@@ -2,12 +2,26 @@ import './style.css';
 import { classes, pets, items, maxHp, type GameState, type GameSnapshot } from '../../packages/shared/index.ts';
 
 import { createArena } from './scene.ts';
+import { createCombatAudio } from './audio.ts';
 
 const get = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
-const overlay = new URLSearchParams(location.search).has('overlay');
+const params = new URLSearchParams(location.search);
+const overlay = params.has('overlay');
+const audio = createCombatAudio();
+const audioToggle = get<HTMLButtonElement>('audio-toggle');
+const overlayAudio = get<HTMLButtonElement>('overlay-audio');
+overlayAudio.hidden = !overlay || params.get('audio') !== '1';
+audioToggle.onclick = async () => {
+  const wasEnabled = audioToggle.getAttribute('aria-pressed') === 'true';
+  if (wasEnabled) audio.disable();
+  const enabled = !wasEnabled && await audio.enable();
+  audioToggle.setAttribute('aria-pressed', String(enabled));
+  audioToggle.textContent = enabled ? 'Tắt âm thanh' : 'Bật âm thanh';
+};
+overlayAudio.onclick = async () => { overlayAudio.hidden = await audio.enable(); };
 document.body.classList.toggle('overlay', overlay);
 const low = get<HTMLInputElement>('low');
-low.checked = new URLSearchParams(location.search).get('quality') !== 'high';
+low.checked = params.get('quality') !== 'high';
 let render: ((state: GameState) => void) | undefined;
 try {
   render = createArena(get('viewport'), () => low.checked, overlay);
@@ -40,6 +54,7 @@ function line(text: string, tag = 'li') {
 }
 
 function update(next: GameSnapshot) {
+  const previous = state;
   state = next;
   const mock = next.mode === 'mock';
   const status = { unconfigured: 'CHƯA CẤU HÌNH', connecting: 'ĐANG KẾT NỐI', connected: 'ĐÃ KẾT NỐI', retrying: 'MẤT KẾT NỐI', rejected: 'BỊ TỪ CHỐI' };
@@ -49,6 +64,9 @@ function update(next: GameSnapshot) {
     : 'Bình luận và quà tặng đến từ TikTok LIVE.';
   render?.(next);
   const { raid, players } = next;
+  get('boss-intro').hidden = raid.phase !== 'SPAWN';
+  if (previous && previous.raid.phase !== raid.phase && raid.phase === 'SPAWN') audio.play('spawn');
+  if (previous && previous.raid.result !== raid.result && raid.result) audio.play(raid.result);
   get('stage').textContent = 'PHỤ BẢN ' + String(raid.stage).padStart(2,'0') + ' · CỔNG HƯ VÔ';
   get('phase').textContent = next.paused ? 'TẠM DỪNG' : phases[raid.phase] + (raid.assisted ? ' · CÓ HỖ TRỢ' : raid.practice ? ' · LUYỆN TẬP' : '');
   get('boss-value').textContent = raid.hp + ' / ' + raid.maxHp;
@@ -92,9 +110,12 @@ function update(next: GameSnapshot) {
     effectSerial = next.effect.serial;
     const node = get('effect');
     node.textContent = next.effect.label;
+    node.dataset.kind = next.effect.kind ?? 'strike';
+    if (previous && previous.raid.result === raid.result) audio.play(next.effect.kind ?? 'strike');
     node.style.color = next.effect.color;
     node.getAnimations().forEach(animation => animation.cancel());
-    node.animate([{ opacity: 0, transform: 'translateY(20px)' },{ opacity: 1, offset: 0.18 },{ opacity: 0, transform: 'translateY(-32px)' }], 950);
+    if (!matchMedia('(prefers-reduced-motion: reduce)').matches) node.animate([{ opacity: 0, transform: 'translateY(20px)' },{ opacity: 1, offset: 0.18 },{ opacity: 0, transform: 'translateY(-32px)' }], 950);
+    else node.animate([{ opacity: 1 }, { opacity: 0 }], 700);
   }
 }
 async function post(path: string, body: unknown) {

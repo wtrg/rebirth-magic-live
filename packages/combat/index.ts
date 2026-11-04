@@ -1,4 +1,4 @@
-import { classes, pets, items, maxHp, type ItemId, type GameEvent, type GameState, type Player } from '../shared/index.ts';
+import { classes, pets, items, maxHp, type ItemId, type EffectKind, type GameEvent, type GameState, type Player } from '../shared/index.ts';
 import { gifts } from '../tiktok-adapter/index.ts';
 
 
@@ -21,8 +21,8 @@ function log(state: GameState, line: string) {
   state.logs.length = Math.min(12, state.logs.length);
 }
 
-function effect(state: GameState, label: string, color: string) {
-  state.effect = { serial: (state.effect?.serial ?? 0) + 1, label, color };
+function effect(state: GameState, label: string, color: string, kind: EffectKind, rulesVersion: number) {
+  state.effect = { serial: (state.effect?.serial ?? 0) + 1, label, color, ...(rulesVersion >= 4 ? { kind } : {}) };
 }
 
 export const nextRaidStage = (state: GameState) =>
@@ -74,7 +74,7 @@ function resolveVictory(state: GameState, equipmentDrops: boolean) {
   log(state, 'Chiến thắng · +EXP · +1 mảnh linh thú');
 }
 
-export function tick(state: GameState, now: number) {
+export function tick(state: GameState, now: number, rulesVersion = 4) {
   if (state.paused || now < state.raid.next) return false;
   if (state.raid.phase === 'SPAWN') {
     state.raid.phase = 'PHASE_1';
@@ -90,7 +90,7 @@ export function tick(state: GameState, now: number) {
     player.hp = Math.max(0, player.hp - damage(force + state.raid.stage, now < state.raid.wardUntil ? 0.65 : 1, defense));
     player.mp = Math.min(60, player.mp + 12);
   }
-  effect(state, 'CHẤN ĐỘNG', '#ff7899');
+  effect(state, 'CHẤN ĐỘNG', '#ff7899', 'boss', rulesVersion);
   if (state.players.every(player => player.hp <= 0)) {
     state.raid.phase = 'RESET';
     state.raid.result = 'defeat';
@@ -99,7 +99,7 @@ export function tick(state: GameState, now: number) {
   return true;
 }
 
-export function applyEvent(state: GameState, event: GameEvent, now: number, rulesVersion = 3) {
+export function applyEvent(state: GameState, event: GameEvent, now: number, rulesVersion = 4) {
   if (state.paused) return;
   const player = state.players.find(player => player.id === event.user);
   if (event.kind === 'gift') {
@@ -108,7 +108,7 @@ export function applyEvent(state: GameState, event: GameEvent, now: number, rule
     const raid = state.raid;
     if (!raid.practice || !player || player.hp <= 0 || !activeRaid(state)) {
       log(state, event.name + ' · ' + gift.label + ' · Hiệu ứng chào mừng');
-      effect(state, gift.label, gift.color);
+      effect(state, gift.label, gift.color, 'gift', rulesVersion);
       return;
     }
     if (raid.usedGifts.includes(event.giftId)) return;
@@ -138,7 +138,7 @@ export function applyEvent(state: GameState, event: GameEvent, now: number, rule
         break;
     }
     log(state, event.name + ' · ' + label);
-    effect(state, label, gift.color);
+    effect(state, label, gift.color, 'gift', rulesVersion);
     return;
   }
   const [command, arg, extra] = event.command.split(/\s+/);
@@ -232,7 +232,8 @@ export function applyEvent(state: GameState, event: GameEvent, now: number, rule
   player.lastHit = now;
   raid.phase = bossPhase(raid.hp, raid.maxHp);
   const label = (definition.skills[index] ?? 'Tấn công') + petSkill;
-  effect(state, '-' + dealt + ' · ' + label, definition.color);
+  const kind = index === 2 ? 'ultimate' : index === 3 ? 'strike' : 'skill';
+  effect(state, '-' + dealt + ' · ' + label, definition.color, kind, rulesVersion);
   log(state, player.name + ' · ' + label + ' · ' + dealt);
   if (raid.phase === 'DEAD') resolveVictory(state, rulesVersion >= 2);
 }

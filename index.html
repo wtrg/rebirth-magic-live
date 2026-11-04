@@ -4,7 +4,7 @@
   <section id="broadcast" aria-label="Màn hình livestream">
     <header><div class="brand">RE<span>:</span>BIRTH</div><small>MA PHÁP BÁ CHỦ SERVER</small><span id="mode">MOCK · ĐANG KẾT NỐI</span></header>
     <section class="boss-hud"><div class="eyebrow" id="stage">PHỤ BẢN 01 · CỔNG HƯ VÔ</div><h1>Varkhazar</h1><div class="boss-track"><div id="boss-hp"></div></div><div class="metrics"><span id="phase">CHỜ KHAI CHIẾN</span><span id="boss-value">480 / 480</span></div></section>
-    <div id="viewport"><div id="notice" role="status"></div><div id="effect"></div></div>
+    <div id="viewport"><div id="notice" role="status"></div><div id="effect"></div><div id="boss-intro" hidden><small>CỔNG HƯ VÔ MỞ RA</small><strong>Varkhazar</strong></div><button id="overlay-audio" hidden>Bật âm thanh</button></div>
     <section class="party"><div class="eyebrow">ĐỘI HÌNH ĐỘT KÍCH <span id="count">00</span></div><div id="party"></div></section>
     <footer><div class="eyebrow">NHẬT KÝ CHIẾN ĐẤU</div><ul id="logs"></ul><div class="ticker">!join <b>·</b> !class fire <b>·</b> !skill1 <b>·</b> !ult</div></footer>
   </section>
@@ -19,7 +19,7 @@
     <div class="eyebrow">QUÀ MOCK</div><div id="gifts"></div>
     </div>
     <div class="operator-actions"><button data-admin="start" class="accent">Bắt đầu Raid</button><button data-admin="practice">Raid luyện tập</button><button data-admin="pause">Dừng khẩn cấp</button><button data-admin="resume">Tiếp tục</button></div>
-    <p id="feedback" role="status"></p><label><input type="checkbox" id="low"> Đồ họa nhẹ</label><a href="/?overlay=1">Mở màn hình OBS ↗</a>
+    <button id="audio-toggle" aria-pressed="false">Bật âm thanh</button><p id="feedback" role="status"></p><label><input type="checkbox" id="low"> Đồ họa nhẹ</label><a href="/?overlay=1">Mở màn hình OBS ↗</a>
     <div class="eyebrow">BẢNG XẾP HẠNG</div><ol id="ranking"></ol>
   </aside>
 </main><script type="module" src="/apps/game/main.ts"></script></body></html>
