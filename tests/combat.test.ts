@@ -259,3 +259,34 @@ test('legacy combat leaves deterministic class counters and criticals disabled',
   assert.equal(state.players[0].attackCount,undefined);
   assert.doesNotMatch(state.logs[0],/CHÍ MẠNG/);
 });
+
+test('phase-two wraiths take splash and targeted damage only in current raids', () => {
+  const state = newGame([],3);
+  const mage = { user:'mage',name:'Mage',kind:'chat' } as const;
+  const act = (command: string, at: number, rules = 8) =>
+    applyEvent(state,{ ...mage,id:String(at),command },at,rules);
+  act('!join',1000);
+  beginRaid(state,1000);
+  tick(state,1800);
+  state.raid.hp = 310;
+  act('!attack',1800);
+  assert.equal(state.raid.phase,'PHASE_2');
+  assert.deepEqual(state.raid.wraiths?.map(x => x.hp),[70,70]);
+  act('!skill2',2400);
+  assert.deepEqual(state.raid.wraiths?.map(x => x.hp),[49,49]);
+  const hp = state.raid.hp;
+  act('!attack left',3000);
+  assert.equal(state.raid.hp,hp);
+  assert.deepEqual(state.raid.wraiths?.map(x => x.hp),[25,49]);
+  state.raid.hp = 1;
+  act('!attack',3600);
+  assert.deepEqual(state.raid.wraiths?.map(x => x.hp),[0,0]);
+  assert.equal(state.raid.result,'victory');
+
+  beginRaid(state,4000);
+  tick(state,4800,7);
+  state.raid.hp = 330;
+  act('!attack',4800,7);
+  assert.equal(state.raid.phase,'PHASE_2');
+  assert.equal(state.raid.wraiths,undefined);
+});

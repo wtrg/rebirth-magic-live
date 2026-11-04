@@ -7,6 +7,7 @@ import { once } from 'node:events';
 import { promisify } from 'node:util';
 import { chromium } from 'playwright';
 import { WebSocket } from 'ws';
+import { openStore } from '../apps/server/store.ts';
 import { playReplay } from '../apps/server/replay.ts';
 
 const root = await mkdtemp(join(tmpdir(),'rebirth-qa-'));
@@ -174,7 +175,11 @@ try {
   await waitForText(page,'#phase','TẠM DỪNG');
   await verifyReplay();
   await stop();
-  await start(':memory:');
+  const encounterPath = join(root,'encounter.sqlite');
+  const encounter = openStore(encounterPath);
+  encounter.commit([],undefined,Date.now(),3);
+  encounter.close();
+  await start(encounterPath);
   const classIds = ['fire','ice','thunder','knight','healer','summon'];
   for (const id of classIds) {
     assert.equal((await send('/event',{id:'class-join:'+id,user:'qa:'+id,name:id,kind:'chat',command:'!join'})).status,202);
@@ -187,6 +192,19 @@ try {
   await waitForText(overlay,'#party','Triệu Hồi Sư');
   assert.equal(await canvas.getAttribute('data-models'),'glb');
   await overlay.screenshot({path:join(evidence,'portrait-six-classes.png')});
+  assert.equal((await send('/admin','start')).status,204);
+  await waitForText(overlay,'#phase','GIAI ĐOẠN I');
+  for (let wave = 0; wave < 7 && !(await overlay.locator('#wraith-hp').isVisible()); wave++) {
+    for (const id of classIds) {
+      assert.equal((await send('/event',{id:'hit:'+wave+':'+id,user:'qa:'+id,name:id,kind:'chat',command:'!attack'})).status,202);
+    }
+    await sleep(650);
+  }
+  await waitForText(overlay,'#wraith-hp','Ảnh Linh trái · 70/70');
+  assert.equal((await send('/event',{id:'fire-splash',user:'qa:fire',name:'fire',kind:'chat',command:'!skill2'})).status,202);
+  await waitForText(overlay,'#wraith-hp','Ảnh Linh trái · 49/70');
+  await waitForText(overlay,'#wraith-hp','Ảnh Linh phải · 49/70');
+  await overlay.screenshot({path:join(evidence,'portrait-wraiths.png')});
   assert.deepEqual(errors,[]);
   console.log('PASS: 3D portrait, boss victory, pause/resume, security, gift deduplication, online backup, restore, stage progression, reconnect, deterministic event replay.');
   console.log('WebGL renderer:',renderer);

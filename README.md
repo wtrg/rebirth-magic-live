@@ -10,6 +10,8 @@ npm start
 
 Mở http://127.0.0.1:4173. Nhấn **Tham gia**, chọn class, bật **Tự đánh (MOCK)** hoặc dùng các nút tấn công, rồi nhấn **Bắt đầu Raid**. Đổi tên thử nghiệm để mô phỏng người chơi khác. Gõ `!pet 1`, `!stats`, `!rank` hoặc `!rebirth` trong ô bình luận. Nút **Dừng khẩn cấp** đóng hàng đợi hiện tại và tạm dừng trận.
 
+Từ phụ bản 3, boss gọi hai Ảnh Linh ở giai đoạn II. Dùng `!attack left` hoặc `!attack right` để nhắm từng mục tiêu. Kỹ năng II và đại chiêu Hỏa đánh lan cả hai.
+
 Gõ `!achievements` để xem các mốc đã đạt hoặc mở mục **Thành tựu** trong bảng điều khiển MOCK.
 
 Thắng raid xếp hạng để nhận trang bị theo số trận đã thắng. Xem túi bằng `!inventory` và dùng `!equip ember`, `!equip aegis` hoặc `!equip eclipse` giữa các trận. Bảng điều khiển MOCK có danh sách trang bị đã sở hữu.

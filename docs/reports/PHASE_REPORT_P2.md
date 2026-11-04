@@ -40,4 +40,4 @@ LEADER_STATUS: LEADER_REVIEW_PENDING
 
 ## Class signature follow-up
 
-The class-combat branch adds a deterministic critical cadence, class-specific signature effects, and a shared control ceiling per boss attack. It keeps replay versions 1–4 on their earlier rules. The focused simulation cases cover all six class effects and the control ceiling. Fire area damage against multiple enemies is still outside the current single-target encounter. See [combat signatures](../GAME_DESIGN.md#combat-signatures).
+The class-combat branch adds a deterministic critical cadence, class-specific signature effects, and a shared control ceiling per boss attack. It keeps replay versions 1–4 on their earlier rules. The focused simulation cases cover all six class effects and the control ceiling. The follow-up stage-3 encounter adds two Ảnh Linh targets. Current Fire area attacks damage both. The boss and summons are simulated server-side. See [combat signatures](../GAME_DESIGN.md#combat-signatures).

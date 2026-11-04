@@ -18,7 +18,7 @@ Pet upgrades reserve the first three earned shards for unlocks. Additional ranke
 
 Critical hits are deterministic and reset each raid. Every 4th successful attack from Thunder, every 7th from Ice or Healer, and every 6th from Fire, Knight or Summoner deals 1.35× damage before defense.
 
-- Fire deals 20% extra damage with Eclipse. The current single-target boss encounter has no extra targets for splash damage.
+- Fire deals 20% extra damage with Eclipse. From stage 3, Varkhazar summons two wraiths once at phase II. Fire skill II and Eclipse deal 45% and 60% of the cast damage to each living wraith. Other classes can aim a basic attack with !attack left or !attack right. Each living wraith adds 2 power to the boss turn.
 - Ice skill II and ultimate delay the next boss attack by 550 ms and 900 ms. Pet delays share a cap of 1,200 ms per boss turn.
 - Thunder ultimate always crits.
 - Knight skill II halves the incoming attack multiplier for the next boss hit. The guard is then consumed.

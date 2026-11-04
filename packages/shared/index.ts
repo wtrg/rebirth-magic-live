@@ -40,6 +40,7 @@ export type Phase = 'IDLE' | 'SPAWN' | 'PHASE_1' | 'PHASE_2' | 'ENRAGED' | 'DEAD
 export type Raid = {
   phase: Phase; hp: number; maxHp: number; stage: number; next: number;
   controlMs?: number;
+  wraiths?: { hp: number; maxHp: number }[];
   practice: boolean;
   usedGifts: string[];
   supportPet: { player: string; until: number } | null;

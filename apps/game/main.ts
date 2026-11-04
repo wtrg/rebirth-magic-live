@@ -75,6 +75,15 @@ function update(next: GameSnapshot) {
   get('phase').textContent = next.paused ? 'TẠM DỪNG' : phases[raid.phase] + (raid.assisted ? ' · CÓ HỖ TRỢ' : raid.practice ? ' · LUYỆN TẬP' : '');
   get('boss-value').textContent = raid.hp + ' / ' + raid.maxHp;
   get('boss-hp').style.width = 100 * raid.hp / raid.maxHp + '%';
+  const wraithHud = get('wraith-hp');
+  const targets = raid.phase === 'RESET' ? [] : raid.wraiths ?? [];
+  wraithHud.hidden = !targets.some(target => target.hp > 0);
+  wraithHud.replaceChildren(...targets.map((target, index) =>
+    line('Ảnh Linh ' + (index === 0 ? 'trái' : 'phải') + ' · ' + target.hp + '/' + target.maxHp,'span')));
+  for (const [index, side] of ['left','right'].entries()) {
+    const button = document.querySelector<HTMLButtonElement>('[data-command="!attack ' + side + '"]');
+    if (button) button.hidden = !targets[index]?.hp;
+  }
   get('count').textContent = String(players.length).padStart(2,'0');
   get('party').replaceChildren(...players.slice(0,6).map(player => {
     const box = document.createElement('article');
