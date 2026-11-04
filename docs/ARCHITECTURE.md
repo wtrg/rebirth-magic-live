@@ -6,7 +6,7 @@ The normalized ingress validates bounded input, checks same origin, applies per-
 
 The first migration stores players and event receipts. Target relational design for later migrations includes characters, classes, character_stats, skills, inventory, pets, player_pets, stages, bosses, raid_sessions, combat_events, rebirth_history, achievements, leaderboard_seasons, gift_events and settings. Content currently resides in versioned TypeScript data. Raw event history and a replay UI require a separate retention and privacy design.
 
-LiveAdapter supplies an abortable source boundary, normalization and retry with bounded backoff. A provider implementation with a verified source, authenticated room and real gift ID mapping is required before the process can switch to LIVE. The current application exposes MOCK with LIVE unconfigured.
+LiveAdapter supplies an abortable source boundary, normalization and retry with bounded backoff. The optional Euler Stream WebSocket source decodes v1 bundles and supplies commands and completed mapped gifts through the same queue. LIVE requires an authorized room and local provider key. Default MOCK makes no network connection. The two modes use separate databases by default. See LIVE_SETUP.md for configuration and verification status.
 
 Renderer shares geometry/materials, caps visible players, limits rendering to roughly 30 updates per second in low quality, and reduces internal resolution. WebGL 2 absence leaves the HUD usable. Procedural 3D serves as the initial asset pipeline. Production GLB assets should be exported from Blender with scale in meters and animation clips named Idle, Run, Attack, Hit and Defeat.
 

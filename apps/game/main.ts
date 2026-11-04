@@ -1,5 +1,5 @@
 import './style.css';
-import { classes, pets, maxHp, type GameState } from '../../packages/shared/index.ts';
+import { classes, pets, maxHp, type GameState, type GameSnapshot } from '../../packages/shared/index.ts';
 
 import { createArena } from './scene.ts';
 
@@ -23,14 +23,14 @@ let effectSerial = 0;
 let reconnectDelay = 500;
 function connect() {
   const socket = new WebSocket('ws://' + location.host + '/state');
-  socket.onopen = () => { reconnectDelay = 500; get('mode').textContent = '● MOCK / OFFLINE'; effectSerial = 0; };
+  socket.onopen = () => { reconnectDelay = 500; effectSerial = 0; };
   socket.onclose = () => {
     state = undefined;
-    get('mode').textContent = 'MOCK · ĐANG KẾT NỐI LẠI';
+    get('mode').textContent = 'ĐANG KẾT NỐI LẠI';
     setTimeout(connect,reconnectDelay);
     reconnectDelay = Math.min(8000, reconnectDelay * 2);
   };
-  socket.onmessage = event => update(JSON.parse(String(event.data)) as GameState);
+  socket.onmessage = event => update(JSON.parse(String(event.data)) as GameSnapshot);
 }
 
 function line(text: string, tag = 'li') {
@@ -39,8 +39,14 @@ function line(text: string, tag = 'li') {
   return node;
 }
 
-function update(next: GameState) {
+function update(next: GameSnapshot) {
   state = next;
+  const mock = next.mode === 'mock';
+  const status = { unconfigured: 'CHƯA CẤU HÌNH', connecting: 'ĐANG KẾT NỐI', connected: 'ĐÃ KẾT NỐI', retrying: 'MẤT KẾT NỐI', rejected: 'BỊ TỪ CHỐI' };
+  get('mode').textContent = mock ? '● MOCK / OFFLINE' : 'LIVE · ' + status[next.live];
+  get('mock-controls').hidden = !mock;
+  get('operator-mode').textContent = mock ? 'Mô phỏng bình luận và quà tặng trên máy này.'
+    : 'Bình luận và quà tặng đến từ TikTok LIVE.';
   render?.(next);
   const { raid, players } = next;
   get('stage').textContent = 'PHỤ BẢN ' + String(raid.stage).padStart(2,'0') + ' · CỔNG HƯ VÔ';
@@ -96,7 +102,7 @@ for (const value of [1,5,10,20,30]) {
   get('gifts').append(button);
 }
 if (!overlay) setInterval(() => {
-  if (!get<HTMLInputElement>('auto').checked || !state || state.paused || !['PHASE_1','PHASE_2','ENRAGED'].includes(state.raid.phase)) return;
+  if (get('mock-controls').hidden || !get<HTMLInputElement>('auto').checked || !state || state.paused || !['PHASE_1','PHASE_2','ENRAGED'].includes(state.raid.phase)) return;
   const player = state.players.find(player => player.id === 'mock:' + username.value.toLowerCase());
   if (player && player.hp > 0) {
     const index = [2,1,0].find(index => player.ready[index] <= Date.now() && player.mp >= [8,16,30][index]);

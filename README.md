@@ -12,7 +12,7 @@ Mở http://127.0.0.1:4173. Nhấn **Tham gia**, chọn class, bật **Tự đá
 
 Chọn **Raid luyện tập** để thử hiệu ứng chiến đấu của quà MOCK. Raid thường nhận EXP và điểm xếp hạng, còn quà chỉ hiện hiệu ứng chào mừng.
 
-OBS Browser Source dùng URL `http://127.0.0.1:4173/?overlay=1` với chiều rộng 1080 và chiều cao 1920. Thêm `&quality=high` để thử chất lượng cao. Bản dựng dùng MOCK. Adapter LIVE chưa có nguồn TikTok đã xác minh.
+OBS Browser Source dùng URL `http://127.0.0.1:4173/?overlay=1` với chiều rộng 1080 và chiều cao 1920. Thêm `&quality=high` để thử chất lượng cao. Máy chủ mặc định chạy MOCK. Có thể cấu hình [chế độ TikTok LIVE](docs/LIVE_SETUP.md) khi có kênh và quyền phù hợp.
 
 Dữ liệu nằm ở `data/rebirth.sqlite`. Dùng Ctrl+C để đóng máy chủ trước khi sao lưu thư mục `data`. Đặt `PORT` và `DB_PATH` qua biến môi trường nếu cần.
 

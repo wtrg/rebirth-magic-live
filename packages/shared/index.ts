@@ -27,6 +27,8 @@ export type Raid = {
   wardUntil: number;
   result: 'victory' | 'defeat' | null; assisted: boolean;
 };
+export type LiveStatus = 'unconfigured' | 'connecting' | 'connected' | 'retrying' | 'rejected';
+export type GameSnapshot = GameState & { mode: 'mock' | 'live'; live: LiveStatus };
 export type GameState = {
   raid: Raid; players: Player[]; logs: string[]; paused: boolean;
   effect: { serial: number; label: string; color: string } | null;
