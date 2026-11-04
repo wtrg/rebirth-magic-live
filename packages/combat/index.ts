@@ -38,6 +38,8 @@ export function beginRaid(state: GameState, now: number, practice = false) {
     player.mp = 60;
     player.ready = [0, 0, 0, 0];
     player.contribution = 0;
+    delete player.attackCount;
+    delete player.guard;
   }
   log(state, 'Varkhazar xuất hiện tại Cổng Hư Vô.');
   return true;
@@ -74,7 +76,7 @@ function resolveVictory(state: GameState, equipmentDrops: boolean) {
   log(state, 'Chiến thắng · +EXP · +1 mảnh linh thú');
 }
 
-export function tick(state: GameState, now: number, rulesVersion = 4) {
+export function tick(state: GameState, now: number, rulesVersion = 5) {
   if (state.paused || now < state.raid.next) return false;
   if (state.raid.phase === 'SPAWN') {
     state.raid.phase = 'PHASE_1';
@@ -82,12 +84,15 @@ export function tick(state: GameState, now: number, rulesVersion = 4) {
     return true;
   }
   if (!activeRaid(state)) return false;
+  if (rulesVersion >= 5) state.raid.controlMs = 0;
   state.raid.next = now + (state.raid.phase === 'ENRAGED' ? 3200 : 4600);
   for (const player of state.players.filter(player => player.hp > 0)) {
     const force = state.raid.phase === 'ENRAGED' ? 27 : state.raid.phase === 'PHASE_2' ? 19 : 13;
     const armor = player.equipment?.armor;
     const defense = classes[player.classId].defense + (armor ? items[armor].defense : 0);
-    player.hp = Math.max(0, player.hp - damage(force + state.raid.stage, now < state.raid.wardUntil ? 0.65 : 1, defense));
+    const guard = rulesVersion >= 5 && player.guard ? 0.5 : 1;
+    player.hp = Math.max(0, player.hp - damage(force + state.raid.stage, (now < state.raid.wardUntil ? 0.65 : 1) * guard, defense));
+    if (guard < 1) delete player.guard;
     player.mp = Math.min(60, player.mp + 12);
   }
   effect(state, 'CHẤN ĐỘNG', '#ff7899', 'boss', rulesVersion);
@@ -99,7 +104,7 @@ export function tick(state: GameState, now: number, rulesVersion = 4) {
   return true;
 }
 
-export function applyEvent(state: GameState, event: GameEvent, now: number, rulesVersion = 4) {
+export function applyEvent(state: GameState, event: GameEvent, now: number, rulesVersion = 5) {
   if (state.paused) return;
   const player = state.players.find(player => player.id === event.user);
   if (event.kind === 'gift') {
@@ -151,7 +156,10 @@ export function applyEvent(state: GameState, event: GameEvent, now: number, rule
   }
   if (!player) return;
   const definition = classes[player.classId];
-  if (command === '!stats') log(state, player.name + ' · Lv.' + player.level + ' · ' + player.xp + ' EXP');
+  if (command === '!stats') {
+    const details = rulesVersion >= 5 ? ' · Hệ ' + definition.element + ' · Chí mạng mỗi ' + definition.critEvery + ' đòn' : '';
+    log(state, player.name + ' · Lv.' + player.level + ' · ' + player.xp + ' EXP' + details);
+  }
   if (command === '!rank') {
     const leader = [...state.players].sort((a, b) => b.score - a.score)[0];
     log(state, 'Bá chủ · ' + leader.name + ' · ' + leader.score + ' điểm');
@@ -208,17 +216,26 @@ export function applyEvent(state: GameState, event: GameEvent, now: number, rule
   player.ready[index] = now + skill.cooldown;
   player.mp -= skill.cost;
   const raid = state.raid;
-  if (player.classId === 'ice' && index === 1) raid.next += 550;
-  if (player.classId === 'healer' && index === 1) {
-    for (const ally of state.players.filter(ally => ally.hp > 0)) ally.hp = Math.min(maxHp(ally), ally.hp + 18);
+  const delayBoss = (requested: number) => {
+    const delay = rulesVersion >= 5 ? Math.min(requested, 1200 - (raid.controlMs ?? 0)) : requested;
+    if (rulesVersion >= 5) raid.controlMs = (raid.controlMs ?? 0) + delay;
+    raid.next += delay;
+  };
+  if (player.classId === 'ice' && (index === 1 || rulesVersion >= 5 && index === 2)) delayBoss(index === 1 ? 550 : 900);
+  if (player.classId === 'healer' && (index === 1 || rulesVersion >= 5 && index === 2)) {
+    for (const ally of state.players.filter(ally => ally.hp > 0)) {
+      ally.hp = Math.min(maxHp(ally), ally.hp + (index === 1 ? 18 : 32));
+      if (index === 2) ally.mp = Math.min(60, ally.mp + 10);
+    }
   }
+  if (rulesVersion >= 5 && player.classId === 'knight' && index === 1) player.guard = true;
   const petLevel = player.pet === null || rulesVersion < 3 ? 1 : player.petLevels?.[player.pet] ?? 1;
   let petSkill = '';
   let petBurst = 0;
   if (rulesVersion >= 3 && index === 1 && player.pet !== null) {
     petSkill = ' + ' + pets[player.pet].skill;
     if (player.pet === 0) petBurst = 5;
-    if (player.pet === 1) raid.next += 350;
+    if (player.pet === 1) delayBoss(350);
     if (player.pet === 2) player.mp = Math.min(60, player.mp + 5);
   }
   const petAttack = player.pet === null ? 0 : (pets[player.pet].attack + (petLevel - 1) * 2) * (player.classId === 'summon' ? 1.5 : 1);
@@ -226,12 +243,21 @@ export function applyEvent(state: GameState, event: GameEvent, now: number, rule
   const power = definition.attack + (player.level - 1) * 4 + player.rebirth * 3 + petAttack + (weapon ? items[weapon].attack : 0);
   const petSupport = raid.supportPet?.player === player.id && now < raid.supportPet.until ? 5 : 0;
   const awakened = raid.awakening?.player === player.id && now < raid.awakening.until;
-  const dealt = Math.min(raid.hp, damage(power + petSupport + petBurst, skill.multiplier * (awakened ? 1.2 : 1), 5));
+  let critical = false;
+  let signature = 1;
+  if (rulesVersion >= 5) {
+    player.attackCount = (player.attackCount ?? 0) + 1;
+    critical = player.attackCount % definition.critEvery === 0 || player.classId === 'thunder' && index === 2;
+    if (index === 2 && player.classId === 'fire') signature = 1.2;
+    if (index === 2 && player.classId === 'summon' && player.pet !== null) petBurst += petAttack;
+  }
+  const dealt = Math.min(raid.hp, damage(power + petSupport + petBurst,
+    skill.multiplier * signature * (awakened ? 1.2 : 1) * (critical ? 1.35 : 1), 5));
   raid.hp -= dealt;
   player.contribution += dealt;
   player.lastHit = now;
   raid.phase = bossPhase(raid.hp, raid.maxHp);
-  const label = (definition.skills[index] ?? 'Tấn công') + petSkill;
+  const label = (definition.skills[index] ?? 'Tấn công') + petSkill + (critical ? ' · CHÍ MẠNG' : '');
   const kind = index === 2 ? 'ultimate' : index === 3 ? 'strike' : 'skill';
   effect(state, '-' + dealt + ' · ' + label, definition.color, kind, rulesVersion);
   log(state, player.name + ' · ' + label + ' · ' + dealt);
