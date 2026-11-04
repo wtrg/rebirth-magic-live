@@ -68,7 +68,7 @@ test('gift validation, streak completion and persisted deduplication', () => {
   assert.equal(db.load()[0].id,'a');
   const raw = { id:'g',user:'a',name:'A',kind:'gift',giftId:'mock-5' };
   assert.equal(normalizeEvent({ ...raw, giftId:'invalid',complete:true }),null);
-  beginRaid(state,1000);
+  beginRaid(state,1000,true);
   tick(state,1800);
   for (const complete of [false,true]) {
     const gift = normalizeEvent({ ...raw,complete });
@@ -81,5 +81,51 @@ test('gift validation, streak completion and persisted deduplication', () => {
   }
   assert.equal(state.raid.result,'victory');
   assert.equal(state.players[0].score,0);
+  assert.equal(state.players[0].level,1);
+  assert.equal(state.players[0].xp,0);
+  assert.equal(state.players[0].owned,0);
+  assert.ok(beginRaid(state,30000));
+  assert.equal(state.raid.stage,1);
+  assert.deepEqual(state.raid.usedGifts,[]);
   db.close();
+});
+
+test('five gift tiers apply distinct bounded effects to an active raid', () => {
+  const state = newGame();
+  const sender = { id: 'sender', user: 'mage', name: 'Mage' };
+  const command = (command: string, now: number) => applyEvent(state, { ...sender, kind: 'chat', command }, now);
+  const gift = (tier: number, now: number) => applyEvent(state, { ...sender, kind: 'gift', giftId: 'mock-' + tier, complete: true }, now);
+  command('!join', 1000);
+  assert.ok(beginRaid(state, 1000));
+  tick(state, 1800);
+  gift(10, 1800);
+  assert.equal(state.raid.hp, 480);
+  assert.equal(state.raid.assisted, false);
+  state.raid.phase = 'RESET';
+  assert.ok(beginRaid(state, 1000, true));
+  tick(state, 1800);
+  gift(1, 1800);
+  assert.equal(state.raid.assisted, false);
+  command('!skill1', 1800);
+  assert.equal(state.players[0].mp, 52);
+  gift(1, 1800);
+  gift(1, 1900);
+  assert.equal(state.players[0].mp, 57);
+  gift(5, 1900);
+  assert.deepEqual(state.raid.supportPet, { player: 'mage', until: 7900 });
+  assert.equal(state.players[0].owned, 0);
+  const hp = state.raid.hp;
+  gift(10, 1900);
+  gift(10, 2000);
+  assert.equal(state.raid.hp, hp - 40);
+  gift(20, 1900);
+  const empowered = state.raid.hp;
+  command('!attack', 2000);
+  assert.equal(empowered - state.raid.hp, damage(34, 1.2, 5));
+  command('!attack', 9900);
+  assert.equal(empowered - state.raid.hp, damage(34, 1.2, 5) + damage(29, 1, 5));
+  gift(30, 9900);
+  tick(state, 9900);
+  assert.equal(state.players[0].hp, 120 - damage(14, 0.65, 4));
+  assert.equal(state.raid.usedGifts.length, 5);
 });

@@ -44,7 +44,7 @@ function update(next: GameState) {
   render?.(next);
   const { raid, players } = next;
   get('stage').textContent = 'PHỤ BẢN ' + String(raid.stage).padStart(2,'0') + ' · CỔNG HƯ VÔ';
-  get('phase').textContent = next.paused ? 'TẠM DỪNG' : phases[raid.phase];
+  get('phase').textContent = next.paused ? 'TẠM DỪNG' : phases[raid.phase] + (raid.assisted ? ' · CÓ HỖ TRỢ' : raid.practice ? ' · LUYỆN TẬP' : '');
   get('boss-value').textContent = raid.hp + ' / ' + raid.maxHp;
   get('boss-hp').style.width = 100 * raid.hp / raid.maxHp + '%';
   get('count').textContent = String(players.length).padStart(2,'0');

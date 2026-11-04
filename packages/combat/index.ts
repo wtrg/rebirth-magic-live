@@ -13,7 +13,7 @@ const skills = [
 
 export function newGame(players: Player[] = []): GameState {
   return { players, logs: [], paused: false, effect: null,
-    raid: { phase: 'IDLE', hp: 480, maxHp: 480, stage: 1, next: 0, furyUntil: 0, result: null, assisted: false } };
+    raid: { phase: 'IDLE', hp: 480, maxHp: 480, stage: 1, next: 0, practice: false, usedGifts: [], supportPet: null, awakening: null, wardUntil: 0, result: null, assisted: false } };
 }
 
 function log(state: GameState, line: string) {
@@ -25,11 +25,11 @@ function effect(state: GameState, label: string, color: string) {
   state.effect = { serial: (state.effect?.serial ?? 0) + 1, label, color };
 }
 
-export function beginRaid(state: GameState, now: number) {
+export function beginRaid(state: GameState, now: number, practice = false) {
   if (state.paused || activeRaid(state) || state.raid.phase === 'SPAWN' || state.players.length === 0) return false;
-  const stage = state.raid.stage + Number(state.raid.result === 'victory');
+  const stage = state.raid.stage + Number(state.raid.result === 'victory' && !state.raid.practice);
   const bossHp = 440 + stage * 40 + (state.players.length - 1) * 75;
-  state.raid = { stage, phase: 'SPAWN', hp: bossHp, maxHp: bossHp, next: now + 800, furyUntil: 0, result: null, assisted: false };
+  state.raid = { stage, phase: 'SPAWN', hp: bossHp, maxHp: bossHp, next: now + 800, practice, usedGifts: [], supportPet: null, awakening: null, wardUntil: 0, result: null, assisted: false };
   for (const player of state.players) {
     player.hp = maxHp(player);
     player.mp = 60;
@@ -42,9 +42,13 @@ export function beginRaid(state: GameState, now: number) {
 
 function resolveVictory(state: GameState) {
   state.raid.result = 'victory';
+  if (state.raid.practice) {
+    log(state, 'Chiến thắng luyện tập · Không tính tiến trình hoặc xếp hạng');
+    return;
+  }
   for (const player of state.players.filter(player => player.contribution > 0)) {
     player.wins++;
-    if (!state.raid.assisted) player.score += state.raid.stage * 100 + player.contribution;
+    player.score += state.raid.stage * 100 + player.contribution;
     player.xp += 100 + state.raid.stage * 20;
     while (player.xp >= player.level * 100) {
       player.xp -= player.level * 100;
@@ -69,7 +73,7 @@ export function tick(state: GameState, now: number) {
   state.raid.next = now + (state.raid.phase === 'ENRAGED' ? 3200 : 4600);
   for (const player of state.players.filter(player => player.hp > 0)) {
     const force = state.raid.phase === 'ENRAGED' ? 27 : state.raid.phase === 'PHASE_2' ? 19 : 13;
-    player.hp = Math.max(0, player.hp - damage(force + state.raid.stage, 1, classes[player.classId].defense));
+    player.hp = Math.max(0, player.hp - damage(force + state.raid.stage, now < state.raid.wardUntil ? 0.65 : 1, classes[player.classId].defense));
     player.mp = Math.min(60, player.mp + 12);
   }
   effect(state, 'CHẤN ĐỘNG', '#ff7899');
@@ -87,13 +91,40 @@ export function applyEvent(state: GameState, event: GameEvent, now: number) {
   if (event.kind === 'gift') {
     const gift = gifts.get(event.giftId);
     if (!gift || !event.complete) return;
-    if (player && activeRaid(state)) {
-      if (event.giftId === 'mock-1') player.mp = Math.min(60, player.mp + 5);
-      else state.raid.furyUntil = Math.max(state.raid.furyUntil, now + Number(event.giftId.slice(5)) * 400);
-      state.raid.assisted = true;
+    const raid = state.raid;
+    if (!raid.practice || !player || player.hp <= 0 || !activeRaid(state)) {
+      log(state, event.name + ' · ' + gift.label + ' · Hiệu ứng chào mừng');
+      effect(state, gift.label, gift.color);
+      return;
     }
-    log(state, event.name + ' · ' + gift.label);
-    effect(state, gift.label, gift.color);
+    if (raid.usedGifts.includes(event.giftId)) return;
+    if (event.giftId === 'mock-1' && player.mp === 60 || event.giftId === 'mock-10' && raid.hp <= 1) return;
+    raid.usedGifts.push(event.giftId);
+    raid.assisted = true;
+    let label = gift.label;
+    switch (event.giftId) {
+      case 'mock-1':
+        player.mp = Math.min(60, player.mp + 5);
+        break;
+      case 'mock-5':
+        raid.supportPet = { player: player.id, until: now + 6000 };
+        break;
+      case 'mock-10': {
+        const strike = Math.min(40, raid.hp - 1);
+        raid.hp -= strike;
+        raid.phase = bossPhase(raid.hp, raid.maxHp);
+        label += ' · -' + strike;
+        break;
+      }
+      case 'mock-20':
+        raid.awakening = { player: player.id, until: now + 8000 };
+        break;
+      case 'mock-30':
+        raid.wardUntil = now + 12000;
+        break;
+    }
+    log(state, event.name + ' · ' + label);
+    effect(state, label, gift.color);
     return;
   }
   const [command, arg, extra] = event.command.split(/\s+/);
@@ -143,7 +174,9 @@ export function applyEvent(state: GameState, event: GameEvent, now: number) {
   }
   const petAttack = player.pet === null ? 0 : pets[player.pet].attack * (player.classId === 'summon' ? 1.5 : 1);
   const power = definition.attack + (player.level - 1) * 4 + player.rebirth * 3 + petAttack;
-  const dealt = Math.min(raid.hp, damage(power, skill.multiplier * (now < raid.furyUntil ? 1.15 : 1), 5));
+  const petSupport = raid.supportPet?.player === player.id && now < raid.supportPet.until ? 5 : 0;
+  const awakened = raid.awakening?.player === player.id && now < raid.awakening.until;
+  const dealt = Math.min(raid.hp, damage(power + petSupport, skill.multiplier * (awakened ? 1.2 : 1), 5));
   raid.hp -= dealt;
   player.contribution += dealt;
   player.lastHit = now;

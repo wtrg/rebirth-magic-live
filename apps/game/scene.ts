@@ -143,11 +143,14 @@ export function createArena(view: HTMLElement, low: () => boolean, portrait: boo
       actor.root.rotation.set(0,Math.PI+arc,player.hp <= 0 ? 1.4 : strike*0.14);
       actor.body.position.y = Math.sin(time*0.005+index)*0.055 + strike*0.24;
       actor.weapon.rotation.x = -strike*2.1;
-      if (player.pet !== null) {
-        if (actor.companion.children[0]?.userData.index !== player.pet) {
+      const support = state?.raid.supportPet;
+      const temporary = support?.player === player.id && (state?.paused || Date.now() < support.until);
+      const petIndex = temporary ? player.pet ?? 0 : player.pet;
+      if (petIndex !== null) {
+        if (actor.companion.children[0]?.userData.index !== petIndex) {
           actor.companion.clear();
-          const model = petModels[player.pet].clone();
-          model.userData.index = player.pet;
+          const model = petModels[petIndex].clone();
+          model.userData.index = petIndex;
           actor.companion.add(model);
         }
         actor.companion.position.set(-0.9,0.15+Math.sin(time*0.008)*0.12,strike*0.8);
