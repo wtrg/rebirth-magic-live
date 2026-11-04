@@ -1,5 +1,35 @@
 # P7 · OBS portrait QA
 
+```text
+PROJECT: RE:BIRTH
+PHASE: P7
+DATE: 2026-11-05
+REPOSITORY_URL: https://github.com/wtrg/rebirth-magic-live
+ANTIGRAVITY_REPORT: NOT_RECEIVED
+QODER_REPORT: NOT_RECEIVED
+GEMINI_REPORT: NOT_RECEIVED
+LEADER_STATUS: LEADER_REVIEW_PENDING
+STATUS: Partial
+BRANCH: qa/obs-combined-load
+COMMIT_SHA: 72e8e629a11e888108017a868b8f4722a7e27a68
+COMPLETED_TASKS: Windows install and smoke, SQLite backup and restore, server load, isolated 1080×1920 OBS recordings and Windows MOCK RC.
+IN_PROGRESS_TASKS: Long-run and audio acceptance.
+BLOCKED_TASKS: No real TikTok LIVE session available as confirmed by the project owner.
+CODEX_QA_REPORT: Measured local OBS capture, server throughput, recovery and queue limits.
+TEST_COMMANDS: npm run typecheck; npm run lint; npm test; npm run build; node scripts/smoke.mjs; node scripts/load.mjs; local OBS recording and ffprobe
+TEST_RESULTS: PASS for listed local checks. Real TikTok LIVE and long combined soak NOT_RUN.
+BUILD_STATUS: PASS
+PERFORMANCE_RESULTS: See measurements below.
+SECURITY_FINDINGS: Loopback server; verified wrong-origin and malformed request rejection, bounded queue and persistent duplicate receipts.
+FILES_CHANGED: OBS setup, recovery, load harness, reports and local capture evidence.
+KNOWN_ISSUES: Three-minute result does not establish long-run stability.
+RISKS: Provider behavior, OBS audio and sustained render/encoding load remain unverified.
+NEXT_TASKS: Verify OBS audio, long-run stability and authorized real LIVE.
+QUESTIONS_FOR_CHATGPT_LEADER: Review the gap between MOCK RC and LIVE acceptance.
+DECISIONS_REQUIRED: Approved LIVE test room, gift catalog and launch gates.
+RECOMMENDATION: Use the MOCK RC for local testing while open gates remain.
+```
+
 Date 2026-11-05. Status partial. Repository [RE:BIRTH](https://github.com/wtrg/rebirth-magic-live), branch `qa/obs-portrait`. Codex QA ran the OBS gate. External agent reports and Leader approval NOT_RECEIVED.
 
 ## Verified
