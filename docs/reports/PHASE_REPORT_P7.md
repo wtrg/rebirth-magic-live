@@ -18,4 +18,11 @@ Both canvas and output were 1080×1920 at 30 FPS. The Browser Source was 1080×1
 
 [Full resolution frame from the OBS recording](evidence/obs-portrait-raid.png) · [Operator setup](../OBS_SETUP.md)
 
-See [SQLite recovery procedure](../RECOVERY.md) for the later online backup and restore test. Pending gates include sustained load, memory, a controlled long recording, verified gift IDs and a real TikTok LIVE session.
+See [SQLite recovery procedure](../RECOVERY.md) for the later online backup and restore test. Pending gates include a sustained memory soak, a controlled long recording, verified gift IDs and a real TikTok LIVE session.
+
+
+## Server load QA
+
+Ran `node scripts/load.mjs` twice on Windows with Node 24 and a fresh file-backed SQLite database per run. The final 60-second measurement used 64 synthetic players and eight WebSocket consumers. It accepted 14,795 attack events and rate-limited 373. A separate warm-up burst of 256 distinct viewers returned 112 HTTP 429 responses, reached the queue cap of 128, and drained. Each WebSocket consumer received at least 1,015 snapshots during the run including warm-up. All eight connections stayed open and the world reached stage 30.
+
+Local event request latency was 39.3 ms p50, 64.5 ms p95, 81.2 ms p99 and 103.3 ms max during the measured interval. Server RSS samples rose from 82.0 to 92.4 MiB. Sampled JS heap varied from 14.8 to 21.3 MiB. The run measures the server and its SQLite writes. Browser/OBS load and long-run memory behavior require separate measurements. See [QA Plan](../QA_PLAN.md) to reproduce.
