@@ -2,7 +2,7 @@ import { createServer, type IncomingMessage } from 'node:http';
 import { createReadStream, statSync } from 'node:fs';
 import { resolve, extname, sep } from 'node:path';
 import { WebSocketServer, WebSocket } from 'ws';
-import { activeRaid, applyEvent, newGame, tick } from '../../packages/combat/index.ts';
+import { activeRaid, applyEvent, newGame, nextRaidStage, tick } from '../../packages/combat/index.ts';
 import { LiveAdapter, normalizeEvent } from '../../packages/tiktok-adapter/index.ts';
 import { eulerSource, eulerUrl, normalizeEulerMessage, readGiftMap } from '../../packages/tiktok-adapter/euler.ts';
 import type { GameEvent, GameSnapshot } from '../../packages/shared/index.ts';
@@ -25,7 +25,7 @@ const liveGiftMap = mode === 'live' ? readGiftMap(process.env.TIKTOK_GIFT_MAP ??
 const abortLive = new AbortController();
 const live = new LiveAdapter(broadcast);
 const store = openStore(process.env.DB_PATH ?? (mode === 'live' ? 'data/rebirth-live.sqlite' : 'data/rebirth.sqlite'));
-let state = newGame(store.load());
+let state = newGame(store.load(), store.loadStage());
 const replay = mode === 'mock' && process.env.REBIRTH_RECORD_REPLAY === '1' ? createReplay(state) : null;
 const queue: GameEvent[] = [];
 const lastEvent = new Map<string, number>();
@@ -144,7 +144,9 @@ const clock = setInterval(() => {
     for (const event of queue.splice(0, 16)) {
       const next = structuredClone(state);
       applyEvent(next, event, now);
-      if (store.commit(next.players, event, now)) {
+      const nextStage = nextRaidStage(next);
+      const unlock = nextStage > nextRaidStage(state) ? nextStage : undefined;
+      if (store.commit(next.players, event, now, unlock)) {
         state = next;
         replay?.record({ kind: 'event', event, at: now });
       }

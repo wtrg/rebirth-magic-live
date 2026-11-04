@@ -1,9 +1,10 @@
 import assert from 'node:assert/strict';
-import { spawn } from 'node:child_process';
+import { execFile, spawn } from 'node:child_process';
 import { mkdtemp, mkdir, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { once } from 'node:events';
+import { promisify } from 'node:util';
 import { chromium } from 'playwright';
 import { WebSocket } from 'ws';
 import { playReplay } from '../apps/server/replay.ts';
@@ -12,8 +13,8 @@ const root = await mkdtemp(join(tmpdir(),'rebirth-qa-'));
 const base = 'http://127.0.0.1:4178';
 let server, browser;
 const sleep = ms => new Promise(resolve => setTimeout(resolve,ms));
-async function start() {
-  server = spawn(process.execPath,['apps/server/index.ts'], { stdio: 'inherit', env: { ...process.env, PORT:'4178', REBIRTH_MODE:'mock', REBIRTH_RECORD_REPLAY:'1', DB_PATH:join(root,'test.sqlite') } });
+async function start(dbPath = join(root,'test.sqlite')) {
+  server = spawn(process.execPath,['apps/server/index.ts'], { stdio: 'inherit', env: { ...process.env, PORT:'4178', REBIRTH_MODE:'mock', REBIRTH_RECORD_REPLAY:'1', DB_PATH:dbPath } });
   for (let attempt = 0; attempt < 80; attempt++) {
     if (server.exitCode !== null) throw new Error('QA server exited early');
     if (await fetch(base + '/health').then(res => res.ok).catch(() => false)) return;
@@ -112,24 +113,34 @@ try {
   await waitForText(page,'#phase','TẠM DỪNG');
   const firstTrace = await verifyReplay();
   assert.equal(firstTrace.steps.filter(step => step.kind === 'event' && step.event.id === 'qa-gift').length, 1);
+  const copy = promisify(execFile);
+  const backup = join(root,'backup.sqlite');
+  const restored = join(root,'restored.sqlite');
+  await copy(process.execPath,['scripts/backup.ts',join(root,'test.sqlite'),backup]);
+  await assert.rejects(copy(process.execPath,['scripts/backup.ts',join(root,'test.sqlite'),backup]), /EEXIST/);
   await stop();
   await waitForText(page,'#mode','KẾT NỐI LẠI');
-  await start();
+  await copy(process.execPath,['scripts/backup.ts',backup,restored]);
+  await start(restored);
   await waitForText(page,'#mode','OFFLINE');
   await waitForText(page,'#party','Hỏa Hồ');
   await waitForText(page,'#party','Lv.2');
   assert.match(await page.locator('#ranking').textContent(),/Astra · [1-9]\d* điểm/);
+  await waitForText(page,'#stage','PHỤ BẢN 02');
+  assert.equal((await send('/event',{...gift,complete:true})).status,202);
+  await sleep(250);
+  assert.equal(await page.locator('#logs li').count(),0);
   await page.getByRole('button',{ name:'Raid luyện tập',exact:true }).click();
   await waitForText(page,'#phase','GIAI ĐOẠN I · LUYỆN TẬP');
   await page.getByRole('button',{ name:'10 xu',exact:true }).click();
-  await waitForText(page,'#boss-value','440 / 480');
+  await waitForText(page,'#boss-value','480 / 520');
   await waitForText(page,'#phase','CÓ HỖ TRỢ');
   await waitForText(page,'#logs','Astra · Phép đặc biệt · -40');
   await page.getByRole('button',{ name:'Dừng khẩn cấp' }).click();
   await waitForText(page,'#phase','TẠM DỪNG');
   await verifyReplay();
   assert.deepEqual(errors,[]);
-  console.log('PASS: 3D portrait, boss victory, pause/resume, security, gift deduplication, persistence, reconnect, deterministic event replay.');
+  console.log('PASS: 3D portrait, boss victory, pause/resume, security, gift deduplication, online backup, restore, stage progression, reconnect, deterministic event replay.');
   console.log('WebGL renderer:',renderer);
 } finally {
   await browser?.close();
