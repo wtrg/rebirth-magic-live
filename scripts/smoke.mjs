@@ -1,0 +1,155 @@
+import assert from 'node:assert/strict';
+import { execFile, spawn } from 'node:child_process';
+import { mkdtemp, mkdir, rm } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { once } from 'node:events';
+import { promisify } from 'node:util';
+import { chromium } from 'playwright';
+import { WebSocket } from 'ws';
+import { playReplay } from '../apps/server/replay.ts';
+
+const root = await mkdtemp(join(tmpdir(),'rebirth-qa-'));
+const base = 'http://127.0.0.1:4178';
+let server, browser;
+const sleep = ms => new Promise(resolve => setTimeout(resolve,ms));
+async function start(dbPath = join(root,'test.sqlite')) {
+  server = spawn(process.execPath,['apps/server/index.ts'], { stdio: 'inherit', env: { ...process.env, PORT:'4178', REBIRTH_MODE:'mock', REBIRTH_RECORD_REPLAY:'1', DB_PATH:dbPath } });
+  for (let attempt = 0; attempt < 80; attempt++) {
+    if (server.exitCode !== null) throw new Error('QA server exited early');
+    if (await fetch(base + '/health').then(res => res.ok).catch(() => false)) return;
+    await sleep(100);
+  }
+  throw new Error('QA server did not respond');
+}
+async function stop() {
+  if (!server || server.exitCode !== null || server.signalCode !== null) return;
+  const closed = once(server,'close');
+  server.kill();
+  await closed;
+}
+async function verifyReplay() {
+  const response = await fetch(base + '/replay');
+  assert.equal(response.status, 200);
+  const trace = await response.json();
+  assert.equal(trace.truncated, false);
+  const socket = new WebSocket(base.replace('http:', 'ws:') + '/state', { origin: base });
+  try {
+    const [data] = await once(socket, 'message');
+    const { mode, live, ...snapshot } = JSON.parse(String(data));
+    assert.equal(mode, 'mock');
+    assert.equal(live, 'unconfigured');
+    assert.deepEqual(playReplay(trace), snapshot);
+  } finally {
+    socket.terminate();
+  }
+  return trace;
+}
+
+async function waitForText(page, selector, text) {
+  await page.locator(selector).filter({ hasText:text }).waitFor();
+}
+try {
+  await start();
+  const send = (path,body,origin = base) => fetch(base+path,{ method:'POST', headers: { Origin:origin, 'Content-Type':'application/json' }, body:JSON.stringify(body) });
+  assert.equal((await send('/admin','pause','http://example.test')).status,403);
+  assert.equal((await send('/event',{ kind:'chat' })).status,400);
+  browser = await chromium.launch({ channel:process.env.QA_BROWSER ?? 'chrome', args:['--enable-unsafe-swiftshader'] });
+  const page = await browser.newPage({ viewport:{width:1280,height:900} });
+  const errors = [];
+  page.on('pageerror',error => errors.push(error.message));
+  await page.goto(base);
+  await waitForText(page,'#mode','OFFLINE');
+  await page.getByRole('button',{ name:'Tham gia' }).click();
+  await waitForText(page,'#party','Astra');
+  await sleep(230);
+  await page.locator('#class').selectOption('thunder');
+  await waitForText(page,'#party','Lôi Pháp Sư');
+  await page.getByRole('button',{ name:'Bắt đầu Raid' }).click();
+  await waitForText(page,'#phase','GIAI ĐOẠN I');
+  const overlay = await browser.newPage({ viewport:{width:540,height:960} });
+  overlay.on('pageerror',error => errors.push(error.message));
+  await overlay.goto(base+'/?overlay=1');
+  await waitForText(overlay,'#party','Astra');
+  assert.equal(await overlay.locator('#operator').isVisible(),false);
+  const canvas = overlay.locator('canvas');
+  await canvas.waitFor();
+  const dimensions = await overlay.locator('#broadcast').boundingBox();
+  assert.ok(Math.abs(dimensions.width/dimensions.height-9/16) < 0.005);
+  const renderer = await canvas.evaluate(element => {
+    const gl = element.getContext('webgl2');
+    const info = gl?.getExtension('WEBGL_debug_renderer_info');
+    return info ? gl.getParameter(info.UNMASKED_RENDERER_WEBGL) : 'unavailable';
+  });
+  await page.getByRole('button',{ name:'Dừng khẩn cấp' }).click();
+  await waitForText(page,'#phase','TẠM DỪNG');
+  const pausedHp = await page.locator('#boss-value').textContent();
+  await page.getByRole('button',{ name:'Tấn công',exact:true }).click();
+  await waitForText(page,'#feedback','Đang dừng');
+  assert.equal(await page.locator('#boss-value').textContent(),pausedHp);
+  await page.getByRole('button',{ name:'Tiếp tục',exact:true }).click();
+  await page.locator('#auto').check();
+  const evidence = process.env.QA_EVIDENCE_DIR ?? 'test-results';
+  await mkdir(evidence,{recursive:true});
+  await overlay.screenshot({path:join(evidence,'portrait-raid.png')});
+  await overlay.locator('#phase').filter({hasText:'CHIẾN THẮNG'}).waitFor({timeout:45000});
+  await page.locator('#auto').uncheck();
+  await waitForText(page,'#party','Lv.2');
+  await overlay.screenshot({path:join(evidence,'portrait-victory.png')});
+  await sleep(250);
+  await page.locator('#pet-list').selectOption('1');
+  await waitForText(page,'#party','Hỏa Hồ');
+  await sleep(250);
+  await page.locator('#inventory').selectOption('ember');
+  await page.waitForFunction(() => document.querySelector('#inventory option[value="ember"]')?.textContent.includes('Đang dùng'));
+  await sleep(250);
+  const gift = { id:'qa-gift',user:'mock:astra',name:'Astra',kind:'gift',giftId:'mock-5',complete:false };
+  assert.equal((await send('/event',gift)).status,202);
+  await sleep(250);
+  assert.equal((await send('/event',{...gift,complete:true})).status,202);
+  await waitForText(page,'#logs','Linh thú hỗ trợ');
+  await sleep(250);
+  assert.equal((await send('/event',{...gift,complete:true})).status,202);
+  await sleep(250);
+  assert.equal(await page.locator('#logs li').filter({hasText:'Linh thú hỗ trợ'}).count(),1);
+  await page.getByRole('button',{ name:'Dừng khẩn cấp' }).click();
+  await waitForText(page,'#phase','TẠM DỪNG');
+  const firstTrace = await verifyReplay();
+  assert.equal(firstTrace.steps.filter(step => step.kind === 'event' && step.event.id === 'qa-gift').length, 1);
+  const copy = promisify(execFile);
+  const backup = join(root,'backup.sqlite');
+  const restored = join(root,'restored.sqlite');
+  await copy(process.execPath,['scripts/backup.ts',join(root,'test.sqlite'),backup]);
+  await assert.rejects(copy(process.execPath,['scripts/backup.ts',join(root,'test.sqlite'),backup]), /EEXIST/);
+  await stop();
+  await waitForText(page,'#mode','KẾT NỐI LẠI');
+  await copy(process.execPath,['scripts/backup.ts',backup,restored]);
+  await start(restored);
+  await waitForText(page,'#mode','OFFLINE');
+  await waitForText(page,'#party','Hỏa Hồ');
+  await waitForText(page,'#party','Lv.2');
+  assert.match(await page.locator('#ranking').textContent(),/Astra · [1-9]\d* điểm/);
+  await waitForText(page,'#stage','PHỤ BẢN 02');
+  await waitForText(overlay,'#party','Hỏa Hồ Lv.1');
+  await overlay.screenshot({path:join(evidence,'portrait-pet.png')});
+  await page.waitForFunction(() => document.querySelector('#inventory option[value="ember"]')?.textContent.includes('Đang dùng'));
+  assert.equal((await send('/event',{...gift,complete:true})).status,202);
+  await sleep(250);
+  assert.equal(await page.locator('#logs li').count(),0);
+  await page.getByRole('button',{ name:'Raid luyện tập',exact:true }).click();
+  await waitForText(page,'#phase','GIAI ĐOẠN I · LUYỆN TẬP');
+  await page.getByRole('button',{ name:'10 xu',exact:true }).click();
+  await waitForText(page,'#boss-value','480 / 520');
+  await waitForText(page,'#phase','CÓ HỖ TRỢ');
+  await waitForText(page,'#logs','Astra · Phép đặc biệt · -40');
+  await page.getByRole('button',{ name:'Dừng khẩn cấp' }).click();
+  await waitForText(page,'#phase','TẠM DỪNG');
+  await verifyReplay();
+  assert.deepEqual(errors,[]);
+  console.log('PASS: 3D portrait, boss victory, pause/resume, security, gift deduplication, online backup, restore, stage progression, reconnect, deterministic event replay.');
+  console.log('WebGL renderer:',renderer);
+} finally {
+  await browser?.close();
+  await stop();
+  await rm(root,{recursive:true,force:true,maxRetries:5});
+}
