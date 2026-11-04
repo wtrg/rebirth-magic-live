@@ -28,7 +28,7 @@ Khi nguồn gián đoạn, game, HUD và điều khiển cục bộ vẫn chạy
 
 ## Tiêu chí nghiệm thu phiên thật
 
-- Một người xem gửi `!join` và xuất hiện đúng trong HUD. Dùng cùng tài khoản sau khi đổi tên hiển thị để kiểm tra định danh.
+- Một người xem gửi `!join` và xuất hiện đúng trong HUD. Dùng cùng tài khoản sau khi đổi tên hiển thị hoặc handle để kiểm tra định danh. Hồ sơ dùng ID số của TikTok làm khóa ổn định, còn handle và tên hiển thị được cập nhật từ sự kiện hợp lệ.
 - Một lệnh hợp lệ thay đổi trạng thái trận. Một streak đã xác minh chỉ kích hoạt một hiệu ứng khi kết thúc.
 - Rớt kết nối và kết nối lại. Kiểm tra HUD vẫn hoạt động, rồi nhận thêm một bình luận mới.
 - Mở OBS Browser Source ở 1080×1920 và xác nhận bố cục, trạng thái LIVE và tiến độ trận.

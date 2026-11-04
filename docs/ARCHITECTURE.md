@@ -8,7 +8,7 @@ The first migration stores players and event receipts. Schema v2 adds a singleto
 
 LiveAdapter supplies an abortable source boundary, normalization and retry with bounded backoff. The optional Euler Stream WebSocket source decodes v1 bundles and supplies commands and completed mapped gifts through the same queue. LIVE requires an authorized room and local provider key. Default MOCK makes no network connection. The two modes use separate databases by default. See LIVE_SETUP.md for configuration and verification status.
 
-Renderer shares geometry/materials, caps visible players, limits rendering to roughly 30 updates per second in low quality, and reduces internal resolution. WebGL 2 absence leaves the HUD usable. Procedural 3D serves as the initial asset pipeline. Production GLB assets should be exported from Blender with scale in meters and animation clips named Idle, Run, Attack, Hit and Defeat.
+Renderer shares geometry/materials, caps visible players, limits rendering to roughly 30 updates per second in low quality, and reduces internal resolution. WebGL 2 absence leaves the HUD usable. The game loads a local GLB for actors and falls back to shared procedural templates. See [model assets](MODEL_ASSETS.md). Production GLB assets should be exported from Blender with scale in meters and animation clips named Idle, Run, Attack, Hit and Defeat.
 
 References
 - [Three.js WebGLRenderer](https://threejs.org/docs/pages/WebGLRenderer)

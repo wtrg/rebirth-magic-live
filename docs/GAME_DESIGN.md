@@ -12,3 +12,21 @@ Scores are earned from contribution and stage in unassisted raids. MOCK gift IDs
 
 
 Pet upgrades reserve the first three earned shards for unlocks. Additional ranked shards are spent on levels 2–5 at costs 1, 2, 3 and 4. Each level adds +2 to the pet attack bonus. On skill II, Hỏa Hồ adds 5 attack to that cast, Băng Vũ delays the boss 350 ms, and Lôi Miêu returns 5 MP. The summoned pet, its level, and spent shards persist across restart and rebirth.
+
+
+## Combat signatures
+
+Critical hits are deterministic and reset each raid. Every 4th successful attack from Thunder, every 7th from Ice or Healer, and every 6th from Fire, Knight or Summoner deals 1.35× damage before defense.
+
+- Fire deals 20% extra damage with Eclipse. From stage 3, Varkhazar summons two wraiths once at phase II. Fire skill II and Eclipse deal 45% and 60% of the cast damage to each living wraith. Other classes can aim a basic attack with !attack left or !attack right. Each living wraith adds 2 power to the boss turn.
+- Ice skill II and ultimate delay the next boss attack by 550 ms and 900 ms. Pet delays share a cap of 1,200 ms per boss turn.
+- Thunder ultimate always crits.
+- Knight skill II halves the incoming attack multiplier for the next boss hit. The guard is then consumed.
+- Healer skill II heals living allies by 18 HP. The ultimate restores 32 HP and 10 MP to living allies.
+- Summoner ultimate adds a second copy of the active pet attack bonus to the cast.
+
+Replay versions 1–4 retain their earlier combat rules. Version 5 introduced these rules. Replay version 6 supports achievement lookup. Version 7 adds richer stats and LIVE profile identity updates.
+
+Achievements derive from persisted ranked milestones: first boss, 10 victories, full equipment collection, three pets, a level-5 pet and first rebirth. Existing profiles receive earned badges immediately. Badges do not modify score or combat stats.
+
+`!stats` reports HP, MP, ATK, DEF, element, critical cadence, rebirth count and raid contribution. ATK and DEF use the same derived values as combat, with temporary skill modifiers applied separately.

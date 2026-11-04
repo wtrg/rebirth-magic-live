@@ -1,6 +1,6 @@
 # RE:BIRTH · Ma Pháp Bá Chủ Server
 
-Bản ứng viên 0.2.0-rc.1 cho Boss Raid 3D tương tác với bình luận. [Phạm vi và bằng chứng QA](docs/RELEASE_CANDIDATE.md). Chạy cục bộ trên Windows với Node 24 và WebGL 2.
+Bản ứng viên 0.2.0-rc.2 cho Boss Raid 3D tương tác với bình luận. [Phạm vi và bằng chứng QA](docs/RELEASE_CANDIDATE.md). Chạy cục bộ trên Windows với Node 24 và WebGL 2.
 
 ```powershell
 npm ci
@@ -10,13 +10,17 @@ npm start
 
 Mở http://127.0.0.1:4173. Nhấn **Tham gia**, chọn class, bật **Tự đánh (MOCK)** hoặc dùng các nút tấn công, rồi nhấn **Bắt đầu Raid**. Đổi tên thử nghiệm để mô phỏng người chơi khác. Gõ `!pet 1`, `!stats`, `!rank` hoặc `!rebirth` trong ô bình luận. Nút **Dừng khẩn cấp** đóng hàng đợi hiện tại và tạm dừng trận.
 
+Từ phụ bản 3, boss gọi hai Ảnh Linh ở giai đoạn II. Dùng `!attack left` hoặc `!attack right` để nhắm từng mục tiêu. Kỹ năng II và đại chiêu Hỏa đánh lan cả hai.
+
+Gõ `!achievements` để xem các mốc đã đạt hoặc mở mục **Thành tựu** trong bảng điều khiển MOCK.
+
 Thắng raid xếp hạng để nhận trang bị theo số trận đã thắng. Xem túi bằng `!inventory` và dùng `!equip ember`, `!equip aegis` hoặc `!equip eclipse` giữa các trận. Bảng điều khiển MOCK có danh sách trang bị đã sở hữu.
 
 Ba mảnh linh thú đầu mở ba pet. Sau đó, dùng mảnh kiếm thêm từ raid xếp hạng để nâng pet lên tối đa cấp 5 giữa các trận. Dùng `!pet 1` đến `!pet 3` để gọi và `!petup` để nâng pet đang gọi. Kỹ năng II kích hoạt chiêu riêng của pet.
 
 Chọn **Raid luyện tập** để thử hiệu ứng chiến đấu của quà MOCK. Raid thường nhận EXP và điểm xếp hạng, còn quà chỉ hiện hiệu ứng chào mừng.
 
-[Hướng dẫn OBS](docs/OBS_SETUP.md). Browser Source dùng URL `http://127.0.0.1:4173/?overlay=1` với chiều rộng 1080 và chiều cao 1920. Thêm `&quality=high` để thử chất lượng cao. Máy chủ mặc định chạy MOCK. Có thể cấu hình [chế độ TikTok LIVE](docs/LIVE_SETUP.md) khi có kênh và quyền phù hợp.
+[Hướng dẫn vận hành](docs/OPERATOR_GUIDE.md) · [Thiết lập OBS](docs/OBS_SETUP.md). Browser Source dùng URL `http://127.0.0.1:4173/?overlay=1` với chiều rộng 1080 và chiều cao 1920. Thêm `&quality=high` để thử chất lượng cao. Máy chủ mặc định chạy MOCK. Có thể cấu hình [chế độ TikTok LIVE](docs/LIVE_SETUP.md) khi có kênh và quyền phù hợp.
 
 Dữ liệu MOCK mặc định nằm ở `data/rebirth.sqlite`. Tiến trình phụ bản được lưu sau mỗi trận thắng xếp hạng. Xem [sao lưu và khôi phục](docs/RECOVERY.md). Đặt `PORT` và `DB_PATH` qua biến môi trường nếu cần.
 

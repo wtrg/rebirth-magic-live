@@ -7,6 +7,7 @@ import { once } from 'node:events';
 import { promisify } from 'node:util';
 import { chromium } from 'playwright';
 import { WebSocket } from 'ws';
+import { openStore } from '../apps/server/store.ts';
 import { playReplay } from '../apps/server/replay.ts';
 
 const root = await mkdtemp(join(tmpdir(),'rebirth-qa-'));
@@ -54,6 +55,7 @@ try {
   const send = (path,body,origin = base) => fetch(base+path,{ method:'POST', headers: { Origin:origin, 'Content-Type':'application/json' }, body:JSON.stringify(body) });
   assert.equal((await send('/admin','pause','http://example.test')).status,403);
   assert.equal((await send('/event',{ kind:'chat' })).status,400);
+  assert.equal((await send('/event',{ id:'spoof', user:'live:123', name:'Fake', username:'fake', kind:'chat', command:'!join' })).status,400);
   browser = await chromium.launch({ channel:process.env.QA_BROWSER ?? 'chrome', args:['--enable-unsafe-swiftshader'] });
   const page = await browser.newPage({ viewport:{width:1280,height:900} });
   const errors = [];
@@ -86,6 +88,15 @@ try {
   assert.equal(await overlay.locator('#operator').isVisible(),false);
   const canvas = overlay.locator('canvas');
   await canvas.waitFor();
+  assert.equal(await canvas.getAttribute('data-models'),'glb');
+  const model = await overlay.request.get(base+'/models/raid.glb');
+  assert.equal(model.headers()['content-type'],'model/gltf-binary');
+  assert.equal((await model.body()).toString('ascii',0,4),'glTF');
+  const fallback = await browser.newPage({viewport:{width:540,height:960}});
+  await fallback.route('**/models/raid.glb', route => route.fulfill({status:404,body:''}));
+  await fallback.goto(base+'/?overlay=1');
+  await fallback.locator('canvas[data-models="procedural"]').waitFor();
+  await fallback.close();
   const dimensions = await overlay.locator('#broadcast').boundingBox();
   assert.ok(Math.abs(dimensions.width/dimensions.height-9/16) < 0.005);
   const renderer = await canvas.evaluate(element => {
@@ -142,6 +153,11 @@ try {
   await waitForText(page,'#party','Lv.2');
   assert.match(await page.locator('#ranking').textContent(),/Astra · [1-9]\d* điểm/);
   await waitForText(page,'#stage','PHỤ BẢN 02');
+  await page.locator('#profile-achievements summary').click();
+  await waitForText(page,'#achievements','Hạ Boss đầu tiên');
+  assert.equal(await page.locator('#achievement-count').textContent(),'1/6');
+  await waitForText(page,'#profile-stats','ATK 46');
+  await waitForText(page,'#profile-stats','DEF 3');
   await waitForText(overlay,'#party','Hỏa Hồ Lv.1');
   await overlay.screenshot({path:join(evidence,'portrait-pet.png')});
   await page.waitForFunction(() => document.querySelector('#inventory option[value="ember"]')?.textContent.includes('Đang dùng'));
@@ -158,6 +174,37 @@ try {
   await page.getByRole('button',{ name:'Dừng khẩn cấp' }).click();
   await waitForText(page,'#phase','TẠM DỪNG');
   await verifyReplay();
+  await stop();
+  const encounterPath = join(root,'encounter.sqlite');
+  const encounter = openStore(encounterPath);
+  encounter.commit([],undefined,Date.now(),3);
+  encounter.close();
+  await start(encounterPath);
+  const classIds = ['fire','ice','thunder','knight','healer','summon'];
+  for (const id of classIds) {
+    assert.equal((await send('/event',{id:'class-join:'+id,user:'qa:'+id,name:id,kind:'chat',command:'!join'})).status,202);
+  }
+  await waitForText(overlay,'#count','06');
+  await sleep(250);
+  for (const id of classIds) {
+    assert.equal((await send('/event',{id:'class-select:'+id,user:'qa:'+id,name:id,kind:'chat',command:'!class '+id})).status,202);
+  }
+  await waitForText(overlay,'#party','Triệu Hồi Sư');
+  assert.equal(await canvas.getAttribute('data-models'),'glb');
+  await overlay.screenshot({path:join(evidence,'portrait-six-classes.png')});
+  assert.equal((await send('/admin','start')).status,204);
+  await waitForText(overlay,'#phase','GIAI ĐOẠN I');
+  for (let wave = 0; wave < 7 && !(await overlay.locator('#wraith-hp').isVisible()); wave++) {
+    for (const id of classIds) {
+      assert.equal((await send('/event',{id:'hit:'+wave+':'+id,user:'qa:'+id,name:id,kind:'chat',command:'!attack'})).status,202);
+    }
+    await sleep(650);
+  }
+  await waitForText(overlay,'#wraith-hp','Ảnh Linh trái · 70/70');
+  assert.equal((await send('/event',{id:'fire-splash',user:'qa:fire',name:'fire',kind:'chat',command:'!skill2'})).status,202);
+  await waitForText(overlay,'#wraith-hp','Ảnh Linh trái · 49/70');
+  await waitForText(overlay,'#wraith-hp','Ảnh Linh phải · 49/70');
+  await overlay.screenshot({path:join(evidence,'portrait-wraiths.png')});
   assert.deepEqual(errors,[]);
   console.log('PASS: 3D portrait, boss victory, pause/resume, security, gift deduplication, online backup, restore, stage progression, reconnect, deterministic event replay.');
   console.log('WebGL renderer:',renderer);

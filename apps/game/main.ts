@@ -1,7 +1,8 @@
 import './style.css';
-import { classes, pets, items, maxHp, type GameState, type GameSnapshot } from '../../packages/shared/index.ts';
+import { classes, pets, items, achievements, attackStats, defenseOf, maxHp, type GameState, type GameSnapshot } from '../../packages/shared/index.ts';
 
 import { createArena } from './scene.ts';
+import { loadRaidModels } from './asset-loader.ts';
 import { createCombatAudio } from './audio.ts';
 
 const get = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
@@ -23,11 +24,14 @@ document.body.classList.toggle('overlay', overlay);
 const low = get<HTMLInputElement>('low');
 low.checked = params.get('quality') !== 'high';
 let render: ((state: GameState) => void) | undefined;
-try {
-  render = createArena(get('viewport'), () => low.checked, overlay);
-} catch {
-  get('notice').textContent = 'WebGL 2 không khả dụng · HUD vẫn đang hoạt động';
-}
+void loadRaidModels().catch(() => undefined).then(models => {
+  try {
+    render = createArena(get('viewport'), () => low.checked, overlay, models);
+    if (state) render(state);
+  } catch {
+    get('notice').textContent = 'WebGL 2 không khả dụng · HUD vẫn đang hoạt động';
+  }
+});
 const phases = { IDLE: 'CHỜ KHAI CHIẾN', SPAWN: 'BOSS XUẤT HIỆN', PHASE_1: 'GIAI ĐOẠN I', PHASE_2: 'GIAI ĐOẠN II', ENRAGED: 'CUỒNG NỘ', DEAD: 'CHIẾN THẮNG', RESET: 'THẤT BẠI' };
 const username = get<HTMLInputElement>('username');
 const command = get<HTMLInputElement>('command');
@@ -71,6 +75,15 @@ function update(next: GameSnapshot) {
   get('phase').textContent = next.paused ? 'TẠM DỪNG' : phases[raid.phase] + (raid.assisted ? ' · CÓ HỖ TRỢ' : raid.practice ? ' · LUYỆN TẬP' : '');
   get('boss-value').textContent = raid.hp + ' / ' + raid.maxHp;
   get('boss-hp').style.width = 100 * raid.hp / raid.maxHp + '%';
+  const wraithHud = get('wraith-hp');
+  const targets = raid.phase === 'RESET' ? [] : raid.wraiths ?? [];
+  wraithHud.hidden = !targets.some(target => target.hp > 0);
+  wraithHud.replaceChildren(...targets.map((target, index) =>
+    line('Ảnh Linh ' + (index === 0 ? 'trái' : 'phải') + ' · ' + target.hp + '/' + target.maxHp,'span')));
+  for (const [index, side] of ['left','right'].entries()) {
+    const button = document.querySelector<HTMLButtonElement>('[data-command="!attack ' + side + '"]');
+    if (button) button.hidden = !targets[index]?.hp;
+  }
   get('count').textContent = String(players.length).padStart(2,'0');
   get('party').replaceChildren(...players.slice(0,6).map(player => {
     const box = document.createElement('article');
@@ -86,6 +99,15 @@ function update(next: GameSnapshot) {
   }));
   get('logs').replaceChildren(...next.logs.slice(0,3).map(log => line(log)));
   const owner = players.find(player => player.id === 'mock:' + username.value.toLowerCase());
+  const badges = owner ? achievements.filter(achievement => achievement.earned(owner)) : [];
+  get('profile-stats').textContent = owner ? 'Lv.' + owner.level + ' · ' + owner.xp + ' EXP · Hệ ' +
+    classes[owner.classId].element + ' · ATK ' + attackStats(owner).attack + ' · DEF ' + defenseOf(owner) +
+    ' · Chí mạng 1/' + classes[owner.classId].critEvery + ' · Trùng sinh ' + owner.rebirth +
+    ' · Đóng góp ' + owner.contribution : 'Chưa có nhân vật';
+  get('achievement-count').textContent = badges.length + '/' + achievements.length;
+  get('achievements').replaceChildren(...(badges.length
+    ? badges.map(achievement => line(achievement.name))
+    : [line('Chưa có thành tựu')]));
   const petList = get<HTMLSelectElement>('pet-list');
   petList.replaceChildren(new Option('Chọn linh thú', ''));
   for (let index = 0; index < (owner?.owned ?? 0); index++) {
