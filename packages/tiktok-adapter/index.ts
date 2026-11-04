@@ -1,4 +1,4 @@
-import type { GameEvent } from '../shared/index.ts';
+import type { GameEvent, LiveStatus } from '../shared/index.ts';
 
 export const gifts = new Map([
   ['mock-1', { label: 'Mana Spark', color: '#68efff' }],
@@ -9,34 +9,52 @@ export const gifts = new Map([
 ]);
 
 export interface LiveSource {
-  connect(signal: AbortSignal): AsyncIterable<unknown>;
+  connect(signal: AbortSignal, reportStatus: (status: LiveStatus) => void): AsyncIterable<unknown>;
 }
 
 export class LiveAdapter {
-  status: 'unconfigured' | 'connecting' | 'connected' | 'retrying' = 'unconfigured';
+  status: LiveStatus = 'unconfigured';
+
+  private readonly onStatus: () => void;
+
+  constructor(onStatus: () => void = () => {}) {
+    this.onStatus = onStatus;
+  }
+
+  private setStatus(status: LiveStatus) {
+    if (this.status === status) return;
+    this.status = status;
+    this.onStatus();
+  }
 
   async run(source: LiveSource, normalize: (raw: unknown) => GameEvent | null, enqueue: (event: GameEvent) => void, signal: AbortSignal) {
     let delay = 1000;
     while (!signal.aborted) {
-      this.status = 'connecting';
+      this.setStatus('connecting');
       try {
-        for await (const raw of source.connect(signal)) {
+        for await (const raw of source.connect(signal, status => {
+          this.setStatus(status);
+          if (status === 'connected') delay = 1000;
+        })) {
           if (signal.aborted) break;
-          this.status = 'connected';
-          delay = 1000;
           const event = normalize(raw);
-          if (event) enqueue(event);
+          if (event) {
+            this.setStatus('connected');
+            delay = 1000;
+            enqueue(event);
+          }
         }
       } catch {
         // Transport details can contain private room information.
       }
+      if (this.status === 'rejected') return;
       if (signal.aborted) break;
-      this.status = 'retrying';
+      this.setStatus('retrying');
       const { setTimeout } = await import('node:timers/promises');
       await setTimeout(delay, undefined, { signal }).catch(() => undefined);
-      delay = Math.min(delay * 2, 30000);
+      delay = Math.min(delay * 2, 120000);
     }
-    this.status = 'unconfigured';
+    this.setStatus('unconfigured');
   }
 }
 
