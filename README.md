@@ -1,6 +1,6 @@
 # RE:BIRTH · Ma Pháp Bá Chủ Server
 
-Vertical slice 3D cho Boss Raid tương tác với bình luận. Chạy cục bộ trên Windows với Node 24 và WebGL 2.
+Bản ứng viên 0.2.0-rc.1 cho Boss Raid 3D tương tác với bình luận. [Phạm vi và bằng chứng QA](docs/RELEASE_CANDIDATE.md). Chạy cục bộ trên Windows với Node 24 và WebGL 2.
 
 ```powershell
 npm ci
