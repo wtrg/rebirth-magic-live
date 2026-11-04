@@ -2,11 +2,13 @@ import { createServer, type IncomingMessage } from 'node:http';
 import { createReadStream, statSync } from 'node:fs';
 import { resolve, extname, sep } from 'node:path';
 import { WebSocketServer, WebSocket } from 'ws';
-import { activeRaid, applyEvent, beginRaid, newGame, tick } from '../../packages/combat/index.ts';
+import { activeRaid, applyEvent, newGame, tick } from '../../packages/combat/index.ts';
 import { LiveAdapter, normalizeEvent } from '../../packages/tiktok-adapter/index.ts';
 import { eulerSource, eulerUrl, normalizeEulerMessage, readGiftMap } from '../../packages/tiktok-adapter/euler.ts';
 import type { GameEvent, GameSnapshot } from '../../packages/shared/index.ts';
 import { openStore } from './store.ts';
+import { applyAdmin, isAdminAction } from './admin.ts';
+import { createReplay } from './replay.ts';
 
 const port = Number(process.env.PORT ?? 4173);
 const dist = resolve('dist');
@@ -24,9 +26,10 @@ const abortLive = new AbortController();
 const live = new LiveAdapter(broadcast);
 const store = openStore(process.env.DB_PATH ?? (mode === 'live' ? 'data/rebirth-live.sqlite' : 'data/rebirth.sqlite'));
 let state = newGame(store.load());
+const replay = mode === 'mock' && process.env.REBIRTH_RECORD_REPLAY === '1' ? createReplay(state) : null;
 const queue: GameEvent[] = [];
 const lastEvent = new Map<string, number>();
-let pausedAt = 0;
+const adminClock = { pausedAt: 0 };
 const hosts = new Set(['127.0.0.1:' + port, 'localhost:' + port]);
 const mime: Record<string, string> = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css' };
 
@@ -64,6 +67,12 @@ const server = createServer(async (req, res) => {
     res.end(JSON.stringify({ status: 'ok', mode, live: live.status, queue: queue.length }));
     return;
   }
+  if (path === '/replay' && req.method === 'GET' && replay) {
+    res.setHeader('Content-Type', 'application/json');
+    res.setHeader('Content-Disposition', 'attachment; filename="rebirth-mock-replay.json"');
+    res.end(replay.export());
+    return;
+  }
   if (path === '/event' || path === '/admin') {
     if (req.method !== 'POST' || !sameOrigin(req) || req.headers['content-type'] !== 'application/json') {
       res.writeHead(403).end(); return;
@@ -79,26 +88,10 @@ const server = createServer(async (req, res) => {
       res.writeHead(202).end();
       return;
     }
-    if (body === 'start' || body === 'practice') {
-      if (!beginRaid(state, now, body === 'practice')) { res.writeHead(409).end(); return; }
-    } else if (body === 'pause') {
-      if (!state.paused) {
-        pausedAt = now;
-        state.paused = true;
-        queue.length = 0;
-      }
-    } else if (body === 'resume') {
-      if (state.paused) {
-        const elapsed = now - pausedAt;
-        state.raid.next += elapsed;
-        if (state.raid.wardUntil > pausedAt) state.raid.wardUntil += elapsed;
-        for (const buff of [state.raid.supportPet, state.raid.awakening]) {
-          if (buff && buff.until > pausedAt) buff.until += elapsed;
-        }
-        for (const player of state.players) player.ready = player.ready.map(time => time > pausedAt ? time + elapsed : time);
-        state.paused = false;
-      }
-    } else { res.writeHead(400).end(); return; }
+    if (!isAdminAction(body)) { res.writeHead(400).end(); return; }
+    if (!applyAdmin(state, body, now, adminClock)) { res.writeHead(409).end(); return; }
+    if (body === 'pause') queue.length = 0;
+    replay?.record({ kind: 'admin', action: body, at: now });
     broadcast();
     res.writeHead(204).end();
     return;
@@ -143,16 +136,23 @@ const clock = setInterval(() => {
   const now = Date.now();
   try {
     const draft = structuredClone(state);
-    if (tick(draft, now)) { store.commit(draft.players); state = draft; }
+    if (tick(draft, now)) {
+      store.commit(draft.players);
+      state = draft;
+      replay?.record({ kind: 'tick', at: now });
+    }
     for (const event of queue.splice(0, 16)) {
       const next = structuredClone(state);
       applyEvent(next, event, now);
-      if (store.commit(next.players, event, now)) state = next;
+      if (store.commit(next.players, event, now)) {
+        state = next;
+        replay?.record({ kind: 'event', event, at: now });
+      }
     }
     broadcast();
   } catch {
-    state.paused = true;
-    pausedAt = now;
+    applyAdmin(state, 'pause', now, adminClock);
+    replay?.record({ kind: 'admin', action: 'pause', at: now });
     queue.length = 0;
     console.error('Local persistence failed. Game paused.');
     broadcast();

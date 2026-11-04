@@ -5,13 +5,15 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { once } from 'node:events';
 import { chromium } from 'playwright';
+import { WebSocket } from 'ws';
+import { playReplay } from '../apps/server/replay.ts';
 
 const root = await mkdtemp(join(tmpdir(),'rebirth-qa-'));
 const base = 'http://127.0.0.1:4178';
 let server, browser;
 const sleep = ms => new Promise(resolve => setTimeout(resolve,ms));
 async function start() {
-  server = spawn(process.execPath,['apps/server/index.ts'], { stdio: 'inherit', env: { ...process.env, PORT:'4178', DB_PATH:join(root,'test.sqlite') } });
+  server = spawn(process.execPath,['apps/server/index.ts'], { stdio: 'inherit', env: { ...process.env, PORT:'4178', REBIRTH_MODE:'mock', REBIRTH_RECORD_REPLAY:'1', DB_PATH:join(root,'test.sqlite') } });
   for (let attempt = 0; attempt < 80; attempt++) {
     if (server.exitCode !== null) throw new Error('QA server exited early');
     if (await fetch(base + '/health').then(res => res.ok).catch(() => false)) return;
@@ -25,6 +27,24 @@ async function stop() {
   server.kill();
   await closed;
 }
+async function verifyReplay() {
+  const response = await fetch(base + '/replay');
+  assert.equal(response.status, 200);
+  const trace = await response.json();
+  assert.equal(trace.truncated, false);
+  const socket = new WebSocket(base.replace('http:', 'ws:') + '/state', { origin: base });
+  try {
+    const [data] = await once(socket, 'message');
+    const { mode, live, ...snapshot } = JSON.parse(String(data));
+    assert.equal(mode, 'mock');
+    assert.equal(live, 'unconfigured');
+    assert.deepEqual(playReplay(trace), snapshot);
+  } finally {
+    socket.terminate();
+  }
+  return trace;
+}
+
 async function waitForText(page, selector, text) {
   await page.locator(selector).filter({ hasText:text }).waitFor();
 }
@@ -88,6 +108,10 @@ try {
   assert.equal((await send('/event',{...gift,complete:true})).status,202);
   await sleep(250);
   assert.equal(await page.locator('#logs li').filter({hasText:'Linh thú hỗ trợ'}).count(),1);
+  await page.getByRole('button',{ name:'Dừng khẩn cấp' }).click();
+  await waitForText(page,'#phase','TẠM DỪNG');
+  const firstTrace = await verifyReplay();
+  assert.equal(firstTrace.steps.filter(step => step.kind === 'event' && step.event.id === 'qa-gift').length, 1);
   await stop();
   await waitForText(page,'#mode','KẾT NỐI LẠI');
   await start();
@@ -101,8 +125,11 @@ try {
   await waitForText(page,'#boss-value','440 / 480');
   await waitForText(page,'#phase','CÓ HỖ TRỢ');
   await waitForText(page,'#logs','Astra · Phép đặc biệt · -40');
+  await page.getByRole('button',{ name:'Dừng khẩn cấp' }).click();
+  await waitForText(page,'#phase','TẠM DỪNG');
+  await verifyReplay();
   assert.deepEqual(errors,[]);
-  console.log('PASS: 3D portrait, boss victory, pause/resume, security, gift deduplication, persistence, reconnect.');
+  console.log('PASS: 3D portrait, boss victory, pause/resume, security, gift deduplication, persistence, reconnect, deterministic event replay.');
   console.log('WebGL renderer:',renderer);
 } finally {
   await browser?.close();
