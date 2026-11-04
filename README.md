@@ -12,6 +12,8 @@ Mở http://127.0.0.1:4173. Nhấn **Tham gia**, chọn class, bật **Tự đá
 
 Thắng raid xếp hạng để nhận trang bị theo số trận đã thắng. Xem túi bằng `!inventory` và dùng `!equip ember`, `!equip aegis` hoặc `!equip eclipse` giữa các trận. Bảng điều khiển MOCK có danh sách trang bị đã sở hữu.
 
+Ba mảnh linh thú đầu mở ba pet. Sau đó, dùng mảnh kiếm thêm từ raid xếp hạng để nâng pet lên tối đa cấp 5 giữa các trận. Dùng `!pet 1` đến `!pet 3` để gọi và `!petup` để nâng pet đang gọi. Kỹ năng II kích hoạt chiêu riêng của pet.
+
 Chọn **Raid luyện tập** để thử hiệu ứng chiến đấu của quà MOCK. Raid thường nhận EXP và điểm xếp hạng, còn quà chỉ hiện hiệu ứng chào mừng.
 
 [Hướng dẫn OBS](docs/OBS_SETUP.md). Browser Source dùng URL `http://127.0.0.1:4173/?overlay=1` với chiều rộng 1080 và chiều cao 1920. Thêm `&quality=high` để thử chất lượng cao. Máy chủ mặc định chạy MOCK. Có thể cấu hình [chế độ TikTok LIVE](docs/LIVE_SETUP.md) khi có kênh và quyền phù hợp.

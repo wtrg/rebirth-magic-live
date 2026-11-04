@@ -151,3 +151,47 @@ test('five gift tiers apply distinct bounded effects to an active raid', () => {
   assert.equal(state.players[0].hp, 120 - damage(14, 0.65, 4));
   assert.equal(state.raid.usedGifts.length, 5);
 });
+
+test('pet upgrades spend ranked shards once and each companion contributes its own skill', () => {
+  const state = newGame();
+  const sender = { id:'pet-test', user:'mage', name:'Mage', kind:'chat' } as const;
+  const command = (text: string, now: number) => applyEvent(state,{ ...sender, command:text },now);
+  command('!join',1000);
+  const mage = state.players[0];
+  mage.shards = 4;
+  mage.owned = 3;
+  command('!pet 1',1000);
+  command('!petup',1000);
+  command('!petup',1000);
+  assert.equal(mage.petLevels?.[0],2);
+  assert.equal(mage.spentPetShards,1);
+  assert.equal(mage.owned,3);
+  assert.equal(mage.shards,4);
+  const store = openStore(':memory:');
+  try {
+    store.commit(state.players);
+    assert.deepEqual(store.load()[0].petLevels,[2,1,1]);
+    assert.equal(store.load()[0].spentPetShards,1);
+  } finally {
+    store.close();
+  }
+  beginRaid(state,1000);
+  tick(state,1800);
+  mage.shards = 100;
+  command('!petup',1800);
+  assert.equal(mage.petLevels?.[0],2);
+  const hp = state.raid.hp;
+  command('!skill2',1800);
+  assert.equal(hp - state.raid.hp,damage(29 + 8 + 5,1.85,5));
+  assert.match(state.logs[0],/Hỏa Vĩ/);
+  command('!pet 2',2000);
+  const bossTurn = state.raid.next;
+  command('!skill2',5200);
+  assert.equal(state.raid.next,bossTurn+350);
+  assert.match(state.logs[0],/Băng Dực/);
+  command('!pet 3',5500);
+  const mp = mage.mp;
+  command('!skill2',8600);
+  assert.equal(mage.mp,mp-16+5);
+  assert.match(state.logs[0],/Lôi Tức/);
+});

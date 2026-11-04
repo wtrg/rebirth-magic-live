@@ -97,7 +97,7 @@ try {
   await waitForText(page,'#party','Lv.2');
   await overlay.screenshot({path:join(evidence,'portrait-victory.png')});
   await sleep(250);
-  await page.getByRole('button',{ name:'Gọi Pet' }).click();
+  await page.locator('#pet-list').selectOption('1');
   await waitForText(page,'#party','Hỏa Hồ');
   await sleep(250);
   await page.locator('#inventory').selectOption('ember');
@@ -130,6 +130,8 @@ try {
   await waitForText(page,'#party','Lv.2');
   assert.match(await page.locator('#ranking').textContent(),/Astra · [1-9]\d* điểm/);
   await waitForText(page,'#stage','PHỤ BẢN 02');
+  await waitForText(overlay,'#party','Hỏa Hồ Lv.1');
+  await overlay.screenshot({path:join(evidence,'portrait-pet.png')});
   await page.waitForFunction(() => document.querySelector('#inventory option[value="ember"]')?.textContent.includes('Đang dùng'));
   assert.equal((await send('/event',{...gift,complete:true})).status,202);
   await sleep(250);

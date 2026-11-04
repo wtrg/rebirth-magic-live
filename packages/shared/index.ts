@@ -7,9 +7,9 @@ export const classes = {
   summon: { name: 'Triệu Hồi Sư', color: '#87f0be', attack: 24, defense: 5, skills: ['Linh Ấn', 'Cộng Hưởng', 'Linh Thú Trận'] },
 } as const;
 export const pets = [
-  { name: 'Hỏa Hồ', color: '#ff985c', attack: 6 },
-  { name: 'Băng Vũ', color: '#83dcff', attack: 8 },
-  { name: 'Lôi Miêu', color: '#d49bff', attack: 10 },
+  { name: 'Hỏa Hồ', color: '#ff985c', attack: 6, skill: 'Hỏa Vĩ' },
+  { name: 'Băng Vũ', color: '#83dcff', attack: 8, skill: 'Băng Dực' },
+  { name: 'Lôi Miêu', color: '#d49bff', attack: 10, skill: 'Lôi Tức' },
 ] as const;
 export const items = {
   ember: { name: 'Trượng Tàn Hỏa', slot: 'weapon', attack: 4, defense: 0, wins: 1 },
@@ -22,6 +22,7 @@ export type ClassId = keyof typeof classes;
 export type Player = {
   id: string; name: string; classId: ClassId; level: number; xp: number; hp: number;
   mp: number; rebirth: number; wins: number; score: number; shards: number; owned: number;
+  petLevels?: number[]; spentPetShards?: number;
   inventory?: ItemId[]; equipment?: Partial<Record<ItemSlot, ItemId>>;
   pet: number | null; ready: number[]; contribution: number; lastHit: number;
 };

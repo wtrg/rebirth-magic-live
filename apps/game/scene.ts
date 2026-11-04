@@ -93,7 +93,21 @@ export function createArena(view: HTMLElement, low: () => boolean, portrait: boo
     const group = new T.Group();
     mesh(group, sphere, pet.color, [0,0.38,0], [0.35,0.22,0.23], true);
     mesh(group, gem, pet.color, [0.26,0.49,0], [0.19,0.24,0.2], true);
-    for (const side of [-1,1]) mesh(group, gem, pet.color, [0.24,0.55,side*0.23], [0.13,0.19+index*0.05,0.11], true);
+    for (const side of [-1,1]) {
+      if (index === 1) {
+        const wing = mesh(group, gem, '#b6eeff', [0,0.45,side*0.25], [0.24,0.07,0.40], true);
+        wing.name = side === 1 ? 'wing-right' : 'wing-left';
+      } else {
+        mesh(group, gem, pet.color, [0.27,0.64,side*0.13], [0.10,0.13,0.08], true);
+        for (const end of [-1,1]) {
+          const paw = mesh(group, box, pet.color, [end*0.19,0.19,side*0.14], [0.12,0.24,0.12]);
+          paw.name = side*end === 1 ? 'paw-forward' : 'paw-back';
+        }
+      }
+    }
+    const tail = mesh(group, gem, index === 1 ? '#b6eeff' : pet.color, [-0.39,0.45,0], [0.31,0.12,0.12], true);
+    tail.rotation.z = index === 2 ? -0.72 : -0.35;
+    group.rotation.y = -Math.PI/2;
     return group;
   });
   const preview = character('#fe936d', false);
@@ -153,7 +167,18 @@ export function createArena(view: HTMLElement, low: () => boolean, portrait: boo
           model.userData.index = petIndex;
           actor.companion.add(model);
         }
-        actor.companion.position.set(-0.9,0.15+Math.sin(time*0.008)*0.12,strike*0.8);
+        const model = actor.companion.children[0];
+        const gait = Math.sin(time*(strike > 0 ? 0.035 : 0.009) + index);
+        for (const part of model.children) {
+          if (part.name === 'paw-forward' || part.name === 'paw-back') {
+            part.rotation.z = gait * (strike > 0 ? 0.8 : 0.10) * (part.name === 'paw-forward' ? 1 : -1);
+          }
+          if (part.name === 'wing-right' || part.name === 'wing-left') {
+            part.rotation.x = gait * 0.52 * (part.name === 'wing-right' ? 1 : -1);
+          }
+        }
+        actor.companion.position.set(-0.9,0.10+Math.abs(gait)*(petIndex === 1 ? 0.22 : 0.07)+strike*0.25,strike*0.8);
+        actor.companion.rotation.x = strike * 0.28;
       } else actor.companion.clear();
     });
     renderer.render(scene,camera);
