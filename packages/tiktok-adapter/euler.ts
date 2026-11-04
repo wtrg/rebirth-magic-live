@@ -33,7 +33,7 @@ export function normalizeEulerMessage(raw: unknown, giftMap: ReadonlyMap<string,
   const eventId = (value: string) => 'live:' + createHash('sha256').update(channel + ':' + value).digest('hex');
   if (type === 'WebcastChatMessage') {
     if (typeof message.comment !== 'string' || !message.comment.trimStart().startsWith('!')) return null;
-    return normalizeEvent({ kind: 'chat', id: eventId('chat:' + msgId), user, name, command: message.comment });
+    return normalizeEvent({ kind: 'chat', id: eventId('chat:' + msgId), user, name, username: sender.uniqueId, command: message.comment });
   }
   if (type !== 'WebcastGiftMessage') return null;
   const upstreamId = numericId(message.giftId);
@@ -43,7 +43,7 @@ export function normalizeEulerMessage(raw: unknown, giftMap: ReadonlyMap<string,
   if (giftType === 1 && message.repeatEnd !== 1) return null;
   const groupId = giftType === 1 ? numericId(message.groupId) : null;
   const id = eventId(groupId ? 'gift:' + upstreamId + ':' + userId + ':' + groupId : 'gift-msg:' + msgId);
-  return normalizeEvent({ kind: 'gift', id, user, name, giftId, complete: true });
+  return normalizeEvent({ kind: 'gift', id, user, name, username: sender.uniqueId, giftId, complete: true });
 }
 
 export function eulerUrl(channel: string, key: string) {

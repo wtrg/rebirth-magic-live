@@ -20,7 +20,7 @@ export type ItemId = keyof typeof items;
 export type ItemSlot = (typeof items)[ItemId]['slot'];
 export type ClassId = keyof typeof classes;
 export type Player = {
-  id: string; name: string; classId: ClassId; level: number; xp: number; hp: number;
+  id: string; name: string; username?: string; classId: ClassId; level: number; xp: number; hp: number;
   mp: number; rebirth: number; wins: number; score: number; shards: number; owned: number;
   attackCount?: number; guard?: boolean;
   petLevels?: number[]; spentPetShards?: number;
@@ -54,8 +54,22 @@ export type GameState = {
   raid: Raid; players: Player[]; logs: string[]; paused: boolean;
   effect: { serial: number; label: string; color: string; kind?: EffectKind } | null;
 };
-export type GameEvent = { id: string; user: string; name: string } & (
+export type GameEvent = { id: string; user: string; name: string; username?: string } & (
   { kind: 'chat'; command: string } | { kind: 'gift'; giftId: string; complete: boolean }
 );
+
+export function attackStats(player: Player, upgradedPets = true) {
+  const petLevel = player.pet === null || !upgradedPets ? 1 : player.petLevels?.[player.pet] ?? 1;
+  const petAttack = player.pet === null ? 0 : (pets[player.pet].attack + (petLevel - 1) * 2) * (player.classId === 'summon' ? 1.5 : 1);
+  const weapon = player.equipment?.weapon;
+  const attack = classes[player.classId].attack + (player.level - 1) * 4 + player.rebirth * 3 +
+    petAttack + (weapon ? items[weapon].attack : 0);
+  return { attack, petAttack };
+}
+
+export function defenseOf(player: Player) {
+  const armor = player.equipment?.armor;
+  return classes[player.classId].defense + (armor ? items[armor].defense : 0);
+}
 
 export const maxHp = (player: Player) => 120 + 12 * (player.level - 1) + player.rebirth * 6;

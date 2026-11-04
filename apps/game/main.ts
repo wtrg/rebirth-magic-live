@@ -1,5 +1,5 @@
 import './style.css';
-import { classes, pets, items, achievements, maxHp, type GameState, type GameSnapshot } from '../../packages/shared/index.ts';
+import { classes, pets, items, achievements, attackStats, defenseOf, maxHp, type GameState, type GameSnapshot } from '../../packages/shared/index.ts';
 
 import { createArena } from './scene.ts';
 import { loadRaidModels } from './asset-loader.ts';
@@ -91,6 +91,10 @@ function update(next: GameSnapshot) {
   get('logs').replaceChildren(...next.logs.slice(0,3).map(log => line(log)));
   const owner = players.find(player => player.id === 'mock:' + username.value.toLowerCase());
   const badges = owner ? achievements.filter(achievement => achievement.earned(owner)) : [];
+  get('profile-stats').textContent = owner ? 'Lv.' + owner.level + ' · ' + owner.xp + ' EXP · Hệ ' +
+    classes[owner.classId].element + ' · ATK ' + attackStats(owner).attack + ' · DEF ' + defenseOf(owner) +
+    ' · Chí mạng 1/' + classes[owner.classId].critEvery + ' · Trùng sinh ' + owner.rebirth +
+    ' · Đóng góp ' + owner.contribution : 'Chưa có nhân vật';
   get('achievement-count').textContent = badges.length + '/' + achievements.length;
   get('achievements').replaceChildren(...(badges.length
     ? badges.map(achievement => line(achievement.name))
