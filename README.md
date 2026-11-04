@@ -25,6 +25,24 @@ npx playwright install chromium
 node scripts/smoke.mjs
 ```
 
+## Ghi và phát lại một phiên MOCK
+
+Đặt biến trước khi khởi động máy chủ. Chỉ dùng tên người chơi thử nghiệm.
+
+```powershell
+$env:REBIRTH_RECORD_REPLAY = '1'
+npm start
+```
+
+Sau khi chơi, tải replay và chạy lại mô phỏng trong một cửa sổ PowerShell khác.
+
+```powershell
+Invoke-WebRequest http://127.0.0.1:4173/replay -OutFile data/rebirth-mock-replay.json
+node scripts/replay.ts data/rebirth-mock-replay.json
+```
+
+Replay khởi tạo từ hồ sơ MOCK lúc máy chủ bật, rồi áp dụng các bước đã xử lý theo thứ tự và thời điểm gốc. Lệnh phát lại in trạng thái cuối và không mở database. Bản ghi nằm trong bộ nhớ cho tới khi xuất, giới hạn 10.000 bước. Nếu vượt giới hạn, trường `truncated` báo rằng file chỉ chứa phần đầu. Máy chủ LIVE không ghi hoặc xuất replay.
+
 [Master Plan](docs/MASTER_PLAN.md) · [Thiết kế game](docs/GAME_DESIGN.md) · [Kiến trúc](docs/ARCHITECTURE.md) · [Báo cáo](docs/reports)
 
 Original project source and procedural geometry are MIT. See [THIRD_PARTY.md](THIRD_PARTY.md) for dependency attributions.
