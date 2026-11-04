@@ -53,7 +53,7 @@ export function createArena(view: HTMLElement, low: () => boolean, portrait: boo
       scene.add(root);
       return { root, body, weapon };
     }
-    const actor = factory.character(id === 'boss' ? '#ff526d' : classes[id].color, id === 'boss');
+    const actor = factory.character(id);
     scene.add(actor.root);
     return actor;
   }

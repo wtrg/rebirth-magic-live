@@ -167,6 +167,20 @@ try {
   await page.getByRole('button',{ name:'Dừng khẩn cấp' }).click();
   await waitForText(page,'#phase','TẠM DỪNG');
   await verifyReplay();
+  await stop();
+  await start(':memory:');
+  const classIds = ['fire','ice','thunder','knight','healer','summon'];
+  for (const id of classIds) {
+    assert.equal((await send('/event',{id:'class-join:'+id,user:'qa:'+id,name:id,kind:'chat',command:'!join'})).status,202);
+  }
+  await waitForText(overlay,'#count','06');
+  await sleep(250);
+  for (const id of classIds) {
+    assert.equal((await send('/event',{id:'class-select:'+id,user:'qa:'+id,name:id,kind:'chat',command:'!class '+id})).status,202);
+  }
+  await waitForText(overlay,'#party','Triệu Hồi Sư');
+  assert.equal(await canvas.getAttribute('data-models'),'glb');
+  await overlay.screenshot({path:join(evidence,'portrait-six-classes.png')});
   assert.deepEqual(errors,[]);
   console.log('PASS: 3D portrait, boss victory, pause/resume, security, gift deduplication, online backup, restore, stage progression, reconnect, deterministic event replay.');
   console.log('WebGL renderer:',renderer);
