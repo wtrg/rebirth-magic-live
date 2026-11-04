@@ -1,5 +1,5 @@
 import './style.css';
-import { classes, pets, maxHp, type GameState, type GameSnapshot } from '../../packages/shared/index.ts';
+import { classes, pets, items, maxHp, type GameState, type GameSnapshot } from '../../packages/shared/index.ts';
 
 import { createArena } from './scene.ts';
 
@@ -18,7 +18,7 @@ const phases = { IDLE: 'CHỜ KHAI CHIẾN', SPAWN: 'BOSS XUẤT HIỆN', PHASE_
 const username = get<HTMLInputElement>('username');
 const command = get<HTMLInputElement>('command');
 const form = get<HTMLFormElement>('chat');
-let state: GameState | undefined;
+let state: GameSnapshot | undefined;
 let effectSerial = 0;
 let reconnectDelay = 500;
 function connect() {
@@ -67,6 +67,16 @@ function update(next: GameSnapshot) {
     return box;
   }));
   get('logs').replaceChildren(...next.logs.slice(0,3).map(log => line(log)));
+  const owner = players.find(player => player.id === 'mock:' + username.value.toLowerCase());
+  const inventory = get<HTMLSelectElement>('inventory');
+  inventory.replaceChildren(new Option('Chọn trang bị', ''));
+  for (const id of owner?.inventory ?? []) {
+    const item = items[id];
+    const worn = owner?.equipment?.[item.slot] === id;
+    const bonus = item.attack ? '+' + item.attack + ' ATK' : '+' + item.defense + ' DEF';
+    inventory.add(new Option(item.name + ' · ' + bonus + (worn ? ' · Đang dùng' : ''), id));
+  }
+  inventory.disabled = !owner?.inventory?.length || ['SPAWN','PHASE_1','PHASE_2','ENRAGED'].includes(raid.phase);
   get('ranking').replaceChildren(...[...players].sort((a,b) => b.score-a.score).slice(0,8).map(player => line(player.name + ' · ' + player.score + ' điểm')));
   if (next.effect && effectSerial !== next.effect.serial) {
     effectSerial = next.effect.serial;
@@ -95,6 +105,12 @@ for (const button of document.querySelectorAll<HTMLButtonElement>('[data-admin]'
 const picker = get<HTMLSelectElement>('class');
 picker.add(new Option('Chọn hệ', ''));
 for (const [id, definition] of Object.entries(classes)) picker.add(new Option(definition.name,id));
+username.oninput = () => { if (state) update(state); };
+get<HTMLSelectElement>('inventory').onchange = event => {
+  const select = event.currentTarget as HTMLSelectElement;
+  if (select.value) void chat('!equip ' + select.value);
+  select.value = '';
+};
 picker.onchange = () => { if (picker.value) void chat('!class ' + picker.value); picker.value = ''; };
 for (const value of [1,5,10,20,30]) {
   const button = line(value + ' xu','button');

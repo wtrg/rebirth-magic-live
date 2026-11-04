@@ -100,6 +100,9 @@ try {
   await page.getByRole('button',{ name:'Gọi Pet' }).click();
   await waitForText(page,'#party','Hỏa Hồ');
   await sleep(250);
+  await page.locator('#inventory').selectOption('ember');
+  await page.waitForFunction(() => document.querySelector('#inventory option[value="ember"]')?.textContent.includes('Đang dùng'));
+  await sleep(250);
   const gift = { id:'qa-gift',user:'mock:astra',name:'Astra',kind:'gift',giftId:'mock-5',complete:false };
   assert.equal((await send('/event',gift)).status,202);
   await sleep(250);
@@ -127,6 +130,7 @@ try {
   await waitForText(page,'#party','Lv.2');
   assert.match(await page.locator('#ranking').textContent(),/Astra · [1-9]\d* điểm/);
   await waitForText(page,'#stage','PHỤ BẢN 02');
+  await page.waitForFunction(() => document.querySelector('#inventory option[value="ember"]')?.textContent.includes('Đang dùng'));
   assert.equal((await send('/event',{...gift,complete:true})).status,202);
   await sleep(250);
   assert.equal(await page.locator('#logs li').count(),0);

@@ -10,6 +10,8 @@ npm start
 
 Mở http://127.0.0.1:4173. Nhấn **Tham gia**, chọn class, bật **Tự đánh (MOCK)** hoặc dùng các nút tấn công, rồi nhấn **Bắt đầu Raid**. Đổi tên thử nghiệm để mô phỏng người chơi khác. Gõ `!pet 1`, `!stats`, `!rank` hoặc `!rebirth` trong ô bình luận. Nút **Dừng khẩn cấp** đóng hàng đợi hiện tại và tạm dừng trận.
 
+Thắng raid xếp hạng để nhận trang bị theo số trận đã thắng. Xem túi bằng `!inventory` và dùng `!equip ember`, `!equip aegis` hoặc `!equip eclipse` giữa các trận. Bảng điều khiển MOCK có danh sách trang bị đã sở hữu.
+
 Chọn **Raid luyện tập** để thử hiệu ứng chiến đấu của quà MOCK. Raid thường nhận EXP và điểm xếp hạng, còn quà chỉ hiện hiệu ứng chào mừng.
 
 [Hướng dẫn OBS](docs/OBS_SETUP.md). Browser Source dùng URL `http://127.0.0.1:4173/?overlay=1` với chiều rộng 1080 và chiều cao 1920. Thêm `&quality=high` để thử chất lượng cao. Máy chủ mặc định chạy MOCK. Có thể cấu hình [chế độ TikTok LIVE](docs/LIVE_SETUP.md) khi có kênh và quyền phù hợp.
