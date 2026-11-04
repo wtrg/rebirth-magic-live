@@ -1,6 +1,6 @@
 # RE:BIRTH · Ma Pháp Bá Chủ Server
 
-Bản ứng viên 0.2.0-rc.1 cho Boss Raid 3D tương tác với bình luận. [Phạm vi và bằng chứng QA](docs/RELEASE_CANDIDATE.md). Chạy cục bộ trên Windows với Node 24 và WebGL 2.
+Bản ứng viên 0.2.0-rc.2 cho Boss Raid 3D tương tác với bình luận. [Phạm vi và bằng chứng QA](docs/RELEASE_CANDIDATE.md). Chạy cục bộ trên Windows với Node 24 và WebGL 2.
 
 ```powershell
 npm ci
@@ -20,7 +20,7 @@ Ba mảnh linh thú đầu mở ba pet. Sau đó, dùng mảnh kiếm thêm từ
 
 Chọn **Raid luyện tập** để thử hiệu ứng chiến đấu của quà MOCK. Raid thường nhận EXP và điểm xếp hạng, còn quà chỉ hiện hiệu ứng chào mừng.
 
-[Hướng dẫn OBS](docs/OBS_SETUP.md). Browser Source dùng URL `http://127.0.0.1:4173/?overlay=1` với chiều rộng 1080 và chiều cao 1920. Thêm `&quality=high` để thử chất lượng cao. Máy chủ mặc định chạy MOCK. Có thể cấu hình [chế độ TikTok LIVE](docs/LIVE_SETUP.md) khi có kênh và quyền phù hợp.
+[Hướng dẫn vận hành](docs/OPERATOR_GUIDE.md) · [Thiết lập OBS](docs/OBS_SETUP.md). Browser Source dùng URL `http://127.0.0.1:4173/?overlay=1` với chiều rộng 1080 và chiều cao 1920. Thêm `&quality=high` để thử chất lượng cao. Máy chủ mặc định chạy MOCK. Có thể cấu hình [chế độ TikTok LIVE](docs/LIVE_SETUP.md) khi có kênh và quyền phù hợp.
 
 Dữ liệu MOCK mặc định nằm ở `data/rebirth.sqlite`. Tiến trình phụ bản được lưu sau mỗi trận thắng xếp hạng. Xem [sao lưu và khôi phục](docs/RECOVERY.md). Đặt `PORT` và `DB_PATH` qua biến môi trường nếu cần.
 
