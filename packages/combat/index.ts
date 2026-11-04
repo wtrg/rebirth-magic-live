@@ -1,4 +1,4 @@
-import { classes, pets, items, maxHp, type ItemId, type EffectKind, type GameEvent, type GameState, type Player } from '../shared/index.ts';
+import { classes, pets, items, achievements, maxHp, type ItemId, type EffectKind, type GameEvent, type GameState, type Player } from '../shared/index.ts';
 import { gifts } from '../tiktok-adapter/index.ts';
 
 
@@ -104,7 +104,7 @@ export function tick(state: GameState, now: number, rulesVersion = 5) {
   return true;
 }
 
-export function applyEvent(state: GameState, event: GameEvent, now: number, rulesVersion = 5) {
+export function applyEvent(state: GameState, event: GameEvent, now: number, rulesVersion = 6) {
   if (state.paused) return;
   const player = state.players.find(player => player.id === event.user);
   if (event.kind === 'gift') {
@@ -159,6 +159,11 @@ export function applyEvent(state: GameState, event: GameEvent, now: number, rule
   if (command === '!stats') {
     const details = rulesVersion >= 5 ? ' · Hệ ' + definition.element + ' · Chí mạng mỗi ' + definition.critEvery + ' đòn' : '';
     log(state, player.name + ' · Lv.' + player.level + ' · ' + player.xp + ' EXP' + details);
+  }
+  if (rulesVersion >= 6 && command === '!achievements') {
+    const earned = achievements.filter(achievement => achievement.earned(player));
+    log(state, player.name + ' · Thành tựu ' + earned.length + '/' + achievements.length +
+      (earned.length ? ' · ' + earned.map(achievement => achievement.name).join(' / ') : ''));
   }
   if (command === '!rank') {
     const leader = [...state.players].sort((a, b) => b.score - a.score)[0];

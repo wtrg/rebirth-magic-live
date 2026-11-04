@@ -1,5 +1,5 @@
 import './style.css';
-import { classes, pets, items, maxHp, type GameState, type GameSnapshot } from '../../packages/shared/index.ts';
+import { classes, pets, items, achievements, maxHp, type GameState, type GameSnapshot } from '../../packages/shared/index.ts';
 
 import { createArena } from './scene.ts';
 import { loadRaidModels } from './asset-loader.ts';
@@ -90,6 +90,11 @@ function update(next: GameSnapshot) {
   }));
   get('logs').replaceChildren(...next.logs.slice(0,3).map(log => line(log)));
   const owner = players.find(player => player.id === 'mock:' + username.value.toLowerCase());
+  const badges = owner ? achievements.filter(achievement => achievement.earned(owner)) : [];
+  get('achievement-count').textContent = badges.length + '/' + achievements.length;
+  get('achievements').replaceChildren(...(badges.length
+    ? badges.map(achievement => line(achievement.name))
+    : [line('Chưa có thành tựu')]));
   const petList = get<HTMLSelectElement>('pet-list');
   petList.replaceChildren(new Option('Chọn linh thú', ''));
   for (let index = 0; index < (owner?.owned ?? 0); index++) {

@@ -151,6 +151,9 @@ try {
   await waitForText(page,'#party','Lv.2');
   assert.match(await page.locator('#ranking').textContent(),/Astra · [1-9]\d* điểm/);
   await waitForText(page,'#stage','PHỤ BẢN 02');
+  await page.locator('#profile-achievements summary').click();
+  await waitForText(page,'#achievements','Hạ Boss đầu tiên');
+  assert.equal(await page.locator('#achievement-count').textContent(),'1/6');
   await waitForText(overlay,'#party','Hỏa Hồ Lv.1');
   await overlay.screenshot({path:join(evidence,'portrait-pet.png')});
   await page.waitForFunction(() => document.querySelector('#inventory option[value="ember"]')?.textContent.includes('Đang dùng'));

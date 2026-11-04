@@ -25,4 +25,6 @@ Critical hits are deterministic and reset each raid. Every 4th successful attack
 - Healer skill II heals living allies by 18 HP. The ultimate restores 32 HP and 10 MP to living allies.
 - Summoner ultimate adds a second copy of the active pet attack bonus to the cast.
 
-Replay versions 1–4 retain their earlier combat rules. Current runs record version 5.
+Replay versions 1–4 retain their earlier combat rules. Version 5 introduced these rules. Replay version 6 also supports achievement lookup.
+
+Achievements derive from persisted ranked milestones: first boss, 10 victories, full equipment collection, three pets, a level-5 pet and first rebirth. Existing profiles receive earned badges immediately. Badges do not modify score or combat stats.

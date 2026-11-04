@@ -36,3 +36,8 @@ LEADER_STATUS: LEADER_REVIEW_PENDING
 ```
 
 [Recovery procedure](../RECOVERY.md) · [Migration tests](../../tests/recovery.test.ts) · [Release candidate](../RELEASE_CANDIDATE.md)
+
+
+## Achievement follow-up
+
+Six badges derive from existing persistent player progress. A version-6 replay supports the achievement command. No database migration or stored duplicate badge state is needed. Practice results cannot unlock ranked milestones. The browser smoke checks the first boss badge after restoring a SQLite backup.
