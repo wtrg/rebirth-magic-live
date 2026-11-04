@@ -99,7 +99,7 @@ export function tick(state: GameState, now: number) {
   return true;
 }
 
-export function applyEvent(state: GameState, event: GameEvent, now: number, equipmentDrops = true) {
+export function applyEvent(state: GameState, event: GameEvent, now: number, rulesVersion = 3) {
   if (state.paused) return;
   const player = state.players.find(player => player.id === event.user);
   if (event.kind === 'gift') {
@@ -172,6 +172,21 @@ export function applyEvent(state: GameState, event: GameEvent, now: number, equi
       log(state, player.name + ' trang bị ' + items[id].name);
     }
   }
+  if (rulesVersion >= 3 && command === '!petup' && !fighting) {
+    const index = arg ? Number(arg) - 1 : player.pet;
+    if (index !== null && Number.isInteger(index) && index >= 0 && index < player.owned) {
+      const level = player.petLevels?.[index] ?? 1;
+      const spent = player.spentPetShards ?? 0;
+      const available = Math.max(0, player.shards - pets.length - spent);
+      if (level >= 5 || available < level) {
+        log(state, level >= 5 ? 'Linh thú đã đạt cấp tối đa' : 'Cần ' + level + ' mảnh linh thú để nâng cấp');
+      } else {
+        (player.petLevels ??= [1, 1, 1])[index] = level + 1;
+        player.spentPetShards = spent + level;
+        log(state, player.name + ' nâng ' + pets[index].name + ' lên Lv.' + (level + 1));
+      }
+    }
+  }
   if (command === '!pet' && player.owned > 0) {
     const index = arg ? Number(arg) - 1 : 0;
     if (Number.isInteger(index) && index >= 0 && index < player.owned) {
@@ -197,18 +212,27 @@ export function applyEvent(state: GameState, event: GameEvent, now: number, equi
   if (player.classId === 'healer' && index === 1) {
     for (const ally of state.players.filter(ally => ally.hp > 0)) ally.hp = Math.min(maxHp(ally), ally.hp + 18);
   }
-  const petAttack = player.pet === null ? 0 : pets[player.pet].attack * (player.classId === 'summon' ? 1.5 : 1);
+  const petLevel = player.pet === null || rulesVersion < 3 ? 1 : player.petLevels?.[player.pet] ?? 1;
+  let petSkill = '';
+  let petBurst = 0;
+  if (rulesVersion >= 3 && index === 1 && player.pet !== null) {
+    petSkill = ' + ' + pets[player.pet].skill;
+    if (player.pet === 0) petBurst = 5;
+    if (player.pet === 1) raid.next += 350;
+    if (player.pet === 2) player.mp = Math.min(60, player.mp + 5);
+  }
+  const petAttack = player.pet === null ? 0 : (pets[player.pet].attack + (petLevel - 1) * 2) * (player.classId === 'summon' ? 1.5 : 1);
   const weapon = player.equipment?.weapon;
   const power = definition.attack + (player.level - 1) * 4 + player.rebirth * 3 + petAttack + (weapon ? items[weapon].attack : 0);
   const petSupport = raid.supportPet?.player === player.id && now < raid.supportPet.until ? 5 : 0;
   const awakened = raid.awakening?.player === player.id && now < raid.awakening.until;
-  const dealt = Math.min(raid.hp, damage(power + petSupport, skill.multiplier * (awakened ? 1.2 : 1), 5));
+  const dealt = Math.min(raid.hp, damage(power + petSupport + petBurst, skill.multiplier * (awakened ? 1.2 : 1), 5));
   raid.hp -= dealt;
   player.contribution += dealt;
   player.lastHit = now;
   raid.phase = bossPhase(raid.hp, raid.maxHp);
-  const label = definition.skills[index] ?? 'Tấn công';
+  const label = (definition.skills[index] ?? 'Tấn công') + petSkill;
   effect(state, '-' + dealt + ' · ' + label, definition.color);
   log(state, player.name + ' · ' + label + ' · ' + dealt);
-  if (raid.phase === 'DEAD') resolveVictory(state, equipmentDrops);
+  if (raid.phase === 'DEAD') resolveVictory(state, rulesVersion >= 2);
 }

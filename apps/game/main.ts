@@ -58,7 +58,7 @@ function update(next: GameSnapshot) {
     const box = document.createElement('article');
     box.style.setProperty('--element',classes[player.classId].color);
     box.append(line(player.name + ' · Lv.' + player.level,'strong'));
-    box.append(line(classes[player.classId].name + (player.pet === null ? '' : ' / ' + pets[player.pet].name),'small'));
+    box.append(line(classes[player.classId].name + (player.pet === null ? '' : ' / ' + pets[player.pet].name + ' Lv.' + (player.petLevels?.[player.pet] ?? 1)),'small'));
     const hp = document.createElement('progress');
     hp.value = player.hp;
     hp.max = maxHp(player);
@@ -68,6 +68,16 @@ function update(next: GameSnapshot) {
   }));
   get('logs').replaceChildren(...next.logs.slice(0,3).map(log => line(log)));
   const owner = players.find(player => player.id === 'mock:' + username.value.toLowerCase());
+  const petList = get<HTMLSelectElement>('pet-list');
+  petList.replaceChildren(new Option('Chọn linh thú', ''));
+  for (let index = 0; index < (owner?.owned ?? 0); index++) {
+    const label = pets[index].name + ' Lv.' + (owner?.petLevels?.[index] ?? 1);
+    petList.add(new Option(label + (owner?.pet === index ? ' · Đang gọi' : ''), String(index + 1)));
+  }
+  petList.disabled = !owner?.owned;
+  get('pet-shards').textContent = 'Mảnh nâng cấp: ' + Math.max(0, (owner?.shards ?? 0) - pets.length - (owner?.spentPetShards ?? 0));
+  (get<HTMLButtonElement>('pet-up')).disabled = !owner || owner.pet === null ||
+    (owner.petLevels?.[owner.pet] ?? 1) >= 5 || ['SPAWN','PHASE_1','PHASE_2','ENRAGED'].includes(raid.phase);
   const inventory = get<HTMLSelectElement>('inventory');
   inventory.replaceChildren(new Option('Chọn trang bị', ''));
   for (const id of owner?.inventory ?? []) {
@@ -102,6 +112,11 @@ const chat = (text: string) => emit({ kind:'chat', command: text });
 form.addEventListener('submit', event => { event.preventDefault(); void chat(command.value); });
 for (const button of document.querySelectorAll<HTMLButtonElement>('[data-command]')) button.onclick = () => void chat(button.dataset.command ?? '');
 for (const button of document.querySelectorAll<HTMLButtonElement>('[data-admin]')) button.onclick = () => void post('/admin',button.dataset.admin);
+get<HTMLSelectElement>('pet-list').onchange = event => {
+  const select = event.currentTarget as HTMLSelectElement;
+  if (select.value) void chat('!pet ' + select.value);
+  select.value = '';
+};
 const picker = get<HTMLSelectElement>('class');
 picker.add(new Option('Chọn hệ', ''));
 for (const [id, definition] of Object.entries(classes)) picker.add(new Option(definition.name,id));

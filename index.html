@@ -14,7 +14,8 @@
     <form id="chat"><label>Người chơi thử nghiệm<input id="username" value="Astra" required maxlength="32" pattern="[A-Za-z0-9_\-]+"></label>
     <label>Bình luận<input id="command" value="!join" required maxlength="80"></label><button class="accent">Gửi bình luận</button></form>
     <div id="quick"><button data-command="!join">Tham gia</button><button data-command="!attack">Tấn công</button><button data-command="!skill1">Phép I</button><button data-command="!skill2">Phép II</button><button data-command="!ult">Đại chiêu</button><button data-command="!pet">Gọi Pet</button></div>
-    <label>Class<select id="class"></select></label><label>Trang bị<select id="inventory" disabled></select></label><label><input type="checkbox" id="auto"> Tự đánh (MOCK)</label>
+    <label>Class<select id="class"></select></label><label>Trang bị<select id="inventory" disabled></select></label>
+    <label>Linh thú<select id="pet-list" disabled></select></label><small id="pet-shards">Mảnh nâng cấp: 0</small><button id="pet-up" data-command="!petup" disabled>Nâng pet đang gọi</button><label><input type="checkbox" id="auto"> Tự đánh (MOCK)</label>
     <div class="eyebrow">QUÀ MOCK</div><div id="gifts"></div>
     </div>
     <div class="operator-actions"><button data-admin="start" class="accent">Bắt đầu Raid</button><button data-admin="practice">Raid luyện tập</button><button data-admin="pause">Dừng khẩn cấp</button><button data-admin="resume">Tiếp tục</button></div>
