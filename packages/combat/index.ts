@@ -11,9 +11,9 @@ const skills = [
   { cost: 30, cooldown: 8000, multiplier: 3 },
 ];
 
-export function newGame(players: Player[] = []): GameState {
+export function newGame(players: Player[] = [], stage = 1): GameState {
   return { players, logs: [], paused: false, effect: null,
-    raid: { phase: 'IDLE', hp: 480, maxHp: 480, stage: 1, next: 0, practice: false, usedGifts: [], supportPet: null, awakening: null, wardUntil: 0, result: null, assisted: false } };
+    raid: { phase: 'IDLE', hp: 440 + stage * 40, maxHp: 440 + stage * 40, stage, next: 0, practice: false, usedGifts: [], supportPet: null, awakening: null, wardUntil: 0, result: null, assisted: false } };
 }
 
 function log(state: GameState, line: string) {
@@ -25,9 +25,12 @@ function effect(state: GameState, label: string, color: string) {
   state.effect = { serial: (state.effect?.serial ?? 0) + 1, label, color };
 }
 
+export const nextRaidStage = (state: GameState) =>
+  state.raid.stage + Number(state.raid.result === 'victory' && !state.raid.practice);
+
 export function beginRaid(state: GameState, now: number, practice = false) {
   if (state.paused || activeRaid(state) || state.raid.phase === 'SPAWN' || state.players.length === 0) return false;
-  const stage = state.raid.stage + Number(state.raid.result === 'victory' && !state.raid.practice);
+  const stage = nextRaidStage(state);
   const bossHp = 440 + stage * 40 + (state.players.length - 1) * 75;
   state.raid = { stage, phase: 'SPAWN', hp: bossHp, maxHp: bossHp, next: now + 800, practice, usedGifts: [], supportPet: null, awakening: null, wardUntil: 0, result: null, assisted: false };
   for (const player of state.players) {

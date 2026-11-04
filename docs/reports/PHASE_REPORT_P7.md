@@ -18,4 +18,4 @@ Both canvas and output were 1080×1920 at 30 FPS. The Browser Source was 1080×1
 
 [Full resolution frame from the OBS recording](evidence/obs-portrait-raid.png) · [Operator setup](../OBS_SETUP.md)
 
-Pending gates include sustained load, memory and backup/restore, a controlled long recording, verified gift IDs and a real TikTok LIVE session.
+See [SQLite recovery procedure](../RECOVERY.md) for the later online backup and restore test. Pending gates include sustained load, memory, a controlled long recording, verified gift IDs and a real TikTok LIVE session.
