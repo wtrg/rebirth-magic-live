@@ -1,8 +1,11 @@
 import * as T from 'three';
-import { pets } from '../../packages/shared/index.ts';
+import { classes, pets, type ClassId } from '../../packages/shared/index.ts';
 
 export function createModelFactory() {
   const box = new T.BoxGeometry(), gem = new T.OctahedronGeometry(1), sphere = new T.IcosahedronGeometry(1, 1);
+  const crown = new T.ConeGeometry(1, 1, 5);
+  const ring = new T.TorusGeometry(1, 0.16, 5, 12);
+  const shield = new T.CylinderGeometry(1, 1, 0.19, 6);
   const materials = new Map<string, T.MeshStandardMaterial>();
   function mesh(parent: T.Object3D, geo: T.BufferGeometry, color: string, position: number[], scale: number[], glow = false) {
     const key = color + glow;
@@ -17,7 +20,9 @@ export function createModelFactory() {
     parent.add(object);
     return object;
   }
-  function character(color: string, monster: boolean) {
+  function character(id: ClassId | 'boss') {
+    const monster = id === 'boss';
+    const color = monster ? '#ff526d' : classes[id].color;
     const root = new T.Group();
     const armor = monster ? '#272537' : '#303150';
     const body = new T.Group();
@@ -42,8 +47,39 @@ export function createModelFactory() {
     weapon.position.set(0.68,0.98,0.12);
     weapon.userData.part = 'weapon';
     body.add(weapon);
-    mesh(weapon, box, '#e8c095', [0,0.15,0], [0.09,1.2,0.09]);
-    mesh(weapon, gem, color, [0,0.82,0], [0.18,0.36,0.18], true);
+    if (id === 'knight') {
+      weapon.position.y = 0.86;
+      mesh(weapon, gem, '#ffd6e2', [0,0.77,0], [0.20,0.78,0.09], true);
+      mesh(weapon, box, color, [0,0.27,0], [0.43,0.09,0.12]);
+      const guard = mesh(body, shield, color, [-0.60,1.12,-0.10], [0.43,0.30,0.56]);
+      guard.rotation.x = Math.PI / 2;
+    } else if (id === 'summon') {
+      const tome = mesh(weapon, box, '#5c7359', [0,0.35,0.15], [0.46,0.13,0.55]);
+      tome.rotation.x = -0.43;
+      mesh(weapon, gem, color, [0,0.68,0.15], [0.15,0.19,0.15], true);
+      mesh(body, gem, '#5b917a', [0,1.10,-0.32], [0.53,0.88,0.20]);
+    } else {
+      mesh(weapon, box, '#e8c095', [0,0.15,0], [0.09,1.2,0.09]);
+      if (id === 'fire') {
+        mesh(weapon, crown, color, [0,0.93,0], [0.23,0.50,0.23], true);
+        mesh(body, gem, color, [0,1.0,-0.36], [0.42,0.75,0.11]);
+      } else if (id === 'ice') {
+        mesh(weapon, gem, color, [0,0.94,0], [0.14,0.46,0.14], true);
+        for (const side of [-1,1]) {
+          mesh(body, gem, color, [side*0.37,1.60,-0.29], [0.14,0.47,0.13]).rotation.z = -side*0.38;
+        }
+      } else if (id === 'thunder') {
+        for (const side of [-1,1]) {
+          mesh(weapon, gem, color, [side*0.15,0.93,0], [0.13,0.30,0.11], true).rotation.z = -side*0.45;
+          mesh(body, crown, '#9c6ddc', [side*0.47,1.21,-0.28], [0.17,0.92,0.17]).rotation.z = side*0.58;
+        }
+      } else if (id === 'healer') {
+        mesh(weapon, ring, color, [0,0.96,0], [0.26,0.26,0.26], true);
+        mesh(body, ring, '#fff2ba', [0,2.30,-0.19], [0.41,0.41,0.41], true);
+      } else {
+        mesh(weapon, gem, color, [0,0.82,0], [0.18,0.36,0.18], true);
+      }
+    }
     return { root, body, weapon };
   }
 

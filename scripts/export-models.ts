@@ -2,7 +2,7 @@ import { mkdir, writeFile } from 'node:fs/promises';
 import { AnimationClip, Euler, Quaternion, QuaternionKeyframeTrack, Scene } from 'three';
 import { GLTFExporter } from 'three/addons/exporters/GLTFExporter.js';
 import { createModelFactory } from '../apps/game/models.ts';
-import { classes, pets } from '../packages/shared/index.ts';
+import { classes, pets, type ClassId } from '../packages/shared/index.ts';
 
 // Three.js binary export needs FileReader's array-buffer path, which Node does not expose.
 class BinaryReader {
@@ -19,12 +19,12 @@ Object.defineProperty(globalThis, 'FileReader', { value: BinaryReader, configura
 
 const scene = new Scene();
 const factory = createModelFactory();
-const boss = factory.character('#ff526d', true);
+const boss = factory.character('boss');
 boss.root.name = 'boss';
 boss.weapon.name = 'bossWeapon';
 scene.add(boss.root);
-for (const [id, definition] of Object.entries(classes)) {
-  const actor = factory.character(definition.color, false);
+for (const id of Object.keys(classes) as ClassId[]) {
+  const actor = factory.character(id);
   actor.root.name = id;
   scene.add(actor.root);
 }
