@@ -38,9 +38,10 @@ export type Raid = {
 };
 export type LiveStatus = 'unconfigured' | 'connecting' | 'connected' | 'retrying' | 'rejected';
 export type GameSnapshot = GameState & { mode: 'mock' | 'live'; live: LiveStatus };
+export type EffectKind = 'strike' | 'skill' | 'ultimate' | 'boss' | 'gift';
 export type GameState = {
   raid: Raid; players: Player[]; logs: string[]; paused: boolean;
-  effect: { serial: number; label: string; color: string } | null;
+  effect: { serial: number; label: string; color: string; kind?: EffectKind } | null;
 };
 export type GameEvent = { id: string; user: string; name: string } & (
   { kind: 'chat'; command: string } | { kind: 'gift'; giftId: string; complete: boolean }

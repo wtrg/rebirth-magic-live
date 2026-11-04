@@ -19,3 +19,12 @@
 .overlay #logs,.overlay .ticker{font-size:clamp(10px,2.2cqw,24px)}
 .overlay #logs{min-height:clamp(40px,9.6cqw,104px)}
 .overlay #effect{font-size:clamp(22px,6cqw,65px)}
+
+#boss-intro{position:absolute;z-index:2;inset:34% 0 auto;display:grid;place-items:center;padding:16px;background:#171321e8;border-block:1px solid #b47da8;pointer-events:none;animation:intro-in .25s ease-out}
+#boss-intro[hidden]{display:none}
+#boss-intro small{color:#f2a6bf;font-weight:700;letter-spacing:.22em;font-size:clamp(10px,2vw,19px)}
+#boss-intro strong{font:700 clamp(34px,8vw,72px)/1.12 Georgia,serif}
+#overlay-audio{position:absolute;z-index:3;bottom:10px;right:10px}
+#effect[data-kind=gift]{text-shadow:0 2px 10px #000,0 0 14px currentColor}
+@keyframes intro-in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+@media(prefers-reduced-motion:reduce){#boss-intro{animation:none}}

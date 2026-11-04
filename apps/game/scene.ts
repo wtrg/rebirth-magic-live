@@ -89,6 +89,11 @@ export function createArena(view: HTMLElement, low: () => boolean, portrait: boo
   const squad = new Map<string, ReturnType<typeof character> & { classId: string; companion: T.Group; lastHit: number; strike: number }>();
   const flash = mesh(scene, new T.TorusGeometry(1.8,0.09,4,36), '#ffd3a4', [0,0.08,-1.45], [1,1,1], true);
   flash.rotation.x = -Math.PI/2;
+  flash.material = flash.material.clone();
+  const sparks = new T.InstancedMesh(gem, new T.MeshBasicMaterial({ color: 0xffffff }), 12);
+  sparks.frustumCulled = false;
+  scene.add(sparks);
+  const spark = new T.Object3D();
   const petModels = pets.map((pet, index) => {
     const group = new T.Group();
     mesh(group, sphere, pet.color, [0,0.38,0], [0.35,0.22,0.23], true);
@@ -127,10 +132,35 @@ export function createArena(view: HTMLElement, low: () => boolean, portrait: boo
       camera.fov = camera.aspect < 0.88 ? 48 : portrait ? 43 : 38;
       camera.updateProjectionMatrix();
     }
-    if (state?.effect && state.effect.serial !== serial) { serial = state.effect.serial; impact = time; }
-    const burst = Math.max(0, 1-(time-impact)/530);
+    if (state?.effect && state.effect.serial !== serial) {
+      serial = state.effect.serial;
+      impact = time;
+      flash.material.color.set(state.effect.color);
+      flash.material.emissive.set(state.effect.color);
+      sparks.material.color.set(state.effect.color);
+    }
+    const kind = state?.effect?.kind;
+    const major = kind === 'ultimate' || kind === 'gift';
+    const burst = Math.max(0, 1-(time-impact)/(major ? 690 : 420));
+    const expanding = 1 - burst;
+    const center = kind === 'boss' || kind === 'gift' ? 0 : -1.45;
     flash.visible = burst > 0;
-    flash.scale.setScalar(1.8 - burst);
+    flash.position.z = center;
+    flash.scale.setScalar((major ? 1.3 : 0.8) + expanding);
+    sparks.visible = burst > 0 && (major || kind === 'skill');
+    if (sparks.visible) {
+      sparks.count = low() ? 6 : 12;
+      for (let i = 0; i < sparks.count; i++) {
+        const angle = i * Math.PI * 2 / sparks.count + expanding * (kind === 'gift' ? 1.4 : 0.3);
+        const spread = 0.7 + expanding * (major ? 3.1 : 1.8);
+        spark.position.set(Math.cos(angle)*spread, 0.28 + Math.sin(expanding * Math.PI)*(0.7 + (i%3)*0.28), center + Math.sin(angle)*spread);
+        spark.scale.setScalar(burst*(major ? 0.19 : 0.13));
+        spark.rotation.set(expanding*3, angle, expanding*4);
+        spark.updateMatrix();
+        sparks.setMatrixAt(i,spark.matrix);
+      }
+      sparks.instanceMatrix.needsUpdate = true;
+    }
     portal.rotation.z = time * 0.00015;
     boss.body.position.y = Math.sin(time*0.003)*0.09 + burst*0.17;
     boss.root.rotation.z = state?.raid.phase === 'DEAD' ? 1.42 : Math.sin(time*0.002)*0.04;

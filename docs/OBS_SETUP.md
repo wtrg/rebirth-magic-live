@@ -8,3 +8,8 @@
 6. Nếu mất nguồn LIVE, HUD hiển thị trạng thái và adapter thử kết nối lại. Dùng **Dừng khẩn cấp** nếu cần dừng raid. Xem [LIVE setup](LIVE_SETUP.md) để chuyển về MOCK.
 
 Bản QA sử dụng cấu hình OBS portable riêng. [OBS Portable Mode](https://obsproject.com/kb/portable-mode) · [OBS WebSocket stats](https://github.com/obsproject/obs-websocket/blob/master/docs/generated/protocol.md#getstats)
+
+
+## Âm thanh chiến đấu
+
+Âm thanh tổng hợp mặc định tắt. Thêm `&audio=1` vào URL Browser Source, mở **Interact** của nguồn trong OBS rồi nhấn **Bật âm thanh**. Sau khi khởi tạo Web Audio, nút tự ẩn. Nếu nguồn tải lại, bật lại bằng **Interact**. Kiểm tra mức tín hiệu trong OBS Audio Mixer trước khi ghi.

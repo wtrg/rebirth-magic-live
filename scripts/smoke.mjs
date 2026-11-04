@@ -58,6 +58,14 @@ try {
   const page = await browser.newPage({ viewport:{width:1280,height:900} });
   const errors = [];
   page.on('pageerror',error => errors.push(error.message));
+  await page.addInitScript(() => {
+    window.qaOscillators = 0;
+    const create = AudioContext.prototype.createOscillator;
+    AudioContext.prototype.createOscillator = function () {
+      window.qaOscillators++;
+      return create.call(this);
+    };
+  });
   await page.goto(base);
   await waitForText(page,'#mode','OFFLINE');
   await page.getByRole('button',{ name:'Tham gia' }).click();
@@ -65,7 +73,11 @@ try {
   await sleep(230);
   await page.locator('#class').selectOption('thunder');
   await waitForText(page,'#party','Lôi Pháp Sư');
+  await page.locator('#audio-toggle').click();
+  await page.getByRole('button',{ name:'Tắt âm thanh' }).waitFor();
   await page.getByRole('button',{ name:'Bắt đầu Raid' }).click();
+  await page.locator('#boss-intro').waitFor({state:'visible'});
+  await page.waitForFunction(() => window.qaOscillators > 0);
   await waitForText(page,'#phase','GIAI ĐOẠN I');
   const overlay = await browser.newPage({ viewport:{width:540,height:960} });
   overlay.on('pageerror',error => errors.push(error.message));
@@ -142,6 +154,7 @@ try {
   await waitForText(page,'#boss-value','480 / 520');
   await waitForText(page,'#phase','CÓ HỖ TRỢ');
   await waitForText(page,'#logs','Astra · Phép đặc biệt · -40');
+  assert.equal(await page.locator('#effect').getAttribute('data-kind'),'gift');
   await page.getByRole('button',{ name:'Dừng khẩn cấp' }).click();
   await waitForText(page,'#phase','TẠM DỪNG');
   await verifyReplay();

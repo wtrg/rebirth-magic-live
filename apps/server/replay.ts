@@ -11,7 +11,7 @@ type Step = { at: number } & (
 const limit = 10000;
 
 export function createReplay(initial: GameState) {
-  const trace = { version: 3, initial: structuredClone(initial), steps: [] as Step[], truncated: false };
+  const trace = { version: 4, initial: structuredClone(initial), steps: [] as Step[], truncated: false };
   return {
     record(step: Step) {
       if (trace.steps.length === limit) trace.truncated = true;
@@ -24,7 +24,7 @@ export function createReplay(initial: GameState) {
 export function playReplay(raw: unknown): GameState {
   if (!raw || typeof raw !== 'object') throw new Error('Invalid replay');
   const { version, initial, steps } = raw as { version?: unknown; initial?: GameState; steps?: Step[] };
-  if ((version !== 1 && version !== 2 && version !== 3) || !initial?.raid || !Array.isArray(initial.players) ||
+  if ((version !== 1 && version !== 2 && version !== 3 && version !== 4) || !initial?.raid || !Array.isArray(initial.players) ||
       !Array.isArray(initial.logs) || !Array.isArray(steps) || steps.length > limit) {
     throw new Error('Invalid replay');
   }
@@ -33,7 +33,7 @@ export function playReplay(raw: unknown): GameState {
   for (const step of steps) {
     if (!step || !Number.isSafeInteger(step.at) || step.at < 0) throw new Error('Invalid replay timestamp');
     if (step.kind === 'tick') {
-      tick(state, step.at);
+      tick(state, step.at, version);
     } else if (step.kind === 'admin' && isAdminAction(step.action)) {
       if (!applyAdmin(state, step.action, step.at, clock)) throw new Error('Replay admin action rejected');
     } else if (step.kind === 'event') {
