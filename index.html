@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="vi"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>RE:BIRTH · Cổng Hư Vô</title></head>
+<body><main>
+  <section id="broadcast" aria-label="Màn hình livestream">
+    <header><div class="brand">RE<span>:</span>BIRTH</div><small>MA PHÁP BÁ CHỦ SERVER</small><span id="mode">MOCK · ĐANG KẾT NỐI</span></header>
+    <section class="boss-hud"><div class="eyebrow" id="stage">PHỤ BẢN 01 · CỔNG HƯ VÔ</div><h1>Varkhazar</h1><div class="boss-track"><div id="boss-hp"></div></div><div class="metrics"><span id="phase">CHỜ KHAI CHIẾN</span><span id="boss-value">480 / 480</span></div></section>
+    <div id="viewport"><div id="notice" role="status"></div><div id="effect"></div></div>
+    <section class="party"><div class="eyebrow">ĐỘI HÌNH ĐỘT KÍCH <span id="count">00</span></div><div id="party"></div></section>
+    <footer><div class="eyebrow">NHẬT KÝ CHIẾN ĐẤU</div><ul id="logs"></ul><div class="ticker">!join <b>·</b> !class fire <b>·</b> !skill1 <b>·</b> !ult</div></footer>
+  </section>
+  <aside id="operator">
+    <div class="eyebrow">RE:BIRTH / OPERATOR</div><h2>Bàn điều khiển</h2><p>Mô phỏng bình luận và quà tặng trên máy này.</p>
+    <form id="chat"><label>Người chơi thử nghiệm<input id="username" value="Astra" required maxlength="32" pattern="[A-Za-z0-9_\-]+"></label>
+    <label>Bình luận<input id="command" value="!join" required maxlength="80"></label><button class="accent">Gửi bình luận</button></form>
+    <div id="quick"><button data-command="!join">Tham gia</button><button data-command="!attack">Tấn công</button><button data-command="!skill1">Phép I</button><button data-command="!skill2">Phép II</button><button data-command="!ult">Đại chiêu</button><button data-command="!pet">Gọi Pet</button></div>
+    <label>Class<select id="class"></select></label><label><input type="checkbox" id="auto"> Tự đánh (MOCK)</label>
+    <div class="operator-actions"><button data-admin="start" class="accent">Bắt đầu Raid</button><button data-admin="pause">Dừng khẩn cấp</button><button data-admin="resume">Tiếp tục</button></div>
+    <div class="eyebrow">QUÀ MOCK</div><div id="gifts"></div>
+    <p id="feedback" role="status"></p><label><input type="checkbox" id="low"> Đồ họa nhẹ</label><a href="/?overlay=1">Mở màn hình OBS ↗</a>
+    <div class="eyebrow">BẢNG XẾP HẠNG</div><ol id="ranking"></ol>
+  </aside>
+</main><script type="module" src="/apps/game/main.ts"></script></body></html>

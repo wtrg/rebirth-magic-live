@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "target": "ES2023", "module": "NodeNext", "strict": true,
+    "allowImportingTsExtensions": true, "noEmit": true,
+    "lib": ["ES2023", "DOM", "DOM.Iterable"], "skipLibCheck": true
+  },
+  "include": ["apps/**/*.ts", "packages/**/*.ts", "tests/**/*.ts"]
+}
