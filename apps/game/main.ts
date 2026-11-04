@@ -2,6 +2,7 @@ import './style.css';
 import { classes, pets, items, maxHp, type GameState, type GameSnapshot } from '../../packages/shared/index.ts';
 
 import { createArena } from './scene.ts';
+import { loadRaidModels } from './asset-loader.ts';
 import { createCombatAudio } from './audio.ts';
 
 const get = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
@@ -23,11 +24,14 @@ document.body.classList.toggle('overlay', overlay);
 const low = get<HTMLInputElement>('low');
 low.checked = params.get('quality') !== 'high';
 let render: ((state: GameState) => void) | undefined;
-try {
-  render = createArena(get('viewport'), () => low.checked, overlay);
-} catch {
-  get('notice').textContent = 'WebGL 2 không khả dụng · HUD vẫn đang hoạt động';
-}
+void loadRaidModels().catch(() => undefined).then(models => {
+  try {
+    render = createArena(get('viewport'), () => low.checked, overlay, models);
+    if (state) render(state);
+  } catch {
+    get('notice').textContent = 'WebGL 2 không khả dụng · HUD vẫn đang hoạt động';
+  }
+});
 const phases = { IDLE: 'CHỜ KHAI CHIẾN', SPAWN: 'BOSS XUẤT HIỆN', PHASE_1: 'GIAI ĐOẠN I', PHASE_2: 'GIAI ĐOẠN II', ENRAGED: 'CUỒNG NỘ', DEAD: 'CHIẾN THẮNG', RESET: 'THẤT BẠI' };
 const username = get<HTMLInputElement>('username');
 const command = get<HTMLInputElement>('command');

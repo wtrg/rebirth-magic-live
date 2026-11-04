@@ -86,6 +86,15 @@ try {
   assert.equal(await overlay.locator('#operator').isVisible(),false);
   const canvas = overlay.locator('canvas');
   await canvas.waitFor();
+  assert.equal(await canvas.getAttribute('data-models'),'glb');
+  const model = await overlay.request.get(base+'/models/raid.glb');
+  assert.equal(model.headers()['content-type'],'model/gltf-binary');
+  assert.equal((await model.body()).toString('ascii',0,4),'glTF');
+  const fallback = await browser.newPage({viewport:{width:540,height:960}});
+  await fallback.route('**/models/raid.glb', route => route.fulfill({status:404,body:''}));
+  await fallback.goto(base+'/?overlay=1');
+  await fallback.locator('canvas[data-models="procedural"]').waitFor();
+  await fallback.close();
   const dimensions = await overlay.locator('#broadcast').boundingBox();
   assert.ok(Math.abs(dimensions.width/dimensions.height-9/16) < 0.005);
   const renderer = await canvas.evaluate(element => {

@@ -31,7 +31,7 @@ const queue: GameEvent[] = [];
 const lastEvent = new Map<string, number>();
 const adminClock = { pausedAt: 0 };
 const hosts = new Set(['127.0.0.1:' + port, 'localhost:' + port]);
-const mime: Record<string, string> = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css' };
+const mime: Record<string, string> = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.glb': 'model/gltf-binary' };
 
 function sameOrigin(req: IncomingMessage) {
   return req.headers.origin === 'http://' + req.headers.host;
