@@ -64,6 +64,16 @@ export function createArena(view: HTMLElement, low: () => boolean, portrait: boo
   const mixer = models?.animations.length ? new T.AnimationMixer(boss.root) : null;
   const actions = new Map(models?.animations.map(clip => [clip.name,mixer!.clipAction(clip)]) ?? []);
   let bossAction: T.AnimationAction | undefined;
+  const wraithModels = [-1,1].map(side => {
+    const root = new T.Group();
+    root.position.set(side*2.75,0,-1.25);
+    mesh(root, gem, '#613587', [0,0.73,0], [0.44,0.92,0.37]);
+    mesh(root, gem, '#f19fff', [0,1.43,0.06], [0.24,0.32,0.22], true);
+    mesh(root, gem, '#cb73ff', [0,0.88,0.34], [0.15,0.22,0.08], true);
+    root.visible = false;
+    scene.add(root);
+    return root;
+  });
   const squad = new Map<string, ReturnType<typeof character> & { classId: string; companion: T.Group; lastHit: number; strike: number }>();
   const flash = mesh(scene, new T.TorusGeometry(1.8,0.09,4,36), '#ffd3a4', [0,0.08,-1.45], [1,1,1], true);
   flash.rotation.x = -Math.PI/2;
@@ -119,6 +129,14 @@ export function createArena(view: HTMLElement, low: () => boolean, portrait: boo
         sparks.setMatrixAt(i,spark.matrix);
       }
       sparks.instanceMatrix.needsUpdate = true;
+    }
+    for (const [index, model] of wraithModels.entries()) {
+      const hp = state?.raid.wraiths?.[index]?.hp ?? 0;
+      model.visible = hp > 0 && state?.raid.phase !== 'RESET';
+      if (model.visible) {
+        model.position.y = 0.14 + Math.sin(time*0.006+index)*0.12;
+        model.rotation.y = Math.sin(time*0.002+index)*0.22;
+      }
     }
     portal.rotation.z = time * 0.00015;
     boss.body.position.y = Math.sin(time*0.003)*0.09 + burst*0.17;

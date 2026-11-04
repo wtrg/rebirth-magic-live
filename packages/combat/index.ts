@@ -16,6 +16,19 @@ export function newGame(players: Player[] = [], stage = 1): GameState {
     raid: { phase: 'IDLE', hp: 440 + stage * 40, maxHp: 440 + stage * 40, stage, next: 0, practice: false, usedGifts: [], supportPet: null, awakening: null, wardUntil: 0, result: null, assisted: false } };
 }
 
+function updateBossPhase(state: GameState, rulesVersion: number) {
+  const raid = state.raid;
+  raid.phase = bossPhase(raid.hp, raid.maxHp);
+  if (rulesVersion < 8) return;
+  if (raid.phase === 'DEAD' && raid.wraiths) {
+    for (const wraith of raid.wraiths) wraith.hp = 0;
+  } else if (raid.stage >= 3 && !raid.wraiths && (raid.phase === 'PHASE_2' || raid.phase === 'ENRAGED')) {
+    const maxHp = 55 + Math.min(raid.stage, 15) * 5;
+    raid.wraiths = [{ hp: maxHp, maxHp }, { hp: maxHp, maxHp }];
+    log(state, 'Varkhazar triệu hồi hai Ảnh Linh');
+  }
+}
+
 function log(state: GameState, line: string) {
   state.logs.unshift(line);
   state.logs.length = Math.min(12, state.logs.length);
@@ -76,7 +89,7 @@ function resolveVictory(state: GameState, equipmentDrops: boolean) {
   log(state, 'Chiến thắng · +EXP · +1 mảnh linh thú');
 }
 
-export function tick(state: GameState, now: number, rulesVersion = 5) {
+export function tick(state: GameState, now: number, rulesVersion = 8) {
   if (state.paused || now < state.raid.next) return false;
   if (state.raid.phase === 'SPAWN') {
     state.raid.phase = 'PHASE_1';
@@ -87,7 +100,9 @@ export function tick(state: GameState, now: number, rulesVersion = 5) {
   if (rulesVersion >= 5) state.raid.controlMs = 0;
   state.raid.next = now + (state.raid.phase === 'ENRAGED' ? 3200 : 4600);
   for (const player of state.players.filter(player => player.hp > 0)) {
-    const force = state.raid.phase === 'ENRAGED' ? 27 : state.raid.phase === 'PHASE_2' ? 19 : 13;
+    const bossForce = state.raid.phase === 'ENRAGED' ? 27 : state.raid.phase === 'PHASE_2' ? 19 : 13;
+    const wraithForce = rulesVersion >= 8 ? (state.raid.wraiths?.filter(wraith => wraith.hp > 0).length ?? 0) * 2 : 0;
+    const force = bossForce + wraithForce;
     const defense = defenseOf(player);
     const guard = rulesVersion >= 5 && player.guard ? 0.5 : 1;
     player.hp = Math.max(0, player.hp - damage(force + state.raid.stage, (now < state.raid.wardUntil ? 0.65 : 1) * guard, defense));
@@ -103,7 +118,7 @@ export function tick(state: GameState, now: number, rulesVersion = 5) {
   return true;
 }
 
-export function applyEvent(state: GameState, event: GameEvent, now: number, rulesVersion = 7) {
+export function applyEvent(state: GameState, event: GameEvent, now: number, rulesVersion = 8) {
   if (state.paused) return;
   const player = state.players.find(player => player.id === event.user);
   const username = rulesVersion >= 7 && event.user.startsWith('live:') ? event.username : undefined;
@@ -135,7 +150,7 @@ export function applyEvent(state: GameState, event: GameEvent, now: number, rule
       case 'mock-10': {
         const strike = Math.min(40, raid.hp - 1);
         raid.hp -= strike;
-        raid.phase = bossPhase(raid.hp, raid.maxHp);
+        updateBossPhase(state, rulesVersion);
         label += ' · -' + strike;
         break;
       }
@@ -223,6 +238,9 @@ export function applyEvent(state: GameState, event: GameEvent, now: number, rule
   }
   const index = ['!skill1', '!skill2', '!ult', '!attack'].indexOf(command);
   if (index < 0 || !activeRaid(state) || player.hp <= 0 || now < player.ready[index]) return;
+  const side = rulesVersion >= 8 && command === '!attack' ? ['left','right'].indexOf(arg ?? '') : -1;
+  const target = side >= 0 ? state.raid.wraiths?.[side] : undefined;
+  if (side >= 0 && (!target || target.hp <= 0)) return;
   const skill = skills[index] ?? { cost: 0, cooldown: 600, multiplier: 1 };
   if (player.mp < skill.cost) return;
   player.ready[index] = now + skill.cooldown;
@@ -260,13 +278,25 @@ export function applyEvent(state: GameState, event: GameEvent, now: number, rule
     if (index === 2 && player.classId === 'fire') signature = 1.2;
     if (index === 2 && player.classId === 'summon' && player.pet !== null) petBurst += petAttack;
   }
-  const dealt = Math.min(raid.hp, damage(power + petSupport + petBurst,
-    skill.multiplier * signature * (awakened ? 1.2 : 1) * (critical ? 1.35 : 1), 5));
-  raid.hp -= dealt;
-  player.contribution += dealt;
+  const hit = damage(power + petSupport + petBurst,
+    skill.multiplier * signature * (awakened ? 1.2 : 1) * (critical ? 1.35 : 1), 5);
+  const victim = target ?? raid;
+  const dealt = Math.min(victim.hp, hit);
+  victim.hp -= dealt;
+  let splash = 0;
+  if (rulesVersion >= 8 && player.classId === 'fire' && (index === 1 || index === 2)) {
+    for (const wraith of raid.wraiths ?? []) {
+      const hitArea = Math.min(wraith.hp, Math.floor(hit * (index === 2 ? 0.6 : 0.45)));
+      wraith.hp -= hitArea;
+      splash += hitArea;
+    }
+  }
+  player.contribution += dealt + splash;
   player.lastHit = now;
-  raid.phase = bossPhase(raid.hp, raid.maxHp);
-  const label = (definition.skills[index] ?? 'Tấn công') + petSkill + (critical ? ' · CHÍ MẠNG' : '');
+  updateBossPhase(state, rulesVersion);
+  const targetLabel = side >= 0 ? (side === 0 ? ' · Ảnh Linh trái' : ' · Ảnh Linh phải') : '';
+  const areaLabel = splash > 0 ? ' · LAN ' + splash : '';
+  const label = (definition.skills[index] ?? 'Tấn công') + petSkill + (critical ? ' · CHÍ MẠNG' : '') + targetLabel + areaLabel;
   const kind = index === 2 ? 'ultimate' : index === 3 ? 'strike' : 'skill';
   effect(state, '-' + dealt + ' · ' + label, definition.color, kind, rulesVersion);
   log(state, player.name + ' · ' + label + ' · ' + dealt);
