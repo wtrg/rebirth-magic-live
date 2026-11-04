@@ -83,7 +83,7 @@ const server = createServer(async (req, res) => {
     if (path === '/event') {
       if (mode !== 'mock') { res.writeHead(409).end(); return; }
       const event = normalizeEvent(body);
-      if (!event) { res.writeHead(400).end(); return; }
+      if (!event || event.user.startsWith('live:')) { res.writeHead(400).end(); return; }
       if (!enqueue(event, now)) { res.writeHead(429).end(); return; }
       res.writeHead(202).end();
       return;

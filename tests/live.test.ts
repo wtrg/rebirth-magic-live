@@ -5,6 +5,7 @@ import { setTimeout } from 'node:timers/promises';
 import { WebSocketServer } from 'ws';
 import { LiveAdapter } from '../packages/tiktok-adapter/index.ts';
 import { eulerSource, eulerUrl, normalizeEulerMessage, readGiftMap } from '../packages/tiktok-adapter/euler.ts';
+import { applyEvent, newGame } from '../packages/combat/index.ts';
 import { openStore } from '../apps/server/store.ts';
 import type { GameEvent, LiveStatus } from '../packages/shared/index.ts';
 
@@ -30,6 +31,7 @@ test('Euler v1 normalizes stable IDs and only completes known gift streaks', () 
   assert.ok(join?.kind === 'chat');
   assert.equal(join.user, 'live:9007199254740993123');
   assert.equal(join.command, '!join');
+  assert.equal(join.username, 'astra');
   assert.equal(normalize({ ...chat, data: { ...chat.data, comment: 'hello' } }), null);
   assert.equal(normalize({ ...gift, data: { ...gift.data, repeatEnd: 0 } }), null);
   assert.equal(normalize({ ...gift, data: { ...gift.data, giftId: 99 } }), null);
@@ -94,4 +96,29 @@ test('stopping the adapter cancels its retry timer', async () => {
   await adapter.run({ async *connect() { await setTimeout(5); yield null; } }, () => null,
     () => assert.fail('Unexpected event'), abort.signal);
   assert.equal(adapter.status, 'unconfigured');
+});
+
+test('renamed TikTok profile keeps the stable ID and durable progress', () => {
+  const join = normalize(chat);
+  assert.ok(join);
+  const state = newGame();
+  applyEvent(state, join, 1000);
+  state.players[0].xp = 74;
+  const renamed = normalize({ ...chat, data: { ...chat.data, user: { ...user, uniqueId:'astra.new', nickname:'Astra Nova' },
+    event:{ msgId:'911' }, comment:'!stats' } });
+  assert.ok(renamed);
+  applyEvent(state, renamed, 2000);
+  assert.equal(state.players.length, 1);
+  assert.equal(state.players[0].id,join.user);
+  assert.equal(state.players[0].username,'astra.new');
+  assert.equal(state.players[0].name,'Astra Nova');
+  assert.match(state.logs[0],/74 EXP.*ATK 29.*DEF 4/);
+  const db = openStore(':memory:');
+  try {
+    assert.ok(db.commit(state.players,renamed));
+    assert.equal(db.load()[0].username,'astra.new');
+    assert.equal(db.load()[0].xp,74);
+  } finally {
+    db.close();
+  }
 });

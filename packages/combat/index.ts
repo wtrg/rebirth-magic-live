@@ -1,4 +1,4 @@
-import { classes, pets, items, achievements, maxHp, type ItemId, type EffectKind, type GameEvent, type GameState, type Player } from '../shared/index.ts';
+import { classes, pets, items, achievements, attackStats, defenseOf, maxHp, type ItemId, type EffectKind, type GameEvent, type GameState, type Player } from '../shared/index.ts';
 import { gifts } from '../tiktok-adapter/index.ts';
 
 
@@ -88,8 +88,7 @@ export function tick(state: GameState, now: number, rulesVersion = 5) {
   state.raid.next = now + (state.raid.phase === 'ENRAGED' ? 3200 : 4600);
   for (const player of state.players.filter(player => player.hp > 0)) {
     const force = state.raid.phase === 'ENRAGED' ? 27 : state.raid.phase === 'PHASE_2' ? 19 : 13;
-    const armor = player.equipment?.armor;
-    const defense = classes[player.classId].defense + (armor ? items[armor].defense : 0);
+    const defense = defenseOf(player);
     const guard = rulesVersion >= 5 && player.guard ? 0.5 : 1;
     player.hp = Math.max(0, player.hp - damage(force + state.raid.stage, (now < state.raid.wardUntil ? 0.65 : 1) * guard, defense));
     if (guard < 1) delete player.guard;
@@ -104,9 +103,14 @@ export function tick(state: GameState, now: number, rulesVersion = 5) {
   return true;
 }
 
-export function applyEvent(state: GameState, event: GameEvent, now: number, rulesVersion = 6) {
+export function applyEvent(state: GameState, event: GameEvent, now: number, rulesVersion = 7) {
   if (state.paused) return;
   const player = state.players.find(player => player.id === event.user);
+  const username = rulesVersion >= 7 && event.user.startsWith('live:') ? event.username : undefined;
+  if (player && username && (event.kind !== 'gift' || event.complete)) {
+    player.username = username;
+    player.name = event.name;
+  }
   if (event.kind === 'gift') {
     const gift = gifts.get(event.giftId);
     if (!gift || !event.complete) return;
@@ -149,7 +153,7 @@ export function applyEvent(state: GameState, event: GameEvent, now: number, rule
   const [command, arg, extra] = event.command.split(/\s+/);
   if (extra) return;
   if (command === '!join' && !player && state.players.length < 64) {
-    state.players.push({ id: event.user, name: event.name, classId: 'fire', level: 1, xp: 0, hp: activeRaid(state) || state.raid.phase === 'SPAWN' ? 0 : 120,
+    state.players.push({ id: event.user, name: event.name, ...(username ? { username } : {}), classId: 'fire', level: 1, xp: 0, hp: activeRaid(state) || state.raid.phase === 'SPAWN' ? 0 : 120,
       mp: 60, rebirth: 0, wins: 0, score: 0, shards: 0, owned: 0, pet: null, ready: [0, 0, 0, 0], contribution: 0, lastHit: 0 });
     log(state, event.name + ' đã gia nhập');
     return;
@@ -158,7 +162,10 @@ export function applyEvent(state: GameState, event: GameEvent, now: number, rule
   const definition = classes[player.classId];
   if (command === '!stats') {
     const details = rulesVersion >= 5 ? ' · Hệ ' + definition.element + ' · Chí mạng mỗi ' + definition.critEvery + ' đòn' : '';
-    log(state, player.name + ' · Lv.' + player.level + ' · ' + player.xp + ' EXP' + details);
+    const stats = rulesVersion >= 7 ? ' · HP ' + player.hp + '/' + maxHp(player) + ' · MP ' + player.mp +
+      ' · ATK ' + attackStats(player).attack + ' · DEF ' + defenseOf(player) + ' · TS ' + player.rebirth +
+      ' · Đóng góp ' + player.contribution : '';
+    log(state, player.name + ' · Lv.' + player.level + ' · ' + player.xp + ' EXP' + details + stats);
   }
   if (rulesVersion >= 6 && command === '!achievements') {
     const earned = achievements.filter(achievement => achievement.earned(player));
@@ -234,7 +241,6 @@ export function applyEvent(state: GameState, event: GameEvent, now: number, rule
     }
   }
   if (rulesVersion >= 5 && player.classId === 'knight' && index === 1) player.guard = true;
-  const petLevel = player.pet === null || rulesVersion < 3 ? 1 : player.petLevels?.[player.pet] ?? 1;
   let petSkill = '';
   let petBurst = 0;
   if (rulesVersion >= 3 && index === 1 && player.pet !== null) {
@@ -243,9 +249,7 @@ export function applyEvent(state: GameState, event: GameEvent, now: number, rule
     if (player.pet === 1) delayBoss(350);
     if (player.pet === 2) player.mp = Math.min(60, player.mp + 5);
   }
-  const petAttack = player.pet === null ? 0 : (pets[player.pet].attack + (petLevel - 1) * 2) * (player.classId === 'summon' ? 1.5 : 1);
-  const weapon = player.equipment?.weapon;
-  const power = definition.attack + (player.level - 1) * 4 + player.rebirth * 3 + petAttack + (weapon ? items[weapon].attack : 0);
+  const { attack: power, petAttack } = attackStats(player, rulesVersion >= 3);
   const petSupport = raid.supportPet?.player === player.id && now < raid.supportPet.until ? 5 : 0;
   const awakened = raid.awakening?.player === player.id && now < raid.awakening.until;
   let critical = false;

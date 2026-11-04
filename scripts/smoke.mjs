@@ -54,6 +54,7 @@ try {
   const send = (path,body,origin = base) => fetch(base+path,{ method:'POST', headers: { Origin:origin, 'Content-Type':'application/json' }, body:JSON.stringify(body) });
   assert.equal((await send('/admin','pause','http://example.test')).status,403);
   assert.equal((await send('/event',{ kind:'chat' })).status,400);
+  assert.equal((await send('/event',{ id:'spoof', user:'live:123', name:'Fake', username:'fake', kind:'chat', command:'!join' })).status,400);
   browser = await chromium.launch({ channel:process.env.QA_BROWSER ?? 'chrome', args:['--enable-unsafe-swiftshader'] });
   const page = await browser.newPage({ viewport:{width:1280,height:900} });
   const errors = [];
@@ -154,6 +155,8 @@ try {
   await page.locator('#profile-achievements summary').click();
   await waitForText(page,'#achievements','Hạ Boss đầu tiên');
   assert.equal(await page.locator('#achievement-count').textContent(),'1/6');
+  await waitForText(page,'#profile-stats','ATK 46');
+  await waitForText(page,'#profile-stats','DEF 3');
   await waitForText(overlay,'#party','Hỏa Hồ Lv.1');
   await overlay.screenshot({path:join(evidence,'portrait-pet.png')});
   await page.waitForFunction(() => document.querySelector('#inventory option[value="ember"]')?.textContent.includes('Đang dùng'));

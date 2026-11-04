@@ -63,7 +63,9 @@ export function normalizeEvent(raw: unknown): GameEvent | null {
   const event = raw as Record<string, unknown>;
   const validId = (id: unknown): id is string => typeof id === 'string' && /^[\w:-]{1,80}$/.test(id);
   if (!validId(event.id) || !validId(event.user) || typeof event.name !== 'string') return null;
-  const base = { id: event.id, user: event.user, name: event.name.replace(/[\p{Cc}\p{Cf}]/gu, '').trim().slice(0, 32).trimEnd() || event.user };
+  const username = event.user.startsWith('live:') && typeof event.username === 'string' &&
+    /^[a-z0-9_.]{2,32}$/i.test(event.username) ? event.username.toLowerCase() : undefined;
+  const base = { id: event.id, user: event.user, ...(username ? { username } : {}), name: event.name.replace(/[\p{Cc}\p{Cf}]/gu, '').trim().slice(0, 32).trimEnd() || event.user };
   if (event.kind === 'chat' && typeof event.command === 'string' && event.command.length <= 80) {
     return { ...base, kind: 'chat', command: event.command.trim().toLowerCase() };
   }
