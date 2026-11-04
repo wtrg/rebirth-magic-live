@@ -11,10 +11,18 @@ export const pets = [
   { name: 'Băng Vũ', color: '#83dcff', attack: 8 },
   { name: 'Lôi Miêu', color: '#d49bff', attack: 10 },
 ] as const;
+export const items = {
+  ember: { name: 'Trượng Tàn Hỏa', slot: 'weapon', attack: 4, defense: 0, wins: 1 },
+  aegis: { name: 'Giáp Hư Vô', slot: 'armor', attack: 0, defense: 3, wins: 2 },
+  eclipse: { name: 'Trượng Nhật Thực', slot: 'weapon', attack: 7, defense: 0, wins: 3 },
+} as const;
+export type ItemId = keyof typeof items;
+export type ItemSlot = (typeof items)[ItemId]['slot'];
 export type ClassId = keyof typeof classes;
 export type Player = {
   id: string; name: string; classId: ClassId; level: number; xp: number; hp: number;
   mp: number; rebirth: number; wins: number; score: number; shards: number; owned: number;
+  inventory?: ItemId[]; equipment?: Partial<Record<ItemSlot, ItemId>>;
   pet: number | null; ready: number[]; contribution: number; lastHit: number;
 };
 export type Phase = 'IDLE' | 'SPAWN' | 'PHASE_1' | 'PHASE_2' | 'ENRAGED' | 'DEAD' | 'RESET';

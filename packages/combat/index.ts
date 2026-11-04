@@ -1,4 +1,4 @@
-import { classes, pets, maxHp, type GameEvent, type GameState, type Player } from '../shared/index.ts';
+import { classes, pets, items, maxHp, type ItemId, type GameEvent, type GameState, type Player } from '../shared/index.ts';
 import { gifts } from '../tiktok-adapter/index.ts';
 
 
@@ -43,7 +43,7 @@ export function beginRaid(state: GameState, now: number, practice = false) {
   return true;
 }
 
-function resolveVictory(state: GameState) {
+function resolveVictory(state: GameState, equipmentDrops: boolean) {
   state.raid.result = 'victory';
   if (state.raid.practice) {
     log(state, 'Chiến thắng luyện tập · Không tính tiến trình hoặc xếp hạng');
@@ -61,6 +61,15 @@ function resolveVictory(state: GameState) {
     const unlocked = Math.min(3, player.shards);
     if (unlocked > player.owned) log(state, player.name + ' nhận ' + pets[unlocked - 1].name);
     player.owned = unlocked;
+    if (equipmentDrops) {
+      const inventory = player.inventory ??= [];
+      for (const id of Object.keys(items) as ItemId[]) {
+        if (player.wins >= items[id].wins && !inventory.includes(id)) {
+          inventory.push(id);
+          log(state, player.name + ' nhận ' + items[id].name);
+        }
+      }
+    }
   }
   log(state, 'Chiến thắng · +EXP · +1 mảnh linh thú');
 }
@@ -76,7 +85,9 @@ export function tick(state: GameState, now: number) {
   state.raid.next = now + (state.raid.phase === 'ENRAGED' ? 3200 : 4600);
   for (const player of state.players.filter(player => player.hp > 0)) {
     const force = state.raid.phase === 'ENRAGED' ? 27 : state.raid.phase === 'PHASE_2' ? 19 : 13;
-    player.hp = Math.max(0, player.hp - damage(force + state.raid.stage, now < state.raid.wardUntil ? 0.65 : 1, classes[player.classId].defense));
+    const armor = player.equipment?.armor;
+    const defense = classes[player.classId].defense + (armor ? items[armor].defense : 0);
+    player.hp = Math.max(0, player.hp - damage(force + state.raid.stage, now < state.raid.wardUntil ? 0.65 : 1, defense));
     player.mp = Math.min(60, player.mp + 12);
   }
   effect(state, 'CHẤN ĐỘNG', '#ff7899');
@@ -88,7 +99,7 @@ export function tick(state: GameState, now: number) {
   return true;
 }
 
-export function applyEvent(state: GameState, event: GameEvent, now: number) {
+export function applyEvent(state: GameState, event: GameEvent, now: number, equipmentDrops = true) {
   if (state.paused) return;
   const player = state.players.find(player => player.id === event.user);
   if (event.kind === 'gift') {
@@ -150,6 +161,17 @@ export function applyEvent(state: GameState, event: GameEvent, now: number) {
     player.classId = arg as Player['classId'];
     log(state, player.name + ' · ' + classes[player.classId].name);
   }
+  if (command === '!inventory') {
+    const contents = player.inventory?.map(id => id + ': ' + items[id].name).join(' / ');
+    log(state, player.name + ' · ' + (contents || 'Túi đồ trống'));
+  }
+  if (command === '!equip' && !fighting && arg && Object.hasOwn(items, arg)) {
+    const id = arg as ItemId;
+    if (player.inventory?.includes(id)) {
+      (player.equipment ??= {})[items[id].slot] = id;
+      log(state, player.name + ' trang bị ' + items[id].name);
+    }
+  }
   if (command === '!pet' && player.owned > 0) {
     const index = arg ? Number(arg) - 1 : 0;
     if (Number.isInteger(index) && index >= 0 && index < player.owned) {
@@ -176,7 +198,8 @@ export function applyEvent(state: GameState, event: GameEvent, now: number) {
     for (const ally of state.players.filter(ally => ally.hp > 0)) ally.hp = Math.min(maxHp(ally), ally.hp + 18);
   }
   const petAttack = player.pet === null ? 0 : pets[player.pet].attack * (player.classId === 'summon' ? 1.5 : 1);
-  const power = definition.attack + (player.level - 1) * 4 + player.rebirth * 3 + petAttack;
+  const weapon = player.equipment?.weapon;
+  const power = definition.attack + (player.level - 1) * 4 + player.rebirth * 3 + petAttack + (weapon ? items[weapon].attack : 0);
   const petSupport = raid.supportPet?.player === player.id && now < raid.supportPet.until ? 5 : 0;
   const awakened = raid.awakening?.player === player.id && now < raid.awakening.until;
   const dealt = Math.min(raid.hp, damage(power + petSupport, skill.multiplier * (awakened ? 1.2 : 1), 5));
@@ -187,5 +210,5 @@ export function applyEvent(state: GameState, event: GameEvent, now: number) {
   const label = definition.skills[index] ?? 'Tấn công';
   effect(state, '-' + dealt + ' · ' + label, definition.color);
   log(state, player.name + ' · ' + label + ' · ' + dealt);
-  if (raid.phase === 'DEAD') resolveVictory(state);
+  if (raid.phase === 'DEAD') resolveVictory(state, equipmentDrops);
 }

@@ -18,6 +18,8 @@ test('raid victory, cooldown, pet unlock, ranking and rebirth', () => {
   const chat = (command: string) => applyEvent(state,{ id: String(now), user:'mock:astra', name:'Astra', kind:'chat', command },now);
   chat('!join');
   chat('!class thunder');
+  chat('!equip ember');
+  assert.equal(state.players[0].equipment, undefined);
   assert.ok(beginRaid(state,now));
   now += 800;
   tick(state,now);
@@ -30,6 +32,9 @@ test('raid victory, cooldown, pet unlock, ranking and rebirth', () => {
   assert.equal(state.raid.result,'victory');
   assert.equal(player.level,2);
   assert.equal(player.owned,1);
+  assert.deepEqual(player.inventory,['ember']);
+  chat('!equip ember');
+  assert.equal(player.equipment?.weapon,'ember');
   assert.ok(player.score > 0);
   chat('!pet 1');
   assert.equal(player.pet,0);
@@ -37,6 +42,11 @@ test('raid victory, cooldown, pet unlock, ranking and rebirth', () => {
     assert.ok(beginRaid(state,now));
     now += 800;
     tick(state,now);
+    if (round === 0) {
+      const bossHp = state.raid.hp;
+      chat('!attack');
+      assert.equal(bossHp - state.raid.hp, damage(32 + 4 + 6 + 4, 1, 5));
+    }
     for (let i = 0; i < 40 && state.raid.hp > 0; i++) { now += 600; chat('!attack'); }
     assert.equal(state.raid.result,'victory');
   }
@@ -45,6 +55,17 @@ test('raid victory, cooldown, pet unlock, ranking and rebirth', () => {
   assert.equal(player.rebirth,1);
   assert.equal(player.level,1);
   assert.equal(player.owned,3);
+  assert.deepEqual(player.inventory,['ember','aegis','eclipse']);
+  chat('!equip aegis');
+  chat('!equip eclipse');
+  assert.deepEqual(player.equipment,{weapon:'eclipse',armor:'aegis'});
+  assert.ok(beginRaid(state,now));
+  chat('!equip ember');
+  assert.equal(player.equipment?.weapon,'eclipse');
+  tick(state,now+800);
+  const playerHp = player.hp;
+  tick(state,now+5400);
+  assert.equal(playerHp-player.hp,damage(13 + state.raid.stage, 1, 3 + 3));
 });
 
 test('boss defeats an idle raid and allows retry', () => {
@@ -84,6 +105,7 @@ test('gift validation, streak completion and persisted deduplication', () => {
   assert.equal(state.players[0].level,1);
   assert.equal(state.players[0].xp,0);
   assert.equal(state.players[0].owned,0);
+  assert.equal(state.players[0].inventory,undefined);
   assert.ok(beginRaid(state,30000));
   assert.equal(state.raid.stage,1);
   assert.deepEqual(state.raid.usedGifts,[]);
