@@ -27,6 +27,15 @@ export type Player = {
   inventory?: ItemId[]; equipment?: Partial<Record<ItemSlot, ItemId>>;
   pet: number | null; ready: number[]; contribution: number; lastHit: number;
 };
+export const achievements = [
+  { id: 'first-clear', name: 'Hạ Boss đầu tiên', earned: (p: Player) => p.wins >= 1 },
+  { id: 'raid-veteran', name: 'Cựu binh Raid', earned: (p: Player) => p.wins >= 10 },
+  { id: 'armory', name: 'Bậc thầy trang bị', earned: (p: Player) => Object.keys(items).every(id => p.inventory?.includes(id as ItemId)) },
+  { id: 'menagerie', name: 'Sưu tập linh thú', earned: (p: Player) => p.owned >= pets.length },
+  { id: 'bond', name: 'Linh thú cấp 5', earned: (p: Player) => p.petLevels?.some(level => level >= 5) ?? false },
+  { id: 'reborn', name: 'Tái sinh', earned: (p: Player) => p.rebirth >= 1 },
+] as const;
+
 export type Phase = 'IDLE' | 'SPAWN' | 'PHASE_1' | 'PHASE_2' | 'ENRAGED' | 'DEAD' | 'RESET';
 export type Raid = {
   phase: Phase; hp: number; maxHp: number; stage: number; next: number;

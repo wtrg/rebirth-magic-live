@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { applyEvent, beginRaid, bossPhase, damage, newGame, tick } from '../packages/combat/index.ts';
 import { normalizeEvent } from '../packages/tiktok-adapter/index.ts';
+import { achievements } from '../packages/shared/index.ts';
 import { openStore } from '../apps/server/store.ts';
 
 test('damage floor and boss phase thresholds', () => {
@@ -33,6 +34,9 @@ test('raid victory, cooldown, pet unlock, ranking and rebirth', () => {
   assert.equal(player.level,2);
   assert.equal(player.owned,1);
   assert.deepEqual(player.inventory,['ember']);
+  assert.deepEqual(achievements.filter(a => a.earned(player)).map(a => a.id), ['first-clear']);
+  chat('!achievements');
+  assert.match(state.logs[0],/Thành tựu 1\/6 · Hạ Boss đầu tiên/);
   chat('!equip ember');
   assert.equal(player.equipment?.weapon,'ember');
   assert.ok(player.score > 0);
@@ -56,6 +60,7 @@ test('raid victory, cooldown, pet unlock, ranking and rebirth', () => {
   assert.equal(player.level,1);
   assert.equal(player.owned,3);
   assert.deepEqual(player.inventory,['ember','aegis','eclipse']);
+  assert.deepEqual(achievements.filter(a => a.earned(player)).map(a => a.id), ['first-clear','armory','menagerie','reborn']);
   chat('!equip aegis');
   chat('!equip eclipse');
   assert.deepEqual(player.equipment,{weapon:'eclipse',armor:'aegis'});
@@ -106,6 +111,7 @@ test('gift validation, streak completion and persisted deduplication', () => {
   assert.equal(state.players[0].xp,0);
   assert.equal(state.players[0].owned,0);
   assert.equal(state.players[0].inventory,undefined);
+  assert.equal(achievements.some(a => a.earned(state.players[0])),false);
   assert.ok(beginRaid(state,30000));
   assert.equal(state.raid.stage,1);
   assert.deepEqual(state.raid.usedGifts,[]);
