@@ -58,8 +58,8 @@ const server = createServer(async (req, res) => {
       res.writeHead(202).end();
       return;
     }
-    if (body === 'start') {
-      if (!beginRaid(state, now)) { res.writeHead(409).end(); return; }
+    if (body === 'start' || body === 'practice') {
+      if (!beginRaid(state, now, body === 'practice')) { res.writeHead(409).end(); return; }
     } else if (body === 'pause') {
       if (!state.paused) {
         pausedAt = now;
@@ -70,7 +70,10 @@ const server = createServer(async (req, res) => {
       if (state.paused) {
         const elapsed = now - pausedAt;
         state.raid.next += elapsed;
-        if (state.raid.furyUntil > pausedAt) state.raid.furyUntil += elapsed;
+        if (state.raid.wardUntil > pausedAt) state.raid.wardUntil += elapsed;
+        for (const buff of [state.raid.supportPet, state.raid.awakening]) {
+          if (buff && buff.until > pausedAt) buff.until += elapsed;
+        }
         for (const player of state.players) player.ready = player.ready.map(time => time > pausedAt ? time + elapsed : time);
         state.paused = false;
       }

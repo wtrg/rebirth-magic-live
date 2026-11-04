@@ -22,4 +22,4 @@ Vertical slice includes a shared arena, boss AI, six class data sets, determinis
 - Integrated GPU throughput varies with output size and OBS encoder. Record hardware, draw budget and frame timing.
 - External agents can fail to connect. Keep file ownership explicit and use handoffs in AGENT_PROTOCOL.md.
 - Real player names and event IDs must stay in local storage. Publish only source and synthetic QA evidence.
-- Ranking needs a Leader decision on whether gift-assisted progression may affect subsequent ranked raids.
+- Review the assisted raid reward rules with the Leader before release.

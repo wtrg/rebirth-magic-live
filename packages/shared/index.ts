@@ -19,7 +19,12 @@ export type Player = {
 };
 export type Phase = 'IDLE' | 'SPAWN' | 'PHASE_1' | 'PHASE_2' | 'ENRAGED' | 'DEAD' | 'RESET';
 export type Raid = {
-  phase: Phase; hp: number; maxHp: number; stage: number; next: number; furyUntil: number;
+  phase: Phase; hp: number; maxHp: number; stage: number; next: number;
+  practice: boolean;
+  usedGifts: string[];
+  supportPet: { player: string; until: number } | null;
+  awakening: { player: string; until: number } | null;
+  wardUntil: number;
   result: 'victory' | 'defeat' | null; assisted: boolean;
 };
 export type GameState = {

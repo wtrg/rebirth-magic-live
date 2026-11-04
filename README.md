@@ -10,6 +10,8 @@ npm start
 
 Mở http://127.0.0.1:4173. Nhấn **Tham gia**, chọn class, bật **Tự đánh (MOCK)** hoặc dùng các nút tấn công, rồi nhấn **Bắt đầu Raid**. Đổi tên thử nghiệm để mô phỏng người chơi khác. Gõ `!pet 1`, `!stats`, `!rank` hoặc `!rebirth` trong ô bình luận. Nút **Dừng khẩn cấp** đóng hàng đợi hiện tại và tạm dừng trận.
 
+Chọn **Raid luyện tập** để thử hiệu ứng chiến đấu của quà MOCK. Raid thường nhận EXP và điểm xếp hạng, còn quà chỉ hiện hiệu ứng chào mừng.
+
 OBS Browser Source dùng URL `http://127.0.0.1:4173/?overlay=1` với chiều rộng 1080 và chiều cao 1920. Thêm `&quality=high` để thử chất lượng cao. Bản dựng dùng MOCK. Adapter LIVE chưa có nguồn TikTok đã xác minh.
 
 Dữ liệu nằm ở `data/rebirth.sqlite`. Dùng Ctrl+C để đóng máy chủ trước khi sao lưu thư mục `data`. Đặt `PORT` và `DB_PATH` qua biến môi trường nếu cần.
