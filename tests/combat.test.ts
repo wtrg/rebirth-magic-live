@@ -195,3 +195,61 @@ test('pet upgrades spend ranked shards once and each companion contributes its o
   assert.equal(mage.mp,mp-16+5);
   assert.match(state.logs[0],/Lôi Tức/);
 });
+
+test('class signatures apply bounded control, protection, support and burst', () => {
+  const state = newGame();
+  const command = (user: string, text: string, now = 1800, rules = 5) =>
+    applyEvent(state,{ id:user + ':' + text, user, name:user, kind:'chat', command:text },now,rules);
+  for (const name of ['fire','ice','thunder','knight','healer','summon']) {
+    command(name,'!join',1000);
+    command(name,'!class ' + name,1000);
+  }
+  const [fire,ice,thunder,knight,healer,summon] = state.players;
+  summon.owned = 1;
+  command('summon','!pet 1');
+  beginRaid(state,1000);
+  tick(state,1800);
+  state.raid.hp = state.raid.maxHp = 10000;
+  const attack = (name: string, input: string, now = 1800) => {
+    const before = state.raid.hp;
+    command(name,input,now);
+    return before - state.raid.hp;
+  };
+  assert.equal(attack('fire','!ult'),damage(29,3 * 1.2,5));
+  const due = state.raid.next;
+  attack('ice','!skill2');
+  attack('ice','!ult');
+  assert.equal(state.raid.next,due+1200);
+  assert.equal(attack('thunder','!ult'),damage(32,3 * 1.35,5));
+  assert.match(state.logs[0],/CHÍ MẠNG/);
+  assert.equal(thunder.attackCount,1);
+  attack('knight','!skill2');
+  assert.equal(knight.guard,true);
+  fire.hp = 50;
+  ice.hp = 0;
+  attack('healer','!ult');
+  assert.equal(fire.hp,82);
+  assert.equal(fire.mp,40);
+  assert.equal(healer.mp,40);
+  assert.equal(ice.hp,0);
+  assert.equal(attack('summon','!ult'),damage(24+9+9,3,5));
+  tick(state,due+1200);
+  assert.equal(knight.hp,119);
+  assert.equal(knight.guard,undefined);
+  assert.equal(state.raid.controlMs,0);
+});
+
+test('legacy combat leaves deterministic class counters and criticals disabled', () => {
+  const state = newGame();
+  const mage = { user:'mage',name:'Mage',kind:'chat' } as const;
+  for (const [id,command] of [['join','!join'],['class','!class thunder']]) {
+    applyEvent(state,{ ...mage,id,command },1000,4);
+  }
+  beginRaid(state,1000);
+  tick(state,1800,4);
+  const hp = state.raid.hp;
+  applyEvent(state,{ ...mage,id:'ult',command:'!ult' },1800,4);
+  assert.equal(hp-state.raid.hp,damage(32,3,5));
+  assert.equal(state.players[0].attackCount,undefined);
+  assert.doesNotMatch(state.logs[0],/CHÍ MẠNG/);
+});

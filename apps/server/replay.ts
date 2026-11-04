@@ -11,7 +11,7 @@ type Step = { at: number } & (
 const limit = 10000;
 
 export function createReplay(initial: GameState) {
-  const trace = { version: 4, initial: structuredClone(initial), steps: [] as Step[], truncated: false };
+  const trace = { version: 5, initial: structuredClone(initial), steps: [] as Step[], truncated: false };
   return {
     record(step: Step) {
       if (trace.steps.length === limit) trace.truncated = true;
@@ -24,7 +24,7 @@ export function createReplay(initial: GameState) {
 export function playReplay(raw: unknown): GameState {
   if (!raw || typeof raw !== 'object') throw new Error('Invalid replay');
   const { version, initial, steps } = raw as { version?: unknown; initial?: GameState; steps?: Step[] };
-  if ((version !== 1 && version !== 2 && version !== 3 && version !== 4) || !initial?.raid || !Array.isArray(initial.players) ||
+  if ((version !== 1 && version !== 2 && version !== 3 && version !== 4 && version !== 5) || !initial?.raid || !Array.isArray(initial.players) ||
       !Array.isArray(initial.logs) || !Array.isArray(steps) || steps.length > limit) {
     throw new Error('Invalid replay');
   }
