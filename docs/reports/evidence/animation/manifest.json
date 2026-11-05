@@ -1,0 +1,35 @@
+{
+  "runtimeSourceCommit": "185b8431db1b4abe90922186df4eac5703e443b4",
+  "fixtureViewport": {
+    "width": 1080,
+    "height": 1500
+  },
+  "lowQuality": true,
+  "scenarios": [
+    "idle",
+    "attack approach and moving legs",
+    "HP recoil",
+    "paused transforms and pixels",
+    "defeat",
+    "revive",
+    "temporary pet expiry",
+    "expired pet remains hidden while paused",
+    "active pet remains visible while paused"
+  ],
+  "modes": [
+    {
+      "mode": "glb",
+      "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x0000A7A8) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    {
+      "mode": "procedural",
+      "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x0000A7A8) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    }
+  ],
+  "limitations": [
+    "Synthetic snapshots isolate rendering; server combat is covered separately.",
+    "Manual animation clock is not an FPS benchmark.",
+    "Projected bounding-box intersection does not establish lack of occlusion.",
+    "Fixture excludes production HUD; visual and product approval remain pending."
+  ]
+}

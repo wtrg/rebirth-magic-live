@@ -13,3 +13,10 @@ Gate 6: Record frame timings and identify rendering context. Perform an OBS load
 Run `node scripts/load.mjs` for a 60-second MOCK measurement. Set `QA_LOAD_SECONDS` to another duration (15–43,200 seconds) or `QA_LOAD_PORT` to a free loopback port. The test starts its own child and temporary SQLite database. It checks one-viewer throttling and a burst of 256 distinct viewers, then drives 64 players in waves of up to four per second while eight WebSocket consumers observe ranked progression. The report includes end-to-end local HTTP request timing, sampled queue depth and child-process RSS and heap usage.
 
 The load harness does not render a game client or run OBS. Use a separate capture test for render and encoding performance. Keep background workload comparable when comparing runs.
+
+
+## Class and pet rendering regression
+
+Run `node scripts/animation-qa.mjs` with installed Chrome (or a compatible Playwright channel selected by `QA_BROWSER`) and free loopback port 4193. It starts its own Vite development server and imports the production arena/GLB loader into a browser-only fixture. No game server or database is opened. Output goes to ignored `test-results/animation/`; the browser and Vite server close in finally cleanup.
+
+The fixture controls its own animation clock and supplies six synthetic player snapshots with three earned pet selections. It checks real rendered class/pet colors, GLB root identity, tagged paws/wings, moving hip joints during the attack approach, weapon motion, HP recoil, collapse, revival, pause pixel stability and temporary-pet expiry. It repeats after a forced GLB 404. Screenshots and real transforms support manual review. Projected bounds check viewport intersection, not occlusion. The fixture isolates scene rendering from combat simulation, excludes the production HUD, and cannot measure FPS. Run the normal browser smoke separately for the production application and combat path.
