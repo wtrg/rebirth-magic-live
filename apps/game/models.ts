@@ -33,10 +33,21 @@ export function createModelFactory() {
     mesh(body, sphere, monster ? '#3d3248' : '#ffd2bc', [0,1.78,0], [0.34,0.39,0.32]);
     mesh(body, gem, monster ? '#1e1e36' : color, [0,2,-0.06], [0.41,0.37,0.38]);
     for (const side of [-1,1]) {
-      mesh(body, box, armor, [side*0.22,0.42,0], [0.25,0.7,0.27]);
-      mesh(body, box, '#212038', [side*0.22,0.09,0.1], [0.27,0.17,0.42]);
-      mesh(body, gem, color, [side*0.52,1.36,0], [0.31,0.26,0.34]);
-      mesh(body, box, armor, [side*0.55,1.04,0.04], [0.2,0.48,0.23]).rotation.z = side*0.18;
+      const leg = new T.Group();
+      leg.position.set(side*0.22,0.77,0);
+      leg.userData.limb = 'leg';
+      leg.userData.side = side;
+      body.add(leg);
+      mesh(leg, box, armor, [0,-0.35,0], [0.25,0.7,0.27]);
+      mesh(leg, box, '#212038', [0,-0.68,0.1], [0.27,0.17,0.42]);
+      const arm = new T.Group();
+      arm.position.set(side*0.55,1.30,0);
+      arm.userData.limb = 'arm';
+      arm.userData.side = side;
+      arm.rotation.z = side*0.18;
+      body.add(arm);
+      mesh(arm, gem, color, [-side*0.03,0.06,0], [0.31,0.26,0.34]);
+      mesh(arm, box, armor, [0,-0.26,0.04], [0.2,0.48,0.23]);
       mesh(body, box, monster ? color : '#312541', [side*0.12,1.79,0.29], [0.1,0.04,0.05], monster);
       if (monster) {
         mesh(body, gem, '#ff6887', [side*0.37,2.12,0], [0.16,0.49,0.18], true).rotation.z = -side*0.38;
