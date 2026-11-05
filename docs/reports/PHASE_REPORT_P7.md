@@ -1,5 +1,27 @@
 # P7 · OBS portrait QA
 
+## Current-source combined auto, HUD and audio — 2026-11-05
+
+Tested source `46cf80db62fa6ec7d27e5e7fb994eb4823ccdfc1` on Windows / Node 24.17.0, Core i7-13620H and Intel UHD Graphics (OBS D3D11). This includes server auto and the post-RC4 layout/animation changes; it is not the RC4 release tag. Git was clean at harness startup. Production sources and built files stayed unchanged during recording; documentation and post-run analysis were added separately.
+
+Isolated portable OBS 33.0.1 used Quick Sync H.264, one active 1080×1920/30 FPS Browser Source with `overlay=1&audio=1`, and AAC stereo 48 kHz. Previous disposable QA browser inputs were muted; no desktop/microphone inputs were allowed. The owner's installed OBS remained open and untouched. No upstream stream was started.
+
+The 600.513-second workload used 32 synthetic players across six classes: server basic auto, manual skill II/ultimate requests, host ranked raid restarts and cosmetic `mock-30` reactions. There were **zero manual basic commands**. Low quality displayed up to eight actors while all 32 simulated. All 32 ended with an earned pet equipped, covering all three types. The host observed/restarted 322 victories and reached stage 323; the ending raid had no terminal result. Excluding setup, 34,079 requests were accepted, zero were HTTP-rate-limited and 2,913 state updates arrived. Maximum ten-second-sampled queue depth was 32. Acceptance does not imply a skill bypassed its game cooldown.
+
+FFprobe measured 600.166 seconds of H.264 at 1080×1920, 30/1, with the AAC track. OBS logged 18,003 final output frames; its pre-stop snapshot reported 18,000. All 57 in-run samples reported approximately 30 FPS; render/encode skipped-frame deltas were zero. Final sampled render time was 0.501 ms. Container duration, workload time and pre-stop/final counters have different boundaries. OBS compositor/encoder counters do not measure unique Three.js presentation FPS.
+
+In-run OBS-reported memory ranged 367.23–399.74 MiB, fell after warm-up and ended at 370.24 MiB in the post-workload snapshot. The pre-recording startup snapshot was 303.98 MiB. Across 120 timestamp-filtered backend samples, RSS was 74.63–90.73 MiB and heap 13.50–20.80 MiB; final backend RSS/heap was 90.73/20.27 MiB. These measurements neither isolate leaks nor measure browser-subprocess/GPU allocation. Long-session stability remains unverified.
+
+Each of ten decoded one-minute mono PCM windows had nonzero signal: RMS −38.83 to −37.48 dBFS, peaks −22.52 to −20.44 dBFS, zero clipped mono samples. This does not assess subjective mix quality, rule out brief dropouts or establish absence of all stereo/encoding artifacts.
+
+After graceful shutdown, SQLite `quick_check` returned `ok`; 32 profiles, auto preferences and equipped pets persisted, with saved stage 323. Profile wins varied 110–322 and scores 623,866–5,346,078. A separate production-only reproduction confirmed **auto roster-order bias**, now a READY bug task in [the finding](AUTO_ORDER_FINDING.md). Manual FIFO skill waves may also affect this run's distribution; do not attribute the whole gap solely to auto. The recording proves combined operation, not fair contribution/pacing or full gameplay acceptance.
+
+Cleanup closed the backend port, removed the new QA source/scene and restored the previous disposable scene. After inspection confirmed recording inactive, root stopped only the path-verified QA portable OBS process; the owner's installed OBS remained running and was not controlled. A 30-second preflight succeeded, and an absent-OBS fault check exited nonzero without leaving its backend listening. Independent Codex review verified the handshake/counter fixes and found no analysis calculation blocker. Typecheck, lint, all 31 tests and build passed; hardware OBS recording is outside CI.
+
+Reproduce with [isolated OBS QA](../OBS_QA.md), `node scripts/obs-soak.mjs`, then `node scripts/analyze-obs.mjs PATH_TO_RESULTS`. [Raw/derived measurements](evidence/obs-auto-current-600.json) · [Encoded frame at 300 seconds](evidence/obs-auto-current-300.png) · [Post-run scene](evidence/obs-auto-current-end.png).
+
+The current-source ten-minute local combined proof gap is closed. Auto ordering requires correction. Actual TikTok LIVE remains untested because no test session is available; Gemini/Antigravity reports remain NOT_RECEIVED, and Leader art/gameplay approval and 8–12-hour stability remain pending.
+
 ```text
 PROJECT: RE:BIRTH
 PHASE: P7

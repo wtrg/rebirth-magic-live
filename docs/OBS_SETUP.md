@@ -9,6 +9,8 @@
 
 Bản QA sử dụng cấu hình OBS portable riêng. [OBS Portable Mode](https://obsproject.com/kb/portable-mode) · [OBS WebSocket stats](https://github.com/obsproject/obs-websocket/blob/master/docs/generated/protocol.md#getstats)
 
+Quy trình đo kết hợp có thể lặp lại nằm ở [OBS QA](OBS_QA.md). Harness chỉ dùng bản OBS portable thử nghiệm riêng, dữ liệu người chơi giả lập và bản ghi cục bộ.
+
 
 ## Âm thanh chiến đấu
 

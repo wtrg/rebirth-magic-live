@@ -1,0 +1,2558 @@
+{
+  "sourceCommit": "46cf80db62fa6ec7d27e5e7fb994eb4823ccdfc1",
+  "sourceDirty": false,
+  "secondsRequested": 600,
+  "measuredSeconds": 600.5134588999999,
+  "startedAt": 1793846288631,
+  "endedAt": 1793846889145,
+  "obs": "33.0.1",
+  "video": {
+    "baseHeight": 1920,
+    "baseWidth": 1080,
+    "fpsDenominator": 1,
+    "fpsNumerator": 30,
+    "outputHeight": 1920,
+    "outputWidth": 1080
+  },
+  "driver": "32 server-auto players; manual skill2/ult; host raid restart; ranked cosmetic mock-30 gifts",
+  "manualBasicCommands": 0,
+  "players": 32,
+  "classes": [
+    "fire",
+    "ice",
+    "thunder",
+    "knight",
+    "healer",
+    "summon"
+  ],
+  "petCount": 32,
+  "petTypes": [
+    0,
+    1,
+    2
+  ],
+  "measuredIngress": {
+    "accepted": 34079,
+    "throttled": 0,
+    "updates": 2913
+  },
+  "lifetimeIngress": {
+    "accepted": 34175,
+    "throttled": 0,
+    "updates": 2923
+  },
+  "victoriesRestarted": 322,
+  "terminalResultAtEnd": null,
+  "stage": 323,
+  "sampledPeakQueue": 32,
+  "before": {
+    "activeFps": 30.000000300000007,
+    "availableDiskSpace": 359082.76953125,
+    "averageFrameRenderTime": 0.351235,
+    "cpuUsage": 3.8485638327630043,
+    "memoryUsage": 303.9765625,
+    "outputSkippedFrames": 0,
+    "outputTotalFrames": 0,
+    "renderSkippedFrames": 0,
+    "renderTotalFrames": 486,
+    "webSocketSessionIncomingMessages": 14,
+    "webSocketSessionOutgoingMessages": 14
+  },
+  "after": {
+    "activeFps": 30.000000300000007,
+    "availableDiskSpace": 358978.046875,
+    "averageFrameRenderTime": 0.50108,
+    "cpuUsage": 2.3132057975611007,
+    "memoryUsage": 370.23828125,
+    "outputSkippedFrames": 0,
+    "outputTotalFrames": 18000,
+    "renderSkippedFrames": 0,
+    "renderTotalFrames": 18502,
+    "webSocketSessionIncomingMessages": 130,
+    "webSocketSessionOutgoingMessages": 130
+  },
+  "samples": [
+    {
+      "at": 1793846298775,
+      "stats": {
+        "activeFps": 30.000000300000007,
+        "availableDiskSpace": 359077.8359375,
+        "averageFrameRenderTime": 0.469993,
+        "cpuUsage": 2.7946427861286436,
+        "memoryUsage": 399.3203125,
+        "outputSkippedFrames": 0,
+        "outputTotalFrames": 288,
+        "renderSkippedFrames": 0,
+        "renderTotalFrames": 790,
+        "webSocketSessionIncomingMessages": 16,
+        "webSocketSessionOutgoingMessages": 16
+      },
+      "record": {
+        "outputActive": true,
+        "outputBytes": 1880096,
+        "outputDuration": 9299,
+        "outputPaused": false,
+        "outputTimecode": "00:00:09.299"
+      },
+      "stage": 5
+    },
+    {
+      "at": 1793846308883,
+      "stats": {
+        "activeFps": 30.000000300000007,
+        "availableDiskSpace": 359074.25390625,
+        "averageFrameRenderTime": 0.470261,
+        "cpuUsage": 2.5159634281980656,
+        "memoryUsage": 399.3984375,
+        "outputSkippedFrames": 0,
+        "outputTotalFrames": 592,
+        "renderSkippedFrames": 0,
+        "renderTotalFrames": 1094,
+        "webSocketSessionIncomingMessages": 18,
+        "webSocketSessionOutgoingMessages": 18
+      },
+      "record": {
+        "outputActive": true,
+        "outputBytes": 3667017,
+        "outputDuration": 19433,
+        "outputPaused": false,
+        "outputTimecode": "00:00:19.433"
+      },
+      "stage": 9
+    },
+    {
+      "at": 1793846319406,
+      "stats": {
+        "activeFps": 30.000000300000007,
+        "availableDiskSpace": 359074.20703125,
+        "averageFrameRenderTime": 0.416709,
+        "cpuUsage": 2.3411834831808096,
+        "memoryUsage": 399.640625,
+        "outputSkippedFrames": 0,
+        "outputTotalFrames": 907,
+        "renderSkippedFrames": 0,
+        "renderTotalFrames": 1409,
+        "webSocketSessionIncomingMessages": 20,
+        "webSocketSessionOutgoingMessages": 20
+      },
+      "record": {
+        "outputActive": true,
+        "outputBytes": 5520193,
+        "outputDuration": 29966,
+        "outputPaused": false,
+        "outputTimecode": "00:00:29.966"
+      },
+      "stage": 13
+    },
+    {
+      "at": 1793846330323,
+      "stats": {
+        "activeFps": 30.000000300000007,
+        "availableDiskSpace": 359072.75,
+        "averageFrameRenderTime": 0.421745,
+        "cpuUsage": 2.2978851494533457,
+        "memoryUsage": 399.7421875,
+        "outputSkippedFrames": 0,
+        "outputTotalFrames": 1235,
+        "renderSkippedFrames": 0,
+        "renderTotalFrames": 1737,
+        "webSocketSessionIncomingMessages": 22,
+        "webSocketSessionOutgoingMessages": 22
+      },
+      "record": {
+        "outputActive": true,
+        "outputBytes": 7539544,
+        "outputDuration": 40866,
+        "outputPaused": false,
+        "outputTimecode": "00:00:40.866"
+      },
+      "stage": 18
+    },
+    {
+      "at": 1793846340437,
+      "stats": {
+        "activeFps": 30.000000300000007,
+        "availableDiskSpace": 359071.70703125,
+        "averageFrameRenderTime": 0.46148,
+        "cpuUsage": 3.0807565501821195,
+        "memoryUsage": 396.4296875,
+        "outputSkippedFrames": 0,
+        "outputTotalFrames": 1539,
+        "renderSkippedFrames": 0,
+        "renderTotalFrames": 2041,
+        "webSocketSessionIncomingMessages": 24,
+        "webSocketSessionOutgoingMessages": 24
+      },
+      "record": {
+        "outputActive": true,
+        "outputBytes": 9140574,
+        "outputDuration": 50999,
+        "outputPaused": false,
+        "outputTimecode": "00:00:50.999"
+      },
+      "stage": 22
+    },
+    {
+      "at": 1793846350940,
+      "stats": {
+        "activeFps": 30.000000300000007,
+        "availableDiskSpace": 359067.375,
+        "averageFrameRenderTime": 0.446329,
+        "cpuUsage": 2.4443805871692237,
+        "memoryUsage": 396.453125,
+        "outputSkippedFrames": 0,
+        "outputTotalFrames": 1854,
+        "renderSkippedFrames": 0,
+        "renderTotalFrames": 2356,
+        "webSocketSessionIncomingMessages": 26,
+        "webSocketSessionOutgoingMessages": 26
+      },
+      "record": {
+        "outputActive": true,
+        "outputBytes": 10981163,
+        "outputDuration": 61499,
+        "outputPaused": false,
+        "outputTimecode": "00:01:01.499"
+      },
+      "stage": 26
+    },
+    {
+      "at": 1793846361833,
+      "stats": {
+        "activeFps": 30.000000300000007,
+        "availableDiskSpace": 359067.2890625,
+        "averageFrameRenderTime": 0.372125,
+        "cpuUsage": 2.548037374886685,
+        "memoryUsage": 396.9609375,
+        "outputSkippedFrames": 0,
+        "outputTotalFrames": 2180,
+        "renderSkippedFrames": 0,
+        "renderTotalFrames": 2682,
+        "webSocketSessionIncomingMessages": 28,
+        "webSocketSessionOutgoingMessages": 28
+      },
+      "record": {
+        "outputActive": true,
+        "outputBytes": 12986936,
+        "outputDuration": 72366,
+        "outputPaused": false,
+        "outputTimecode": "00:01:12.366"
+      },
+      "stage": 31
+    },
+    {
+      "at": 1793846371955,
+      "stats": {
+        "activeFps": 30.000000300000007,
+        "availableDiskSpace": 359057.74609375,
+        "averageFrameRenderTime": 0.458683,
+        "cpuUsage": 2.6908934222321292,
+        "memoryUsage": 397.15625,
+        "outputSkippedFrames": 0,
+        "outputTotalFrames": 2484,
+        "renderSkippedFrames": 0,
+        "renderTotalFrames": 2986,
+        "webSocketSessionIncomingMessages": 30,
+        "webSocketSessionOutgoingMessages": 30
+      },
+      "record": {
+        "outputActive": true,
+        "outputBytes": 14718691,
+        "outputDuration": 82499,
+        "outputPaused": false,
+        "outputTimecode": "00:01:22.499"
+      },
+      "stage": 35
+    },
+    {
+      "at": 1793846382461,
+      "stats": {
+        "activeFps": 30.000000300000007,
+        "availableDiskSpace": 359057.72265625,
+        "averageFrameRenderTime": 0.400154,
+        "cpuUsage": 1.9698003073357069,
+        "memoryUsage": 397.171875,
+        "outputSkippedFrames": 0,
+        "outputTotalFrames": 2799,
+        "renderSkippedFrames": 0,
+        "renderTotalFrames": 3301,
+        "webSocketSessionIncomingMessages": 32,
+        "webSocketSessionOutgoingMessages": 32
+      },
+      "record": {
+        "outputActive": true,
+        "outputBytes": 16417703,
+        "outputDuration": 92999,
+        "outputPaused": false,
+        "outputTimecode": "00:01:32.999"
+      },
+      "stage": 39
+    },
+    {
+      "at": 1793846393376,
+      "stats": {
+        "activeFps": 30.000000300000007,
+        "availableDiskSpace": 359057.703125,
+        "averageFrameRenderTime": 0.449051,
+        "cpuUsage": 2.4325055823999877,
+        "memoryUsage": 389.73046875,
+        "outputSkippedFrames": 0,
+        "outputTotalFrames": 3127,
+        "renderSkippedFrames": 0,
+        "renderTotalFrames": 3629,
+        "webSocketSessionIncomingMessages": 34,
+        "webSocketSessionOutgoingMessages": 34
+      },
+      "record": {
+        "outputActive": true,
+        "outputBytes": 18354236,
+        "outputDuration": 103933,
+        "outputPaused": false,
+        "outputTimecode": "00:01:43.933"
+      },
+      "stage": 44
+    },
+    {
+      "at": 1793846403464,
+      "stats": {
+        "activeFps": 30.000000300000007,
+        "availableDiskSpace": 359052.40625,
+        "averageFrameRenderTime": 0.46309,
+        "cpuUsage": 2.43892911583383,
+        "memoryUsage": 388.6328125,
+        "outputSkippedFrames": 0,
+        "outputTotalFrames": 3430,
+        "renderSkippedFrames": 0,
+        "renderTotalFrames": 3932,
+        "webSocketSessionIncomingMessages": 36,
+        "webSocketSessionOutgoingMessages": 36
+      },
+      "record": {
+        "outputActive": true,
+        "outputBytes": 20150076,
+        "outputDuration": 114033,
+        "outputPaused": false,
+        "outputTimecode": "00:01:54.033"
+      },
+      "stage": 48
+    },
+    {
+      "at": 1793846413994,
+      "stats": {
+        "activeFps": 30.000000300000007,
+        "availableDiskSpace": 359052.38671875,
+        "averageFrameRenderTime": 0.41089,
+        "cpuUsage": 2.840015729621279,
+        "memoryUsage": 388.5859375,
+        "outputSkippedFrames": 0,
+        "outputTotalFrames": 3745,
+        "renderSkippedFrames": 0,
+        "renderTotalFrames": 4247,
+        "webSocketSessionIncomingMessages": 38,
+        "webSocketSessionOutgoingMessages": 38
+      },
+      "record": {
+        "outputActive": true,
+        "outputBytes": 21944780,
+        "outputDuration": 124533,
+        "outputPaused": false,
+        "outputTimecode": "00:02:04.533"
+      },
+      "stage": 52
+    },
+    {
+      "at": 1793846424962,
+      "stats": {
+        "activeFps": 30.000000300000007,
+        "availableDiskSpace": 359052.36328125,
+        "averageFrameRenderTime": 0.45837,
+        "cpuUsage": 2.787273217562878,
+        "memoryUsage": 388.66796875,
+        "outputSkippedFrames": 0,
+        "outputTotalFrames": 4074,
+        "renderSkippedFrames": 0,
+        "renderTotalFrames": 4576,
+        "webSocketSessionIncomingMessages": 40,
+        "webSocketSessionOutgoingMessages": 40
+      },
+      "record": {
+        "outputActive": true,
+        "outputBytes": 23794201,
+        "outputDuration": 135499,
+        "outputPaused": false,
+        "outputTimecode": "00:02:15.499"
+      },
+      "stage": 57
+    },
+    {
+      "at": 1793846435064,
+      "stats": {
+        "activeFps": 30.000000300000007,
+        "availableDiskSpace": 359049.0078125,
+        "averageFrameRenderTime": 0.47278,
+        "cpuUsage": 2.6582413928304316,
+        "memoryUsage": 388.91015625,
+        "outputSkippedFrames": 0,
+        "outputTotalFrames": 4377,
+        "renderSkippedFrames": 0,
+        "renderTotalFrames": 4879,
+        "webSocketSessionIncomingMessages": 42,
+        "webSocketSessionOutgoingMessages": 42
+      },
+      "record": {
+        "outputActive": true,
+        "outputBytes": 25612505,
+        "outputDuration": 145599,
+        "outputPaused": false,
+        "outputTimecode": "00:02:25.599"
+      },
+      "stage": 61
+    },
+    {
+      "at": 1793846445602,
+      "stats": {
+        "activeFps": 30.000000300000007,
+        "availableDiskSpace": 359048.9765625,
+        "averageFrameRenderTime": 0.470706,
+        "cpuUsage": 2.965583656709274,
+        "memoryUsage": 382.90234375,
+        "outputSkippedFrames": 0,
+        "outputTotalFrames": 4694,
+        "renderSkippedFrames": 0,
+        "renderTotalFrames": 5196,
+        "webSocketSessionIncomingMessages": 44,
+        "webSocketSessionOutgoingMessages": 44
+      },
+      "record": {
+        "outputActive": true,
+        "outputBytes": 27411775,
+        "outputDuration": 156133,
+        "outputPaused": false,
+        "outputTimecode": "00:02:36.133"
+      },
+      "stage": 65
+    },
+    {
+      "at": 1793846456544,
+      "stats": {
+        "activeFps": 30.000000300000007,
+        "availableDiskSpace": 359046.13671875,
+        "averageFrameRenderTime": 0.406858,
+        "cpuUsage": 2.6485547801459113,
+        "memoryUsage": 367.234375,
+        "outputSkippedFrames": 0,
+        "outputTotalFrames": 5022,
+        "renderSkippedFrames": 0,
+        "renderTotalFrames": 5524,
+        "webSocketSessionIncomingMessages": 46,
+        "webSocketSessionOutgoingMessages": 46
+      },
+      "record": {
+        "outputActive": true,
+        "outputBytes": 29255999,
+        "outputDuration": 167099,
+        "outputPaused": false,
+        "outputTimecode": "00:02:47.099"
+      },
+      "stage": 70
+    },
+    {
+      "at": 1793846466703,
+      "stats": {
+        "activeFps": 30.000000300000007,
+        "availableDiskSpace": 359045.42578125,
+        "averageFrameRenderTime": 0.411396,
+        "cpuUsage": 2.3096562176127686,
+        "memoryUsage": 367.25390625,
+        "outputSkippedFrames": 0,
+        "outputTotalFrames": 5326,
+        "renderSkippedFrames": 0,
+        "renderTotalFrames": 5828,
+        "webSocketSessionIncomingMessages": 48,
+        "webSocketSessionOutgoingMessages": 48
+      },
+      "record": {
+        "outputActive": true,
+        "outputBytes": 31054381,
+        "outputDuration": 177233,
+        "outputPaused": false,
+        "outputTimecode": "00:02:57.233"
+      },
+      "stage": 74
+    },
+    {
+      "at": 1793846477220,
+      "stats": {
+        "activeFps": 30.000000300000007,
+        "availableDiskSpace": 359043.56640625,
+        "averageFrameRenderTime": 0.428503,
+        "cpuUsage": 2.476967243052761,
+        "memoryUsage": 367.25390625,
+        "outputSkippedFrames": 0,
+        "outputTotalFrames": 5642,
+        "renderSkippedFrames": 0,
+        "renderTotalFrames": 6144,
+        "webSocketSessionIncomingMessages": 50,
+        "webSocketSessionOutgoingMessages": 50
+      },
+      "record": {
+        "outputActive": true,
+        "outputBytes": 32689170,
+        "outputDuration": 187766,
+        "outputPaused": false,
+        "outputTimecode": "00:03:07.766"
+      },
+      "stage": 78
+    },
+    {
+      "at": 1793846488205,
+      "stats": {
+        "activeFps": 30.000000300000007,
+        "availableDiskSpace": 359042.2265625,
+        "averageFrameRenderTime": 0.467987,
+        "cpuUsage": 2.99471661817427,
+        "memoryUsage": 367.25390625,
+        "outputSkippedFrames": 0,
+        "outputTotalFrames": 5970,
+        "renderSkippedFrames": 0,
+        "renderTotalFrames": 6472,
+        "webSocketSessionIncomingMessages": 52,
+        "webSocketSessionOutgoingMessages": 52
+      },
+      "record": {
+        "outputActive": true,
+        "outputBytes": 34522771,
+        "outputDuration": 198699,
+        "outputPaused": false,
+        "outputTimecode": "00:03:18.699"
+      },
+      "stage": 83
+    },
+    {
+      "at": 1793846498271,
+      "stats": {
+        "activeFps": 30.000000300000007,
+        "availableDiskSpace": 359040.76171875,
+        "averageFrameRenderTime": 0.419022,
+        "cpuUsage": 2.9019604919149766,
+        "memoryUsage": 367.27734375,
+        "outputSkippedFrames": 0,
+        "outputTotalFrames": 6274,
+        "renderSkippedFrames": 0,
+        "renderTotalFrames": 6776,
+        "webSocketSessionIncomingMessages": 54,
+        "webSocketSessionOutgoingMessages": 54
+      },
+      "record": {
+        "outputActive": true,
+        "outputBytes": 36295147,
+        "outputDuration": 208833,
+        "outputPaused": false,
+        "outputTimecode": "00:03:28.833"
+      },
+      "stage": 87
+    },
+    {
+      "at": 1793846508820,
+      "stats": {
+        "activeFps": 30.000000300000007,
+        "availableDiskSpace": 359030.15234375,
+        "averageFrameRenderTime": 0.302048,
+        "cpuUsage": 3.971963798607777,
+        "memoryUsage": 367.29296875,
+        "outputSkippedFrames": 0,
+        "outputTotalFrames": 6590,
+        "renderSkippedFrames": 0,
+        "renderTotalFrames": 7092,
+        "webSocketSessionIncomingMessages": 56,
+        "webSocketSessionOutgoingMessages": 56
+      },
+      "record": {
+        "outputActive": true,
+        "outputBytes": 38025016,
+        "outputDuration": 219366,
+        "outputPaused": false,
+        "outputTimecode": "00:03:39.366"
+      },
+      "stage": 91
+    },
+    {
+      "at": 1793846519718,
+      "stats": {
+        "activeFps": 30.000000300000007,
+        "availableDiskSpace": 359030.12890625,
+        "averageFrameRenderTime": 0.482235,
+        "cpuUsage": 2.446271013858696,
+        "memoryUsage": 367.49609375,
+        "outputSkippedFrames": 0,
+        "outputTotalFrames": 6917,
+        "renderSkippedFrames": 0,
+        "renderTotalFrames": 7419,
+        "webSocketSessionIncomingMessages": 58,
+        "webSocketSessionOutgoingMessages": 58
+      },
+      "record": {
+        "outputActive": true,
+        "outputBytes": 39767523,
+        "outputDuration": 230266,
+        "outputPaused": false,
+        "outputTimecode": "00:03:50.266"
+      },
+      "stage": 96
+    },
+    {
+      "at": 1793846529853,
+      "stats": {
+        "activeFps": 30.000000300000007,
+        "availableDiskSpace": 359030.109375,
+        "averageFrameRenderTime": 0.481222,
+        "cpuUsage": 2.283013022108378,
+        "memoryUsage": 367.83203125,
+        "outputSkippedFrames": 0,
+        "outputTotalFrames": 7221,
+        "renderSkippedFrames": 0,
+        "renderTotalFrames": 7723,
+        "webSocketSessionIncomingMessages": 60,
+        "webSocketSessionOutgoingMessages": 60
+      },
+      "record": {
+        "outputActive": true,
+        "outputBytes": 41556054,
+        "outputDuration": 240399,
+        "outputPaused": false,
+        "outputTimecode": "00:04:00.399"
+      },
+      "stage": 101
+    },
+    {
+      "at": 1793846540720,
+      "stats": {
+        "activeFps": 30.000000300000007,
+        "availableDiskSpace": 359030.05859375,
+        "averageFrameRenderTime": 0.402719,
+        "cpuUsage": 2.2923870033448304,
+        "memoryUsage": 367.87890625,
+        "outputSkippedFrames": 0,
+        "outputTotalFrames": 7547,
+        "renderSkippedFrames": 0,
+        "renderTotalFrames": 8049,
+        "webSocketSessionIncomingMessages": 62,
+        "webSocketSessionOutgoingMessages": 62
+      },
+      "record": {
+        "outputActive": true,
+        "outputBytes": 43292621,
+        "outputDuration": 251266,
+        "outputPaused": false,
+        "outputTimecode": "00:04:11.266"
+      },
+      "stage": 108
+    },
+    {
+      "at": 1793846550854,
+      "stats": {
+        "activeFps": 30.000000300000007,
+        "availableDiskSpace": 359030.0390625,
+        "averageFrameRenderTime": 0.459661,
+        "cpuUsage": 2.4858029066987775,
+        "memoryUsage": 367.8828125,
+        "outputSkippedFrames": 0,
+        "outputTotalFrames": 7851,
+        "renderSkippedFrames": 0,
+        "renderTotalFrames": 8353,
+        "webSocketSessionIncomingMessages": 64,
+        "webSocketSessionOutgoingMessages": 64
+      },
+      "record": {
+        "outputActive": true,
+        "outputBytes": 44929908,
+        "outputDuration": 261399,
+        "outputPaused": false,
+        "outputTimecode": "00:04:21.399"
+      },
+      "stage": 114
+    },
+    {
+      "at": 1793846561782,
+      "stats": {
+        "activeFps": 30.000000300000007,
+        "availableDiskSpace": 359029.9921875,
+        "averageFrameRenderTime": 0.426016,
+        "cpuUsage": 2.2694711388574724,
+        "memoryUsage": 367.8984375,
+        "outputSkippedFrames": 0,
+        "outputTotalFrames": 8179,
+        "renderSkippedFrames": 0,
+        "renderTotalFrames": 8681,
+        "webSocketSessionIncomingMessages": 66,
+        "webSocketSessionOutgoingMessages": 66
+      },
+      "record": {
+        "outputActive": true,
+        "outputBytes": 46771602,
+        "outputDuration": 272333,
+        "outputPaused": false,
+        "outputTimecode": "00:04:32.333"
+      },
+      "stage": 121
+    },
+    {
+      "at": 1793846571884,
+      "stats": {
+        "activeFps": 30.000000300000007,
+        "availableDiskSpace": 359027.65234375,
+        "averageFrameRenderTime": 0.478312,
+        "cpuUsage": 2.831377362241828,
+        "memoryUsage": 368.234375,
+        "outputSkippedFrames": 0,
+        "outputTotalFrames": 8482,
+        "renderSkippedFrames": 0,
+        "renderTotalFrames": 8984,
+        "webSocketSessionIncomingMessages": 68,
+        "webSocketSessionOutgoingMessages": 68
+      },
+      "record": {
+        "outputActive": true,
+        "outputBytes": 48351858,
+        "outputDuration": 282433,
+        "outputPaused": false,
+        "outputTimecode": "00:04:42.433"
+      },
+      "stage": 127
+    },
+    {
+      "at": 1793846582818,
+      "stats": {
+        "activeFps": 30.000000300000007,
+        "availableDiskSpace": 359023.671875,
+        "averageFrameRenderTime": 0.482619,
+        "cpuUsage": 2.501845155120301,
+        "memoryUsage": 368.7421875,
+        "outputSkippedFrames": 0,
+        "outputTotalFrames": 8810,
+        "renderSkippedFrames": 0,
+        "renderTotalFrames": 9312,
+        "webSocketSessionIncomingMessages": 70,
+        "webSocketSessionOutgoingMessages": 70
+      },
+      "record": {
+        "outputActive": true,
+        "outputBytes": 50032226,
+        "outputDuration": 293366,
+        "outputPaused": false,
+        "outputTimecode": "00:04:53.366"
+      },
+      "stage": 134
+    },
+    {
+      "at": 1793846592925,
+      "stats": {
+        "activeFps": 30.000000300000007,
+        "availableDiskSpace": 359023.6484375,
+        "averageFrameRenderTime": 0.408341,
+        "cpuUsage": 2.2325649927960156,
+        "memoryUsage": 368.72265625,
+        "outputSkippedFrames": 0,
+        "outputTotalFrames": 9113,
+        "renderSkippedFrames": 0,
+        "renderTotalFrames": 9615,
+        "webSocketSessionIncomingMessages": 72,
+        "webSocketSessionOutgoingMessages": 72
+      },
+      "record": {
+        "outputActive": true,
+        "outputBytes": 51605717,
+        "outputDuration": 303466,
+        "outputPaused": false,
+        "outputTimecode": "00:05:03.466"
+      },
+      "stage": 140
+    },
+    {
+      "at": 1793846603901,
+      "stats": {
+        "activeFps": 30.000000300000007,
+        "availableDiskSpace": 359023.6015625,
+        "averageFrameRenderTime": 0.446354,
+        "cpuUsage": 3.2408506526671497,
+        "memoryUsage": 369.1484375,
+        "outputSkippedFrames": 0,
+        "outputTotalFrames": 9442,
+        "renderSkippedFrames": 0,
+        "renderTotalFrames": 9944,
+        "webSocketSessionIncomingMessages": 74,
+        "webSocketSessionOutgoingMessages": 74
+      },
+      "record": {
+        "outputActive": true,
+        "outputBytes": 53463677,
+        "outputDuration": 314433,
+        "outputPaused": false,
+        "outputTimecode": "00:05:14.433"
+      },
+      "stage": 147
+    },
+    {
+      "at": 1793846613989,
+      "stats": {
+        "activeFps": 30.000000300000007,
+        "availableDiskSpace": 359019.94921875,
+        "averageFrameRenderTime": 0.423183,
+        "cpuUsage": 2.70774787388751,
+        "memoryUsage": 369.3203125,
+        "outputSkippedFrames": 0,
+        "outputTotalFrames": 9745,
+        "renderSkippedFrames": 0,
+        "renderTotalFrames": 10247,
+        "webSocketSessionIncomingMessages": 76,
+        "webSocketSessionOutgoingMessages": 76
+      },
+      "record": {
+        "outputActive": true,
+        "outputBytes": 55077011,
+        "outputDuration": 324533,
+        "outputPaused": false,
+        "outputTimecode": "00:05:24.533"
+      },
+      "stage": 153
+    },
+    {
+      "at": 1793846624893,
+      "stats": {
+        "activeFps": 30.000000300000007,
+        "availableDiskSpace": 359019.90234375,
+        "averageFrameRenderTime": 0.429054,
+        "cpuUsage": 2.344968739325559,
+        "memoryUsage": 369.3203125,
+        "outputSkippedFrames": 0,
+        "outputTotalFrames": 10072,
+        "renderSkippedFrames": 0,
+        "renderTotalFrames": 10575,
+        "webSocketSessionIncomingMessages": 78,
+        "webSocketSessionOutgoingMessages": 78
+      },
+      "record": {
+        "outputActive": true,
+        "outputBytes": 56839336,
+        "outputDuration": 335433,
+        "outputPaused": false,
+        "outputTimecode": "00:05:35.433"
+      },
+      "stage": 160
+    },
+    {
+      "at": 1793846635000,
+      "stats": {
+        "activeFps": 30.000000300000007,
+        "availableDiskSpace": 359017.25390625,
+        "averageFrameRenderTime": 0.366593,
+        "cpuUsage": 2.352962668024913,
+        "memoryUsage": 369.41015625,
+        "outputSkippedFrames": 0,
+        "outputTotalFrames": 10375,
+        "renderSkippedFrames": 0,
+        "renderTotalFrames": 10877,
+        "webSocketSessionIncomingMessages": 80,
+        "webSocketSessionOutgoingMessages": 80
+      },
+      "record": {
+        "outputActive": true,
+        "outputBytes": 58566181,
+        "outputDuration": 345533,
+        "outputPaused": false,
+        "outputTimecode": "00:05:45.533"
+      },
+      "stage": 166
+    },
+    {
+      "at": 1793846645882,
+      "stats": {
+        "activeFps": 30.000000300000007,
+        "availableDiskSpace": 359017.203125,
+        "averageFrameRenderTime": 0.457561,
+        "cpuUsage": 2.68845185476715,
+        "memoryUsage": 369.3671875,
+        "outputSkippedFrames": 0,
+        "outputTotalFrames": 10702,
+        "renderSkippedFrames": 0,
+        "renderTotalFrames": 11204,
+        "webSocketSessionIncomingMessages": 82,
+        "webSocketSessionOutgoingMessages": 82
+      },
+      "record": {
+        "outputActive": true,
+        "outputBytes": 60298335,
+        "outputDuration": 356433,
+        "outputPaused": false,
+        "outputTimecode": "00:05:56.433"
+      },
+      "stage": 173
+    },
+    {
+      "at": 1793846656018,
+      "stats": {
+        "activeFps": 30.000000300000007,
+        "availableDiskSpace": 359015.61328125,
+        "averageFrameRenderTime": 0.402219,
+        "cpuUsage": 2.4672089914411828,
+        "memoryUsage": 369.37109375,
+        "outputSkippedFrames": 0,
+        "outputTotalFrames": 11006,
+        "renderSkippedFrames": 0,
+        "renderTotalFrames": 11508,
+        "webSocketSessionIncomingMessages": 84,
+        "webSocketSessionOutgoingMessages": 84
+      },
+      "record": {
+        "outputActive": true,
+        "outputBytes": 61832335,
+        "outputDuration": 366566,
+        "outputPaused": false,
+        "outputTimecode": "00:06:06.566"
+      },
+      "stage": 179
+    },
+    {
+      "at": 1793846666911,
+      "stats": {
+        "activeFps": 30.000000300000007,
+        "availableDiskSpace": 359007.69140625,
+        "averageFrameRenderTime": 0.336235,
+        "cpuUsage": 2.437915057046157,
+        "memoryUsage": 369.34375,
+        "outputSkippedFrames": 0,
+        "outputTotalFrames": 11333,
+        "renderSkippedFrames": 0,
+        "renderTotalFrames": 11835,
+        "webSocketSessionIncomingMessages": 86,
+        "webSocketSessionOutgoingMessages": 86
+      },
+      "record": {
+        "outputActive": true,
+        "outputBytes": 63673645,
+        "outputDuration": 377466,
+        "outputPaused": false,
+        "outputTimecode": "00:06:17.466"
+      },
+      "stage": 186
+    },
+    {
+      "at": 1793846677080,
+      "stats": {
+        "activeFps": 30.000000300000007,
+        "availableDiskSpace": 359007.66796875,
+        "averageFrameRenderTime": 0.458609,
+        "cpuUsage": 3.541186517593779,
+        "memoryUsage": 369.30859375,
+        "outputSkippedFrames": 0,
+        "outputTotalFrames": 11637,
+        "renderSkippedFrames": 0,
+        "renderTotalFrames": 12139,
+        "webSocketSessionIncomingMessages": 88,
+        "webSocketSessionOutgoingMessages": 88
+      },
+      "record": {
+        "outputActive": true,
+        "outputBytes": 65318223,
+        "outputDuration": 387599,
+        "outputPaused": false,
+        "outputTimecode": "00:06:27.599"
+      },
+      "stage": 192
+    },
+    {
+      "at": 1793846687918,
+      "stats": {
+        "activeFps": 30.000000300000007,
+        "availableDiskSpace": 359007.61328125,
+        "averageFrameRenderTime": 0.457235,
+        "cpuUsage": 2.426448185489422,
+        "memoryUsage": 369.30859375,
+        "outputSkippedFrames": 0,
+        "outputTotalFrames": 11963,
+        "renderSkippedFrames": 0,
+        "renderTotalFrames": 12465,
+        "webSocketSessionIncomingMessages": 90,
+        "webSocketSessionOutgoingMessages": 90
+      },
+      "record": {
+        "outputActive": true,
+        "outputBytes": 67061585,
+        "outputDuration": 398466,
+        "outputPaused": false,
+        "outputTimecode": "00:06:38.466"
+      },
+      "stage": 199
+    },
+    {
+      "at": 1793846698081,
+      "stats": {
+        "activeFps": 30.000000300000007,
+        "availableDiskSpace": 359007.58984375,
+        "averageFrameRenderTime": 0.469683,
+        "cpuUsage": 2.3444229262461582,
+        "memoryUsage": 369.3671875,
+        "outputSkippedFrames": 0,
+        "outputTotalFrames": 12268,
+        "renderSkippedFrames": 0,
+        "renderTotalFrames": 12770,
+        "webSocketSessionIncomingMessages": 92,
+        "webSocketSessionOutgoingMessages": 92
+      },
+      "record": {
+        "outputActive": true,
+        "outputBytes": 68806358,
+        "outputDuration": 408633,
+        "outputPaused": false,
+        "outputTimecode": "00:06:48.633"
+      },
+      "stage": 205
+    },
+    {
+      "at": 1793846708951,
+      "stats": {
+        "activeFps": 30.000000300000007,
+        "availableDiskSpace": 359007.5390625,
+        "averageFrameRenderTime": 0.485174,
+        "cpuUsage": 2.4870811130492823,
+        "memoryUsage": 369.37109375,
+        "outputSkippedFrames": 0,
+        "outputTotalFrames": 12594,
+        "renderSkippedFrames": 0,
+        "renderTotalFrames": 13096,
+        "webSocketSessionIncomingMessages": 94,
+        "webSocketSessionOutgoingMessages": 94
+      },
+      "record": {
+        "outputActive": true,
+        "outputBytes": 70521927,
+        "outputDuration": 419499,
+        "outputPaused": false,
+        "outputTimecode": "00:06:59.499"
+      },
+      "stage": 212
+    },
+    {
+      "at": 1793846719116,
+      "stats": {
+        "activeFps": 30.000000300000007,
+        "availableDiskSpace": 358999.51953125,
+        "averageFrameRenderTime": 0.513483,
+        "cpuUsage": 3.124220317654929,
+        "memoryUsage": 369.35546875,
+        "outputSkippedFrames": 0,
+        "outputTotalFrames": 12899,
+        "renderSkippedFrames": 0,
+        "renderTotalFrames": 13401,
+        "webSocketSessionIncomingMessages": 96,
+        "webSocketSessionOutgoingMessages": 96
+      },
+      "record": {
+        "outputActive": true,
+        "outputBytes": 72139039,
+        "outputDuration": 429666,
+        "outputPaused": false,
+        "outputTimecode": "00:07:09.666"
+      },
+      "stage": 218
+    },
+    {
+      "at": 1793846730039,
+      "stats": {
+        "activeFps": 30.000000300000007,
+        "availableDiskSpace": 358999.46875,
+        "averageFrameRenderTime": 0.472622,
+        "cpuUsage": 2.3254490096583256,
+        "memoryUsage": 369.35546875,
+        "outputSkippedFrames": 0,
+        "outputTotalFrames": 13227,
+        "renderSkippedFrames": 0,
+        "renderTotalFrames": 13729,
+        "webSocketSessionIncomingMessages": 98,
+        "webSocketSessionOutgoingMessages": 98
+      },
+      "record": {
+        "outputActive": true,
+        "outputBytes": 73876857,
+        "outputDuration": 440599,
+        "outputPaused": false,
+        "outputTimecode": "00:07:20.599"
+      },
+      "stage": 225
+    },
+    {
+      "at": 1793846740192,
+      "stats": {
+        "activeFps": 30.000000300000007,
+        "availableDiskSpace": 358999.44921875,
+        "averageFrameRenderTime": 0.448845,
+        "cpuUsage": 2.5674241032664176,
+        "memoryUsage": 369.35546875,
+        "outputSkippedFrames": 0,
+        "outputTotalFrames": 13531,
+        "renderSkippedFrames": 0,
+        "renderTotalFrames": 14033,
+        "webSocketSessionIncomingMessages": 100,
+        "webSocketSessionOutgoingMessages": 100
+      },
+      "record": {
+        "outputActive": true,
+        "outputBytes": 75504487,
+        "outputDuration": 450733,
+        "outputPaused": false,
+        "outputTimecode": "00:07:30.733"
+      },
+      "stage": 231
+    },
+    {
+      "at": 1793846751138,
+      "stats": {
+        "activeFps": 30.000000300000007,
+        "availableDiskSpace": 358999.3984375,
+        "averageFrameRenderTime": 0.340851,
+        "cpuUsage": 2.685285458892091,
+        "memoryUsage": 369.35546875,
+        "outputSkippedFrames": 0,
+        "outputTotalFrames": 13860,
+        "renderSkippedFrames": 0,
+        "renderTotalFrames": 14362,
+        "webSocketSessionIncomingMessages": 102,
+        "webSocketSessionOutgoingMessages": 102
+      },
+      "record": {
+        "outputActive": true,
+        "outputBytes": 77229937,
+        "outputDuration": 461699,
+        "outputPaused": false,
+        "outputTimecode": "00:07:41.699"
+      },
+      "stage": 238
+    },
+    {
+      "at": 1793846761251,
+      "stats": {
+        "activeFps": 30.000000300000007,
+        "availableDiskSpace": 358999.375,
+        "averageFrameRenderTime": 0.521187,
+        "cpuUsage": 3.2641238014193026,
+        "memoryUsage": 369.41796875,
+        "outputSkippedFrames": 0,
+        "outputTotalFrames": 14163,
+        "renderSkippedFrames": 0,
+        "renderTotalFrames": 14665,
+        "webSocketSessionIncomingMessages": 104,
+        "webSocketSessionOutgoingMessages": 104
+      },
+      "record": {
+        "outputActive": true,
+        "outputBytes": 78848080,
+        "outputDuration": 471799,
+        "outputPaused": false,
+        "outputTimecode": "00:07:51.799"
+      },
+      "stage": 244
+    },
+    {
+      "at": 1793846772161,
+      "stats": {
+        "activeFps": 30.000000300000007,
+        "availableDiskSpace": 358994.578125,
+        "averageFrameRenderTime": 0.44469,
+        "cpuUsage": 2.0484184458370325,
+        "memoryUsage": 369.5234375,
+        "outputSkippedFrames": 0,
+        "outputTotalFrames": 14491,
+        "renderSkippedFrames": 0,
+        "renderTotalFrames": 14993,
+        "webSocketSessionIncomingMessages": 106,
+        "webSocketSessionOutgoingMessages": 106
+      },
+      "record": {
+        "outputActive": true,
+        "outputBytes": 80692127,
+        "outputDuration": 482733,
+        "outputPaused": false,
+        "outputTimecode": "00:08:02.733"
+      },
+      "stage": 251
+    },
+    {
+      "at": 1793846782316,
+      "stats": {
+        "activeFps": 30.000000300000007,
+        "availableDiskSpace": 358994.55078125,
+        "averageFrameRenderTime": 0.477193,
+        "cpuUsage": 1.9148374499192142,
+        "memoryUsage": 369.61328125,
+        "outputSkippedFrames": 0,
+        "outputTotalFrames": 14795,
+        "renderSkippedFrames": 0,
+        "renderTotalFrames": 15297,
+        "webSocketSessionIncomingMessages": 108,
+        "webSocketSessionOutgoingMessages": 108
+      },
+      "record": {
+        "outputActive": true,
+        "outputBytes": 82240881,
+        "outputDuration": 492866,
+        "outputPaused": false,
+        "outputTimecode": "00:08:12.866"
+      },
+      "stage": 257
+    },
+    {
+      "at": 1793846793217,
+      "stats": {
+        "activeFps": 30.000000300000007,
+        "availableDiskSpace": 358994.50390625,
+        "averageFrameRenderTime": 0.576293,
+        "cpuUsage": 2.032839775988591,
+        "memoryUsage": 369.63671875,
+        "outputSkippedFrames": 0,
+        "outputTotalFrames": 15122,
+        "renderSkippedFrames": 0,
+        "renderTotalFrames": 15624,
+        "webSocketSessionIncomingMessages": 110,
+        "webSocketSessionOutgoingMessages": 110
+      },
+      "record": {
+        "outputActive": true,
+        "outputBytes": 83816275,
+        "outputDuration": 503766,
+        "outputPaused": false,
+        "outputTimecode": "00:08:23.766"
+      },
+      "stage": 264
+    },
+    {
+      "at": 1793846803368,
+      "stats": {
+        "activeFps": 30.000000300000007,
+        "availableDiskSpace": 358992.60546875,
+        "averageFrameRenderTime": 0.529493,
+        "cpuUsage": 1.877435596621825,
+        "memoryUsage": 370,
+        "outputSkippedFrames": 0,
+        "outputTotalFrames": 15426,
+        "renderSkippedFrames": 0,
+        "renderTotalFrames": 15928,
+        "webSocketSessionIncomingMessages": 112,
+        "webSocketSessionOutgoingMessages": 112
+      },
+      "record": {
+        "outputActive": true,
+        "outputBytes": 85554765,
+        "outputDuration": 513899,
+        "outputPaused": false,
+        "outputTimecode": "00:08:33.899"
+      },
+      "stage": 270
+    },
+    {
+      "at": 1793846814233,
+      "stats": {
+        "activeFps": 30.000000300000007,
+        "availableDiskSpace": 358984.875,
+        "averageFrameRenderTime": 0.574161,
+        "cpuUsage": 2.1200012170091833,
+        "memoryUsage": 370.16015625,
+        "outputSkippedFrames": 0,
+        "outputTotalFrames": 15753,
+        "renderSkippedFrames": 0,
+        "renderTotalFrames": 16255,
+        "webSocketSessionIncomingMessages": 114,
+        "webSocketSessionOutgoingMessages": 114
+      },
+      "record": {
+        "outputActive": true,
+        "outputBytes": 87293549,
+        "outputDuration": 524799,
+        "outputPaused": false,
+        "outputTimecode": "00:08:44.799"
+      },
+      "stage": 277
+    },
+    {
+      "at": 1793846824385,
+      "stats": {
+        "activeFps": 30.000000300000007,
+        "availableDiskSpace": 358984.84765625,
+        "averageFrameRenderTime": 0.514464,
+        "cpuUsage": 2.454549230109454,
+        "memoryUsage": 370.16015625,
+        "outputSkippedFrames": 0,
+        "outputTotalFrames": 16057,
+        "renderSkippedFrames": 0,
+        "renderTotalFrames": 16559,
+        "webSocketSessionIncomingMessages": 116,
+        "webSocketSessionOutgoingMessages": 116
+      },
+      "record": {
+        "outputActive": true,
+        "outputBytes": 88902383,
+        "outputDuration": 534933,
+        "outputPaused": false,
+        "outputTimecode": "00:08:54.933"
+      },
+      "stage": 283
+    },
+    {
+      "at": 1793846835314,
+      "stats": {
+        "activeFps": 30.000000300000007,
+        "availableDiskSpace": 358984.8046875,
+        "averageFrameRenderTime": 0.459496,
+        "cpuUsage": 2.1442805726652243,
+        "memoryUsage": 370.16015625,
+        "outputSkippedFrames": 0,
+        "outputTotalFrames": 16385,
+        "renderSkippedFrames": 0,
+        "renderTotalFrames": 16887,
+        "webSocketSessionIncomingMessages": 118,
+        "webSocketSessionOutgoingMessages": 118
+      },
+      "record": {
+        "outputActive": true,
+        "outputBytes": 90779095,
+        "outputDuration": 545866,
+        "outputPaused": false,
+        "outputTimecode": "00:09:05.866"
+      },
+      "stage": 290
+    },
+    {
+      "at": 1793846845448,
+      "stats": {
+        "activeFps": 30.000000300000007,
+        "availableDiskSpace": 358984.77734375,
+        "averageFrameRenderTime": 0.483441,
+        "cpuUsage": 2.1564554091551535,
+        "memoryUsage": 370.15625,
+        "outputSkippedFrames": 0,
+        "outputTotalFrames": 16689,
+        "renderSkippedFrames": 0,
+        "renderTotalFrames": 17191,
+        "webSocketSessionIncomingMessages": 120,
+        "webSocketSessionOutgoingMessages": 120
+      },
+      "record": {
+        "outputActive": true,
+        "outputBytes": 92381783,
+        "outputDuration": 555999,
+        "outputPaused": false,
+        "outputTimecode": "00:09:15.999"
+      },
+      "stage": 296
+    },
+    {
+      "at": 1793846856367,
+      "stats": {
+        "activeFps": 30.000000300000007,
+        "availableDiskSpace": 358984.484375,
+        "averageFrameRenderTime": 0.488719,
+        "cpuUsage": 2.0557470866289824,
+        "memoryUsage": 370.16015625,
+        "outputSkippedFrames": 0,
+        "outputTotalFrames": 17016,
+        "renderSkippedFrames": 0,
+        "renderTotalFrames": 17518,
+        "webSocketSessionIncomingMessages": 122,
+        "webSocketSessionOutgoingMessages": 122
+      },
+      "record": {
+        "outputActive": true,
+        "outputBytes": 93982136,
+        "outputDuration": 566899,
+        "outputPaused": false,
+        "outputTimecode": "00:09:26.899"
+      },
+      "stage": 303
+    },
+    {
+      "at": 1793846866509,
+      "stats": {
+        "activeFps": 30.000000300000007,
+        "availableDiskSpace": 358980.3984375,
+        "averageFrameRenderTime": 0.490358,
+        "cpuUsage": 2.054091365443344,
+        "memoryUsage": 370.16015625,
+        "outputSkippedFrames": 0,
+        "outputTotalFrames": 17321,
+        "renderSkippedFrames": 0,
+        "renderTotalFrames": 17823,
+        "webSocketSessionIncomingMessages": 124,
+        "webSocketSessionOutgoingMessages": 124
+      },
+      "record": {
+        "outputActive": true,
+        "outputBytes": 95590135,
+        "outputDuration": 577066,
+        "outputPaused": false,
+        "outputTimecode": "00:09:37.066"
+      },
+      "stage": 309
+    },
+    {
+      "at": 1793846877436,
+      "stats": {
+        "activeFps": 30.000000300000007,
+        "availableDiskSpace": 358980.34375,
+        "averageFrameRenderTime": 0.402451,
+        "cpuUsage": 2.1994666809297203,
+        "memoryUsage": 369.9296875,
+        "outputSkippedFrames": 0,
+        "outputTotalFrames": 17648,
+        "renderSkippedFrames": 0,
+        "renderTotalFrames": 18150,
+        "webSocketSessionIncomingMessages": 126,
+        "webSocketSessionOutgoingMessages": 126
+      },
+      "record": {
+        "outputActive": true,
+        "outputBytes": 97340231,
+        "outputDuration": 587966,
+        "outputPaused": false,
+        "outputTimecode": "00:09:47.966"
+      },
+      "stage": 316
+    },
+    {
+      "at": 1793846887551,
+      "stats": {
+        "activeFps": 30.000000300000007,
+        "availableDiskSpace": 358978.07421875,
+        "averageFrameRenderTime": 0.511935,
+        "cpuUsage": 2.0941218993735564,
+        "memoryUsage": 369.97265625,
+        "outputSkippedFrames": 0,
+        "outputTotalFrames": 17952,
+        "renderSkippedFrames": 0,
+        "renderTotalFrames": 18454,
+        "webSocketSessionIncomingMessages": 128,
+        "webSocketSessionOutgoingMessages": 128
+      },
+      "record": {
+        "outputActive": true,
+        "outputBytes": 98970100,
+        "outputDuration": 598099,
+        "outputPaused": false,
+        "outputTimecode": "00:09:58.099"
+      },
+      "stage": 322
+    }
+  ],
+  "memory": [
+    {
+      "at": 1793846290007,
+      "rss": 82223104,
+      "heapTotal": 23326720,
+      "heapUsed": 15465248,
+      "external": 10859708,
+      "arrayBuffers": 59797
+    },
+    {
+      "at": 1793846295014,
+      "rss": 82612224,
+      "heapTotal": 23588864,
+      "heapUsed": 15353712,
+      "external": 10865543,
+      "arrayBuffers": 65592
+    },
+    {
+      "at": 1793846300018,
+      "rss": 83316736,
+      "heapTotal": 23588864,
+      "heapUsed": 16370896,
+      "external": 10884324,
+      "arrayBuffers": 84373
+    },
+    {
+      "at": 1793846305024,
+      "rss": 83005440,
+      "heapTotal": 23588864,
+      "heapUsed": 17094744,
+      "external": 10892420,
+      "arrayBuffers": 92469
+    },
+    {
+      "at": 1793846310038,
+      "rss": 83107840,
+      "heapTotal": 23588864,
+      "heapUsed": 16337104,
+      "external": 10908932,
+      "arrayBuffers": 108981
+    },
+    {
+      "at": 1793846315046,
+      "rss": 83714048,
+      "heapTotal": 23588864,
+      "heapUsed": 15815040,
+      "external": 10928594,
+      "arrayBuffers": 113799
+    },
+    {
+      "at": 1793846320046,
+      "rss": 83308544,
+      "heapTotal": 23588864,
+      "heapUsed": 14360344,
+      "external": 10933508,
+      "arrayBuffers": 121991
+    },
+    {
+      "at": 1793846325052,
+      "rss": 83689472,
+      "heapTotal": 23588864,
+      "heapUsed": 16546712,
+      "external": 10933412,
+      "arrayBuffers": 133461
+    },
+    {
+      "at": 1793846330061,
+      "rss": 83734528,
+      "heapTotal": 23588864,
+      "heapUsed": 14460240,
+      "external": 10941668,
+      "arrayBuffers": 138375
+    },
+    {
+      "at": 1793846335069,
+      "rss": 84045824,
+      "heapTotal": 23588864,
+      "heapUsed": 16163040,
+      "external": 10955655,
+      "arrayBuffers": 155704
+    },
+    {
+      "at": 1793846340076,
+      "rss": 84193280,
+      "heapTotal": 23588864,
+      "heapUsed": 16598912,
+      "external": 10966283,
+      "arrayBuffers": 166332
+    },
+    {
+      "at": 1793846345086,
+      "rss": 84410368,
+      "heapTotal": 23588864,
+      "heapUsed": 16033904,
+      "external": 10986009,
+      "arrayBuffers": 171143
+    },
+    {
+      "at": 1793846350098,
+      "rss": 84410368,
+      "heapTotal": 23588864,
+      "heapUsed": 15358088,
+      "external": 10986009,
+      "arrayBuffers": 179335
+    },
+    {
+      "at": 1793846355107,
+      "rss": 84205568,
+      "heapTotal": 23588864,
+      "heapUsed": 15334064,
+      "external": 10994233,
+      "arrayBuffers": 187527
+    },
+    {
+      "at": 1793846360116,
+      "rss": 84209664,
+      "heapTotal": 23588864,
+      "heapUsed": 17285912,
+      "external": 11007140,
+      "arrayBuffers": 207189
+    },
+    {
+      "at": 1793846365130,
+      "rss": 83906560,
+      "heapTotal": 23588864,
+      "heapUsed": 14825696,
+      "external": 11018809,
+      "arrayBuffers": 212103
+    },
+    {
+      "at": 1793846370132,
+      "rss": 84021248,
+      "heapTotal": 23588864,
+      "heapUsed": 16710080,
+      "external": 11023524,
+      "arrayBuffers": 223573
+    },
+    {
+      "at": 1793846375143,
+      "rss": 84172800,
+      "heapTotal": 23851008,
+      "heapUsed": 14886088,
+      "external": 11023620,
+      "arrayBuffers": 220295
+    },
+    {
+      "at": 1793846380151,
+      "rss": 84221952,
+      "heapTotal": 23851008,
+      "heapUsed": 14735440,
+      "external": 11043282,
+      "arrayBuffers": 236679
+    },
+    {
+      "at": 1793846385151,
+      "rss": 84246528,
+      "heapTotal": 23851008,
+      "heapUsed": 16906560,
+      "external": 11048196,
+      "arrayBuffers": 248245
+    },
+    {
+      "at": 1793846390165,
+      "rss": 84471808,
+      "heapTotal": 24113152,
+      "heapUsed": 15555728,
+      "external": 11067858,
+      "arrayBuffers": 253063
+    },
+    {
+      "at": 1793846395167,
+      "rss": 78254080,
+      "heapTotal": 19656704,
+      "heapUsed": 15281136,
+      "external": 10859780,
+      "arrayBuffers": 56455
+    },
+    {
+      "at": 1793846400171,
+      "rss": 80261120,
+      "heapTotal": 19656704,
+      "heapUsed": 15191256,
+      "external": 10884356,
+      "arrayBuffers": 81031
+    },
+    {
+      "at": 1793846405174,
+      "rss": 80338944,
+      "heapTotal": 19656704,
+      "heapUsed": 14293608,
+      "external": 10917092,
+      "arrayBuffers": 113799
+    },
+    {
+      "at": 1793846410177,
+      "rss": 80355328,
+      "heapTotal": 19656704,
+      "heapUsed": 14639584,
+      "external": 10949860,
+      "arrayBuffers": 146567
+    },
+    {
+      "at": 1793846415192,
+      "rss": 80613376,
+      "heapTotal": 19656704,
+      "heapUsed": 15859712,
+      "external": 10974379,
+      "arrayBuffers": 174428
+    },
+    {
+      "at": 1793846420195,
+      "rss": 82157568,
+      "heapTotal": 23851008,
+      "heapUsed": 15151632,
+      "external": 11010585,
+      "arrayBuffers": 203911
+    },
+    {
+      "at": 1793846425209,
+      "rss": 84275200,
+      "heapTotal": 23851008,
+      "heapUsed": 17376552,
+      "external": 11015458,
+      "arrayBuffers": 215507
+    },
+    {
+      "at": 1793846430220,
+      "rss": 84475904,
+      "heapTotal": 23851008,
+      "heapUsed": 16448824,
+      "external": 11023620,
+      "arrayBuffers": 223669
+    },
+    {
+      "at": 1793846435232,
+      "rss": 84545536,
+      "heapTotal": 23851008,
+      "heapUsed": 16454704,
+      "external": 11040004,
+      "arrayBuffers": 240053
+    },
+    {
+      "at": 1793846440245,
+      "rss": 84819968,
+      "heapTotal": 23851008,
+      "heapUsed": 17186968,
+      "external": 11040004,
+      "arrayBuffers": 240053
+    },
+    {
+      "at": 1793846445257,
+      "rss": 84545536,
+      "heapTotal": 23851008,
+      "heapUsed": 14769032,
+      "external": 11056507,
+      "arrayBuffers": 244871
+    },
+    {
+      "at": 1793846450265,
+      "rss": 84574208,
+      "heapTotal": 23851008,
+      "heapUsed": 16593976,
+      "external": 11056388,
+      "arrayBuffers": 256437
+    },
+    {
+      "at": 1793846455268,
+      "rss": 84791296,
+      "heapTotal": 24113152,
+      "heapUsed": 17361704,
+      "external": 11072772,
+      "arrayBuffers": 272821
+    },
+    {
+      "at": 1793846460280,
+      "rss": 85135360,
+      "heapTotal": 24113152,
+      "heapUsed": 14661392,
+      "external": 11076050,
+      "arrayBuffers": 261255
+    },
+    {
+      "at": 1793846465293,
+      "rss": 85278720,
+      "heapTotal": 24113152,
+      "heapUsed": 16066032,
+      "external": 11084338,
+      "arrayBuffers": 269447
+    },
+    {
+      "at": 1793846470305,
+      "rss": 85311488,
+      "heapTotal": 24113152,
+      "heapUsed": 17595056,
+      "external": 11089060,
+      "arrayBuffers": 289109
+    },
+    {
+      "at": 1793846475312,
+      "rss": 85389312,
+      "heapTotal": 24113152,
+      "heapUsed": 15508920,
+      "external": 11100722,
+      "arrayBuffers": 285831
+    },
+    {
+      "at": 1793846480324,
+      "rss": 85393408,
+      "heapTotal": 24113152,
+      "heapUsed": 16904976,
+      "external": 11105476,
+      "arrayBuffers": 305525
+    },
+    {
+      "at": 1793846485335,
+      "rss": 85303296,
+      "heapTotal": 24637440,
+      "heapUsed": 15423008,
+      "external": 11097348,
+      "arrayBuffers": 297397
+    },
+    {
+      "at": 1793846490339,
+      "rss": 85553152,
+      "heapTotal": 24637440,
+      "heapUsed": 17741144,
+      "external": 11105540,
+      "arrayBuffers": 305589
+    },
+    {
+      "at": 1793846495341,
+      "rss": 85274624,
+      "heapTotal": 24637440,
+      "heapUsed": 15113152,
+      "external": 11122887,
+      "arrayBuffers": 310407
+    },
+    {
+      "at": 1793846500349,
+      "rss": 78249984,
+      "heapTotal": 19918848,
+      "heapUsed": 14314320,
+      "external": 10851627,
+      "arrayBuffers": 48263
+    },
+    {
+      "at": 1793846505358,
+      "rss": 81342464,
+      "heapTotal": 19918848,
+      "heapUsed": 14277440,
+      "external": 10884395,
+      "arrayBuffers": 81031
+    },
+    {
+      "at": 1793846510369,
+      "rss": 81342464,
+      "heapTotal": 19918848,
+      "heapUsed": 15026008,
+      "external": 10908971,
+      "arrayBuffers": 105607
+    },
+    {
+      "at": 1793846515372,
+      "rss": 81444864,
+      "heapTotal": 19918848,
+      "heapUsed": 14155752,
+      "external": 10941636,
+      "arrayBuffers": 138375
+    },
+    {
+      "at": 1793846520375,
+      "rss": 81166336,
+      "heapTotal": 20180992,
+      "heapUsed": 15179536,
+      "external": 10974500,
+      "arrayBuffers": 171143
+    },
+    {
+      "at": 1793846525380,
+      "rss": 83509248,
+      "heapTotal": 24375296,
+      "heapUsed": 14445384,
+      "external": 11002393,
+      "arrayBuffers": 195719
+    },
+    {
+      "at": 1793846530393,
+      "rss": 85467136,
+      "heapTotal": 24375296,
+      "heapUsed": 15245136,
+      "external": 11018873,
+      "arrayBuffers": 212103
+    },
+    {
+      "at": 1793846535394,
+      "rss": 85889024,
+      "heapTotal": 24375296,
+      "heapUsed": 15221560,
+      "external": 11026969,
+      "arrayBuffers": 220295
+    },
+    {
+      "at": 1793846540399,
+      "rss": 85901312,
+      "heapTotal": 24375296,
+      "heapUsed": 16467560,
+      "external": 11040004,
+      "arrayBuffers": 240053
+    },
+    {
+      "at": 1793846545404,
+      "rss": 85909504,
+      "heapTotal": 24375296,
+      "heapUsed": 17208568,
+      "external": 11048196,
+      "arrayBuffers": 248245
+    },
+    {
+      "at": 1793846550419,
+      "rss": 85934080,
+      "heapTotal": 24375296,
+      "heapUsed": 14685704,
+      "external": 11046427,
+      "arrayBuffers": 246476
+    },
+    {
+      "at": 1793846555420,
+      "rss": 85622784,
+      "heapTotal": 24375296,
+      "heapUsed": 15234536,
+      "external": 11067993,
+      "arrayBuffers": 253063
+    },
+    {
+      "at": 1793846560428,
+      "rss": 85676032,
+      "heapTotal": 24375296,
+      "heapUsed": 15234880,
+      "external": 11076185,
+      "arrayBuffers": 261255
+    },
+    {
+      "at": 1793846565428,
+      "rss": 85954560,
+      "heapTotal": 24375296,
+      "heapUsed": 15817392,
+      "external": 11072804,
+      "arrayBuffers": 272853
+    },
+    {
+      "at": 1793846570433,
+      "rss": 85966848,
+      "heapTotal": 24375296,
+      "heapUsed": 17212288,
+      "external": 11080900,
+      "arrayBuffers": 280949
+    },
+    {
+      "at": 1793846575442,
+      "rss": 85975040,
+      "heapTotal": 24375296,
+      "heapUsed": 17233112,
+      "external": 11089188,
+      "arrayBuffers": 289237
+    },
+    {
+      "at": 1793846580447,
+      "rss": 85979136,
+      "heapTotal": 24375296,
+      "heapUsed": 17485752,
+      "external": 11097404,
+      "arrayBuffers": 297453
+    },
+    {
+      "at": 1793846585454,
+      "rss": 86183936,
+      "heapTotal": 24375296,
+      "heapUsed": 17472856,
+      "external": 11105572,
+      "arrayBuffers": 305621
+    },
+    {
+      "at": 1793846590456,
+      "rss": 86224896,
+      "heapTotal": 24375296,
+      "heapUsed": 16783288,
+      "external": 11113668,
+      "arrayBuffers": 313717
+    },
+    {
+      "at": 1793846595471,
+      "rss": 86298624,
+      "heapTotal": 24375296,
+      "heapUsed": 16877040,
+      "external": 11130116,
+      "arrayBuffers": 330165
+    },
+    {
+      "at": 1793846600476,
+      "rss": 86454272,
+      "heapTotal": 24375296,
+      "heapUsed": 17793184,
+      "external": 11138308,
+      "arrayBuffers": 338357
+    },
+    {
+      "at": 1793846605506,
+      "rss": 86458368,
+      "heapTotal": 24375296,
+      "heapUsed": 16170256,
+      "external": 11146539,
+      "arrayBuffers": 346588
+    },
+    {
+      "at": 1793846610519,
+      "rss": 86597632,
+      "heapTotal": 24637440,
+      "heapUsed": 16315896,
+      "external": 11158105,
+      "arrayBuffers": 343175
+    },
+    {
+      "at": 1793846615525,
+      "rss": 86097920,
+      "heapTotal": 24637440,
+      "heapUsed": 16078024,
+      "external": 11166297,
+      "arrayBuffers": 351367
+    },
+    {
+      "at": 1793846620536,
+      "rss": 86102016,
+      "heapTotal": 24637440,
+      "heapUsed": 16756296,
+      "external": 11162916,
+      "arrayBuffers": 362965
+    },
+    {
+      "at": 1793846625542,
+      "rss": 86294528,
+      "heapTotal": 24637440,
+      "heapUsed": 17573816,
+      "external": 11171012,
+      "arrayBuffers": 371061
+    },
+    {
+      "at": 1793846630552,
+      "rss": 86294528,
+      "heapTotal": 24637440,
+      "heapUsed": 16796920,
+      "external": 11179300,
+      "arrayBuffers": 379349
+    },
+    {
+      "at": 1793846635560,
+      "rss": 86417408,
+      "heapTotal": 24637440,
+      "heapUsed": 16111536,
+      "external": 11199001,
+      "arrayBuffers": 384135
+    },
+    {
+      "at": 1793846640561,
+      "rss": 86446080,
+      "heapTotal": 24899584,
+      "heapUsed": 17135416,
+      "external": 11195684,
+      "arrayBuffers": 395733
+    },
+    {
+      "at": 1793846645567,
+      "rss": 86200320,
+      "heapTotal": 24899584,
+      "heapUsed": 15001992,
+      "external": 11207154,
+      "arrayBuffers": 400519
+    },
+    {
+      "at": 1793846650568,
+      "rss": 90140672,
+      "heapTotal": 33288192,
+      "heapUsed": 18063936,
+      "external": 10863186,
+      "arrayBuffers": 63235
+    },
+    {
+      "at": 1793846655577,
+      "rss": 93114368,
+      "heapTotal": 33288192,
+      "heapUsed": 14876256,
+      "external": 10878069,
+      "arrayBuffers": 56455
+    },
+    {
+      "at": 1793846660585,
+      "rss": 92758016,
+      "heapTotal": 33288192,
+      "heapUsed": 14956152,
+      "external": 10874791,
+      "arrayBuffers": 56455
+    },
+    {
+      "at": 1793846665599,
+      "rss": 92762112,
+      "heapTotal": 33288192,
+      "heapUsed": 19492760,
+      "external": 10871385,
+      "arrayBuffers": 71434
+    },
+    {
+      "at": 1793846670599,
+      "rss": 92934144,
+      "heapTotal": 33288192,
+      "heapUsed": 17468392,
+      "external": 10871321,
+      "arrayBuffers": 71370
+    },
+    {
+      "at": 1793846675614,
+      "rss": 92971008,
+      "heapTotal": 33288192,
+      "heapUsed": 15033624,
+      "external": 10885681,
+      "arrayBuffers": 56455
+    },
+    {
+      "at": 1793846680623,
+      "rss": 93593600,
+      "heapTotal": 33288192,
+      "heapUsed": 19893528,
+      "external": 10871321,
+      "arrayBuffers": 71370
+    },
+    {
+      "at": 1793846685625,
+      "rss": 93085696,
+      "heapTotal": 33288192,
+      "heapUsed": 17178416,
+      "external": 10859812,
+      "arrayBuffers": 59861
+    },
+    {
+      "at": 1793846690635,
+      "rss": 93597696,
+      "heapTotal": 33288192,
+      "heapUsed": 14569928,
+      "external": 10874695,
+      "arrayBuffers": 56455
+    },
+    {
+      "at": 1793846695636,
+      "rss": 93687808,
+      "heapTotal": 33288192,
+      "heapUsed": 18866792,
+      "external": 10873837,
+      "arrayBuffers": 73886
+    },
+    {
+      "at": 1793846700644,
+      "rss": 93687808,
+      "heapTotal": 33288192,
+      "heapUsed": 17268896,
+      "external": 10859780,
+      "arrayBuffers": 59829
+    },
+    {
+      "at": 1793846705657,
+      "rss": 93691904,
+      "heapTotal": 33288192,
+      "heapUsed": 14488448,
+      "external": 10874791,
+      "arrayBuffers": 56455
+    },
+    {
+      "at": 1793846710667,
+      "rss": 93384704,
+      "heapTotal": 33288192,
+      "heapUsed": 19740440,
+      "external": 10874389,
+      "arrayBuffers": 74438
+    },
+    {
+      "at": 1793846715669,
+      "rss": 93392896,
+      "heapTotal": 33288192,
+      "heapUsed": 17983384,
+      "external": 10868011,
+      "arrayBuffers": 68060
+    },
+    {
+      "at": 1793846720683,
+      "rss": 93392896,
+      "heapTotal": 33288192,
+      "heapUsed": 15293064,
+      "external": 10886300,
+      "arrayBuffers": 56455
+    },
+    {
+      "at": 1793846725695,
+      "rss": 93396992,
+      "heapTotal": 33288192,
+      "heapUsed": 20506304,
+      "external": 10874695,
+      "arrayBuffers": 74744
+    },
+    {
+      "at": 1793846730705,
+      "rss": 93401088,
+      "heapTotal": 33288192,
+      "heapUsed": 19162328,
+      "external": 10871417,
+      "arrayBuffers": 71466
+    },
+    {
+      "at": 1793846735712,
+      "rss": 93474816,
+      "heapTotal": 33288192,
+      "heapUsed": 16650696,
+      "external": 10859836,
+      "arrayBuffers": 59885
+    },
+    {
+      "at": 1793846740713,
+      "rss": 93556736,
+      "heapTotal": 33288192,
+      "heapUsed": 20602096,
+      "external": 10874791,
+      "arrayBuffers": 74840
+    },
+    {
+      "at": 1793846745719,
+      "rss": 93769728,
+      "heapTotal": 33288192,
+      "heapUsed": 17527352,
+      "external": 10867908,
+      "arrayBuffers": 67957
+    },
+    {
+      "at": 1793846750730,
+      "rss": 93995008,
+      "heapTotal": 33288192,
+      "heapUsed": 14756480,
+      "external": 10874791,
+      "arrayBuffers": 56455
+    },
+    {
+      "at": 1793846755739,
+      "rss": 93761536,
+      "heapTotal": 33288192,
+      "heapUsed": 20698920,
+      "external": 10874808,
+      "arrayBuffers": 74857
+    },
+    {
+      "at": 1793846760749,
+      "rss": 93761536,
+      "heapTotal": 33288192,
+      "heapUsed": 17560832,
+      "external": 10859780,
+      "arrayBuffers": 59829
+    },
+    {
+      "at": 1793846765764,
+      "rss": 93765632,
+      "heapTotal": 33288192,
+      "heapUsed": 15974824,
+      "external": 10868004,
+      "arrayBuffers": 68053
+    },
+    {
+      "at": 1793846770778,
+      "rss": 93765632,
+      "heapTotal": 33288192,
+      "heapUsed": 20452208,
+      "external": 10881503,
+      "arrayBuffers": 81552
+    },
+    {
+      "at": 1793846775787,
+      "rss": 93777920,
+      "heapTotal": 33288192,
+      "heapUsed": 17478408,
+      "external": 10868011,
+      "arrayBuffers": 68060
+    },
+    {
+      "at": 1793846780817,
+      "rss": 93650944,
+      "heapTotal": 33288192,
+      "heapUsed": 16562944,
+      "external": 10858486,
+      "arrayBuffers": 58535
+    },
+    {
+      "at": 1793846785822,
+      "rss": 94052352,
+      "heapTotal": 33288192,
+      "heapUsed": 20693888,
+      "external": 10874791,
+      "arrayBuffers": 74840
+    },
+    {
+      "at": 1793846790829,
+      "rss": 93646848,
+      "heapTotal": 33288192,
+      "heapUsed": 17608416,
+      "external": 10867908,
+      "arrayBuffers": 67957
+    },
+    {
+      "at": 1793846795831,
+      "rss": 93716480,
+      "heapTotal": 33288192,
+      "heapUsed": 15049904,
+      "external": 10882983,
+      "arrayBuffers": 56455
+    },
+    {
+      "at": 1793846800839,
+      "rss": 93724672,
+      "heapTotal": 33288192,
+      "heapUsed": 18871752,
+      "external": 10871321,
+      "arrayBuffers": 71370
+    },
+    {
+      "at": 1793846805848,
+      "rss": 93794304,
+      "heapTotal": 33288192,
+      "heapUsed": 17066608,
+      "external": 10859780,
+      "arrayBuffers": 59829
+    },
+    {
+      "at": 1793846810857,
+      "rss": 93798400,
+      "heapTotal": 33288192,
+      "heapUsed": 21591064,
+      "external": 10874695,
+      "arrayBuffers": 74744
+    },
+    {
+      "at": 1793846815862,
+      "rss": 93798400,
+      "heapTotal": 33288192,
+      "heapUsed": 19041792,
+      "external": 10871385,
+      "arrayBuffers": 71434
+    },
+    {
+      "at": 1793846820870,
+      "rss": 94076928,
+      "heapTotal": 33288192,
+      "heapUsed": 17708008,
+      "external": 10859819,
+      "arrayBuffers": 59868
+    },
+    {
+      "at": 1793846825879,
+      "rss": 94523392,
+      "heapTotal": 33288192,
+      "heapUsed": 21738208,
+      "external": 10874791,
+      "arrayBuffers": 74840
+    },
+    {
+      "at": 1793846830880,
+      "rss": 94486528,
+      "heapTotal": 33550336,
+      "heapUsed": 19482472,
+      "external": 10882983,
+      "arrayBuffers": 83032
+    },
+    {
+      "at": 1793846835892,
+      "rss": 94916608,
+      "heapTotal": 33550336,
+      "heapUsed": 17766224,
+      "external": 10867908,
+      "arrayBuffers": 67957
+    },
+    {
+      "at": 1793846840903,
+      "rss": 94965760,
+      "heapTotal": 33550336,
+      "heapUsed": 21806488,
+      "external": 10882983,
+      "arrayBuffers": 83032
+    },
+    {
+      "at": 1793846845912,
+      "rss": 95043584,
+      "heapTotal": 33550336,
+      "heapUsed": 19137952,
+      "external": 10871314,
+      "arrayBuffers": 71363
+    },
+    {
+      "at": 1793846850926,
+      "rss": 95043584,
+      "heapTotal": 33550336,
+      "heapUsed": 16103624,
+      "external": 10885375,
+      "arrayBuffers": 56455
+    },
+    {
+      "at": 1793846855935,
+      "rss": 95043584,
+      "heapTotal": 33550336,
+      "heapUsed": 19971224,
+      "external": 10871321,
+      "arrayBuffers": 71370
+    },
+    {
+      "at": 1793846860951,
+      "rss": 95047680,
+      "heapTotal": 33550336,
+      "heapUsed": 19198224,
+      "external": 10871378,
+      "arrayBuffers": 71427
+    },
+    {
+      "at": 1793846865961,
+      "rss": 95051776,
+      "heapTotal": 33550336,
+      "heapUsed": 16075504,
+      "external": 10886261,
+      "arrayBuffers": 56455
+    },
+    {
+      "at": 1793846870982,
+      "rss": 95121408,
+      "heapTotal": 33550336,
+      "heapUsed": 21243776,
+      "external": 10874791,
+      "arrayBuffers": 74840
+    },
+    {
+      "at": 1793846875997,
+      "rss": 95121408,
+      "heapTotal": 33550336,
+      "heapUsed": 19193784,
+      "external": 10871385,
+      "arrayBuffers": 71434
+    },
+    {
+      "at": 1793846881002,
+      "rss": 95121408,
+      "heapTotal": 33550336,
+      "heapUsed": 16055416,
+      "external": 10886396,
+      "arrayBuffers": 56455
+    },
+    {
+      "at": 1793846886010,
+      "rss": 95133696,
+      "heapTotal": 33550336,
+      "heapUsed": 21252000,
+      "external": 10882983,
+      "arrayBuffers": 83032
+    }
+  ],
+  "recordingFile": "2026-11-05 09-38-08.mkv",
+  "encoded": {
+    "programs": [],
+    "stream_groups": [],
+    "streams": [
+      {
+        "index": 0,
+        "codec_name": "h264",
+        "codec_type": "video",
+        "width": 1080,
+        "height": 1920,
+        "r_frame_rate": "30/1"
+      },
+      {
+        "index": 1,
+        "codec_name": "aac",
+        "codec_type": "audio",
+        "sample_rate": "48000",
+        "channels": 2,
+        "r_frame_rate": "0/0"
+      }
+    ],
+    "format": {
+      "duration": "600.166000",
+      "size": "99715331"
+    }
+  },
+  "audioAnalysis": {
+    "decodedFormat": "mono PCM16 48000 Hz",
+    "windows": [
+      {
+        "startSeconds": 0,
+        "seconds": 60,
+        "rmsDbfs": -38.63,
+        "peakDbfs": -21.02,
+        "nonzeroSamples": 1369163,
+        "clippedSamples": 0
+      },
+      {
+        "startSeconds": 60,
+        "seconds": 60,
+        "rmsDbfs": -38.83,
+        "peakDbfs": -20.9,
+        "nonzeroSamples": 1324480,
+        "clippedSamples": 0
+      },
+      {
+        "startSeconds": 120,
+        "seconds": 60,
+        "rmsDbfs": -38.73,
+        "peakDbfs": -21.22,
+        "nonzeroSamples": 1331796,
+        "clippedSamples": 0
+      },
+      {
+        "startSeconds": 180,
+        "seconds": 60,
+        "rmsDbfs": -38.71,
+        "peakDbfs": -20.44,
+        "nonzeroSamples": 1352737,
+        "clippedSamples": 0
+      },
+      {
+        "startSeconds": 240,
+        "seconds": 60,
+        "rmsDbfs": -37.51,
+        "peakDbfs": -22.48,
+        "nonzeroSamples": 1820452,
+        "clippedSamples": 0
+      },
+      {
+        "startSeconds": 300,
+        "seconds": 60,
+        "rmsDbfs": -37.51,
+        "peakDbfs": -22.47,
+        "nonzeroSamples": 1815963,
+        "clippedSamples": 0
+      },
+      {
+        "startSeconds": 360,
+        "seconds": 60,
+        "rmsDbfs": -37.48,
+        "peakDbfs": -22.52,
+        "nonzeroSamples": 1824225,
+        "clippedSamples": 0
+      },
+      {
+        "startSeconds": 420,
+        "seconds": 60,
+        "rmsDbfs": -37.5,
+        "peakDbfs": -22.47,
+        "nonzeroSamples": 1815626,
+        "clippedSamples": 0
+      },
+      {
+        "startSeconds": 480,
+        "seconds": 60,
+        "rmsDbfs": -37.51,
+        "peakDbfs": -22.46,
+        "nonzeroSamples": 1813672,
+        "clippedSamples": 0
+      },
+      {
+        "startSeconds": 540,
+        "seconds": 60,
+        "rmsDbfs": -37.51,
+        "peakDbfs": -22.47,
+        "nonzeroSamples": 1821063,
+        "clippedSamples": 0
+      }
+    ]
+  },
+  "persistence": {
+    "integrity": "ok",
+    "profiles": 32,
+    "autoPreferences": 32,
+    "equippedPets": 32,
+    "wins": {
+      "min": 110,
+      "max": 322
+    },
+    "scores": {
+      "min": 623866,
+      "max": 5346078
+    },
+    "savedStage": 323
+  },
+  "derived": {
+    "obsFps": {
+      "min": 30.000000300000007,
+      "max": 30.000000300000007
+    },
+    "obsMemoryMiB": {
+      "min": 367.234375,
+      "max": 399.7421875
+    },
+    "backendRssMiB": {
+      "min": 74.625,
+      "max": 90.7265625
+    },
+    "backendHeapMiB": {
+      "min": 13.499977111816406,
+      "max": 20.796287536621094
+    },
+    "backendEndMiB": {
+      "rss": 90.7265625,
+      "heap": 20.267486572265625
+    },
+    "obsRenderSkippedDelta": 0,
+    "obsEncodeSkippedDelta": 0
+  },
+  "limits": "Ten-minute local recording scope when requested=600; OBS counters do not measure unique scene presentation FPS. Backend/OBS memory excludes browser subprocess/GPU bytes. Per-minute audio energy does not rule out brief dropouts or assess mix quality. No upstream LIVE or 8–12-hour stability claim."
+}

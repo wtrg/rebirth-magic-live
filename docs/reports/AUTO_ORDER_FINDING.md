@@ -1,0 +1,13 @@
+# Fixed-order auto contribution bias
+
+Status: confirmed technical finding at `46cf80db62fa6ec7d27e5e7fb994eb4823ccdfc1`; fix READY, not implemented here. Codex root reproduced the independent Codex reviewer's result. This is not a Leader balance approval.
+
+The current [auto scheduler](../../packages/combat/index.ts) visits the roster in fixed order. Each eligible basic resolves damage and may finish the raid immediately. Victory rewards correctly require positive contribution, but a same-time eligible attacker later in the roster may never get a turn. Earlier players can earn levels while later players repeatedly miss rewards.
+
+Reproduction through production entrypoints only: create 32 identical Fire profiles with `!join`; set each to level 30, full computed HP, auto enabled, no gear/pets; `beginRaid(state,1000)`, `tick(state,1800)`, `autoBattle(state,1800)`. Repeat from a fresh equivalent state with only roster order reversed. No manual commands, gifts, clock performance or OBS are involved. At stage 1 the scaled boss has 2,805 HP; the first batch kills it. The first 21 roster members receive positive contribution/rewards, while the last 11 receive none. Reversing the roster reverses the excluded identities. [Synthetic reproduction output](evidence/auto-order-repro.json).
+
+The separate ten-minute combined run saved 32 profiles with wins ranging 110–322. Its driver also sends manual skill waves in ascending order, so that distribution cannot isolate auto's effect. The reproduction above establishes auto ordering as an independent cause. Do not change contribution eligibility or grant idle participants rewards to hide the defect.
+
+The narrow proposed correction is deterministic rotation of the starting auto attacker across raids, giving eligible participants repeated opportunities while retaining cooldowns, bounded basic attacks, contribution requirements and once-only rewards. A recorded round-robin cursor is another option with a broader state change. Root must choose and verify the implementation. Any changed combat ordering must preserve old v10 replay results via a new rules-version gate; changing historical replay outcomes is unacceptable.
+
+Task RB-AUTO-ORDER is READY in the [ledger](../TASK_LEDGER.md). Acceptance: an auto-only permutation/repeated-raid regression demonstrates opportunities rotate; no dead/paused/inactive attack or duplicate reward; cooldown sharing remains; existing v1–v10 traces retain their rules; new replay is deterministic; required gates and browser smoke pass. Ownership will be declared on a separate implementation branch before edits. No runtime changes are included in this finding/OBS evidence task.
