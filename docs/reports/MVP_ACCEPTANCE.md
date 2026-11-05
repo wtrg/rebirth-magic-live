@@ -27,7 +27,7 @@ Audit date 2026-11-05. Source snapshot 14b66c062251497d482a98c5e7f5cd0f8aa42aaa.
 
 ## Remaining gates
 
-- P1 active roster limitation. Historical saved profiles occupy the 64-player active array and prevent a 65th distinct viewer from joining. The roster needs a separate lifecycle and restore path.
+- The active roster limitation was corrected in the session-roster follow-up. Join restores the saved profile, leave and host clear free active slots, and global ranking retains archived players. The HTTP regression covers viewer 65 and archived profile restoration. See P7.
 
 - Actual TikTok account, room events, verified gift IDs and platform behavior. The owner confirmed no real test LIVE session is currently available.
 - OBS audio routing was subsequently verified in a 17.5-second recording with Browser Source as the only audio input. Sustained audio operation remains unmeasured. See P7.

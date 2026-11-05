@@ -142,7 +142,7 @@ function update(next: GameSnapshot) {
     inventory.add(new Option(item.name + ' · ' + bonus + (worn ? ' · Đang dùng' : ''), id));
   }
   inventory.disabled = !owner?.inventory?.length || ['SPAWN','PHASE_1','PHASE_2','ENRAGED'].includes(raid.phase);
-  get('ranking').replaceChildren(...[...players].sort((a,b) => b.score-a.score).slice(0,8).map(player => line(player.name + ' · ' + player.score + ' điểm')));
+  get('ranking').replaceChildren(...(next.leaderboard ?? [...players].sort((a,b) => b.score-a.score).slice(0,8)).map(player => line(player.name + ' · ' + player.score + ' điểm')));
   if (next.effect && effectSerial !== next.effect.serial) {
     effectSerial = next.effect.serial;
     const node = get('effect');

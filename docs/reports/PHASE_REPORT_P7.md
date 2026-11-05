@@ -95,4 +95,13 @@ FFprobe confirmed AAC stereo at 48 kHz. After decoding to mono PCM for measureme
 
 A read-only Codex sub-agent reviewed server, persistence and adapter behavior. It reproduced an ordering bug: an accepted join followed immediately by admin start returned 409 until the queue tick ran. Class selection could similarly be applied after combat had already started. Admin start/practice now drains preceding accepted events before opening the raid. The HTTP regression submits class selection immediately before start and verifies the saved class. The 16-test suite and Windows browser smoke passed; the strengthened HTTP regression also passed after respecting the per-user rate limit.
 
-The reviewer also identified a P1 roster limitation: historical profiles share the 64-player active array and are revived by every new raid. A 65th distinct viewer cannot join once that array is full, including after restart. This remains open pending a persistent roster change.
+The reviewer also identified a P1 roster limitation: historical profiles share the 64-player active array and are revived by every new raid. A 65th distinct viewer cannot join once that array is full, including after restart. The follow-up below resolves this by separating session membership from stored profiles.
+
+
+## Session roster correction
+
+An empty process-local roster now starts alongside the persistent profile database. Join restores saved progress by stable ID, leave frees a slot between fights, and the host can clear the roster. Global ranking reads all saved profiles. Replay v9 records saved profile and ranking context for deterministic offline reconstruction.
+
+The HTTP regression seeds 64 saved viewers, admits a 65th after one leaves, clears the roster, and restores the first viewer with 77 XP, score 900, pet and equipment. A one-person raid then has 480 HP rather than scaling for the 65 archived profiles. Leave is blocked during combat. The test also checks global rank from a member while the leading viewer is absent. Independent Codex review found and verified the fix for joining with a tab and an argument, which otherwise could overwrite the archived profile. The 17-test suite passed. Windows browser smoke rejoined after restore and verified gear, pet, score and replay.
+
+A 60-second load rerun with the new persistent leaderboard completed 15,168 accepted events, eight connected WebSockets and stage 30. The measured HTTP p95 was 40.9 ms and maximum 47.8 ms. The queue remained within 128. This is a server-only sample with 64 active profiles, not a benchmark of an unbounded archive.

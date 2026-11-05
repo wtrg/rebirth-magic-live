@@ -5,7 +5,7 @@ import { WebSocketServer, WebSocket } from 'ws';
 import { activeRaid, applyEvent, newGame, nextRaidStage, tick } from '../../packages/combat/index.ts';
 import { LiveAdapter, normalizeEvent } from '../../packages/tiktok-adapter/index.ts';
 import { eulerSource, eulerUrl, normalizeEulerMessage, readGiftMap } from '../../packages/tiktok-adapter/euler.ts';
-import type { GameEvent, GameSnapshot } from '../../packages/shared/index.ts';
+import type { EventContext, GameEvent, GameSnapshot } from '../../packages/shared/index.ts';
 import { openStore } from './store.ts';
 import { applyAdmin, isAdminAction } from './admin.ts';
 import { createReplay } from './replay.ts';
@@ -25,7 +25,7 @@ const liveGiftMap = mode === 'live' ? readGiftMap(process.env.TIKTOK_GIFT_MAP ??
 const abortLive = new AbortController();
 const live = new LiveAdapter(broadcast);
 const store = openStore(process.env.DB_PATH ?? (mode === 'live' ? 'data/rebirth-live.sqlite' : 'data/rebirth.sqlite'));
-let state = newGame(store.load(), store.loadStage());
+let state = newGame([], store.loadStage());
 const replay = mode === 'mock' && process.env.REBIRTH_RECORD_REPLAY === '1' ? createReplay(state) : null;
 const queue: GameEvent[] = [];
 let stopping = false;
@@ -109,7 +109,7 @@ const server = createServer(async (req, res) => {
       return;
     }
     if (!isAdminAction(body)) { res.writeHead(400).end(); return; }
-    if (body === 'start' || body === 'practice') {
+    if (body === 'start' || body === 'practice' || body === 'clear-roster') {
       try {
         processQueue(now, queue.length);
       } catch {
@@ -152,11 +152,12 @@ server.on('upgrade', (req, socket, head) => {
 });
 
 function snapshot() {
-  const data: GameSnapshot = { ...state, mode, live: live.status };
+  const data: GameSnapshot = { ...state, mode, live: live.status, leaderboard: store.leaderboard() };
   return JSON.stringify(data);
 }
 
 function broadcast() {
+  if (stopping) return;
   const payload = snapshot();
   for (const client of ws.clients) {
     if (client.bufferedAmount > 256000) client.terminate();
@@ -168,12 +169,19 @@ function processQueue(now: number, limit: number) {
   for (let i = 0; i < limit && queue.length; i++) {
     const event = queue[0];
     const next = structuredClone(state);
-    applyEvent(next, event, now);
+    const member = next.players.find(player => player.id === event.user);
+    const context: EventContext = {};
+    if (event.kind === 'chat') {
+      if (event.command.split(/\s+/)[0] === '!join' && !member && next.players.length < 64) context.restored = store.find(event.user);
+      if (event.command.split(/\s+/)[0] === '!rank') context.leader = store.leaderboard()[0];
+    }
+    applyEvent(next, event, now, 9, context);
+    const departing = member && !next.players.includes(member) ? [member] : [];
     const nextStage = nextRaidStage(next);
     const unlock = nextStage > nextRaidStage(state) ? nextStage : undefined;
-    if (store.commit(next.players, event, now, unlock)) {
+    if (store.commit([...next.players,...departing], event, now, unlock)) {
       state = next;
-      replay?.record({ kind: 'event', event, at: now });
+      replay?.record({ kind: 'event', event, at: now, context });
     }
     queue.shift();
   }

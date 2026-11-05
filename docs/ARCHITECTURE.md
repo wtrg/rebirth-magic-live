@@ -14,3 +14,6 @@ References
 - [Three.js WebGLRenderer](https://threejs.org/docs/pages/WebGLRenderer)
 - [Node 24 SQLite](https://nodejs.org/download/release/latest-v24.x/docs/api/sqlite.html)
 - [TikTok developer webhook event catalog](https://developers.tiktok.com/docs/en/webhooks-events)
+
+
+Persistent profiles are distinct from the process-local active raid roster. A new server process starts with an empty roster. An accepted join retrieves the saved profile by stable ID and resets transient combat fields. Leave and clear-roster remove active members without deleting profiles. The leaderboard queries persistent scores. MOCK replay v9 records the restore/leader context needed to replay those database-dependent commands offline.

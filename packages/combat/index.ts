@@ -1,4 +1,4 @@
-import { classes, pets, items, achievements, attackStats, defenseOf, maxHp, type ItemId, type EffectKind, type GameEvent, type GameState, type Player } from '../shared/index.ts';
+import { classes, pets, items, achievements, attackStats, defenseOf, maxHp, type ItemId, type EffectKind, type EventContext, type GameEvent, type GameState, type Player } from '../shared/index.ts';
 import { gifts } from '../tiktok-adapter/index.ts';
 
 
@@ -118,7 +118,7 @@ export function tick(state: GameState, now: number, rulesVersion = 8) {
   return true;
 }
 
-export function applyEvent(state: GameState, event: GameEvent, now: number, rulesVersion = 8) {
+export function applyEvent(state: GameState, event: GameEvent, now: number, rulesVersion = 9, context?: EventContext) {
   if (state.paused) return;
   const player = state.players.find(player => player.id === event.user);
   const username = rulesVersion >= 7 && event.user.startsWith('live:') ? event.username : undefined;
@@ -168,7 +168,19 @@ export function applyEvent(state: GameState, event: GameEvent, now: number, rule
   const [command, arg, extra] = event.command.split(/\s+/);
   if (extra) return;
   if (command === '!join' && !player && state.players.length < 64) {
-    state.players.push({ id: event.user, name: event.name, ...(username ? { username } : {}), classId: 'fire', level: 1, xp: 0, hp: activeRaid(state) || state.raid.phase === 'SPAWN' ? 0 : 120,
+    if (rulesVersion >= 9 && context?.restored?.id === event.user) {
+      const restored = structuredClone(context.restored);
+      restored.name = event.name;
+      if (username) restored.username = username;
+      restored.hp = activeRaid(state) || state.raid.phase === 'SPAWN' ? 0 : maxHp(restored);
+      restored.mp = 60;
+      restored.ready = [0,0,0,0];
+      restored.contribution = 0;
+      restored.lastHit = 0;
+      delete restored.guard;
+      delete restored.attackCount;
+      state.players.push(restored);
+    } else state.players.push({ id: event.user, name: event.name, ...(username ? { username } : {}), classId: 'fire', level: 1, xp: 0, hp: activeRaid(state) || state.raid.phase === 'SPAWN' ? 0 : 120,
       mp: 60, rebirth: 0, wins: 0, score: 0, shards: 0, owned: 0, pet: null, ready: [0, 0, 0, 0], contribution: 0, lastHit: 0 });
     log(state, event.name + ' đã gia nhập');
     return;
@@ -188,10 +200,18 @@ export function applyEvent(state: GameState, event: GameEvent, now: number, rule
       (earned.length ? ' · ' + earned.map(achievement => achievement.name).join(' / ') : ''));
   }
   if (command === '!rank') {
-    const leader = [...state.players].sort((a, b) => b.score - a.score)[0];
+    const leader = (rulesVersion >= 9 ? context?.leader : undefined) ?? [...state.players].sort((a, b) => b.score - a.score)[0];
     log(state, 'Bá chủ · ' + leader.name + ' · ' + leader.score + ' điểm');
   }
   const fighting = activeRaid(state) || state.raid.phase === 'SPAWN';
+  if (rulesVersion >= 9 && command === '!leave') {
+    if (fighting) log(state, player.name + ' · Chờ trận kết thúc để rời đội');
+    else {
+      state.players.splice(state.players.indexOf(player),1);
+      log(state, player.name + ' rời đội · !join để trở lại');
+    }
+    return;
+  }
   if (command === '!class' && !fighting && arg && Object.hasOwn(classes, arg)) {
     player.classId = arg as Player['classId'];
     log(state, player.name + ' · ' + classes[player.classId].name);

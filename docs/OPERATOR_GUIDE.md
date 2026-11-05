@@ -32,3 +32,10 @@ Invoke-WebRequest http://127.0.0.1:4173/admin -Method Post -ContentType applicat
 ```
 
 Máy chủ ngừng nhận sự kiện mới, xử lý phần hàng đợi đã nhận rồi đóng kết nối và SQLite. Khi cần sao lưu hoặc đổi phiên bản, chờ tiến trình kết thúc trước khi khởi động lại. Thao tác kết thúc cưỡng bức qua Task Manager có thể bỏ các sự kiện còn trong bộ nhớ.
+
+
+## Đội hình của phiên hiện tại
+
+Mỗi lần máy chủ khởi động, đội hình bắt đầu trống. Người xem gửi `!join` để khôi phục hồ sơ đã lưu và tham gia phiên này. Tối đa 64 người cùng ở trong đội. Hồ sơ lưu trong SQLite vẫn có thể nhiều hơn 64.
+
+Dùng `!leave` giữa các trận để rời đội, hoặc nút **Giải tán đội hình** để host cho đội hình về trống. Người rời đội vẫn giữ tiến trình và điểm xếp hạng. Lệnh rời đội hoặc giải tán bị từ chối trong trận. Boss chỉ tính độ khó theo những người đang ở trong đội.

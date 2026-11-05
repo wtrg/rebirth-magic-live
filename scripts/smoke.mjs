@@ -42,9 +42,10 @@ async function verifyReplay() {
   const socket = new WebSocket(base.replace('http:', 'ws:') + '/state', { origin: base });
   try {
     const [data] = await once(socket, 'message');
-    const { mode, live, ...snapshot } = JSON.parse(String(data));
+    const { mode, live, leaderboard, ...snapshot } = JSON.parse(String(data));
     assert.equal(mode, 'mock');
     assert.equal(live, 'unconfigured');
+    assert.ok(Array.isArray(leaderboard));
     assert.deepEqual(playReplay(trace), snapshot);
   } finally {
     socket.terminate();
@@ -161,6 +162,8 @@ try {
   await copy(process.execPath,['scripts/backup.ts',backup,restored]);
   await start(restored);
   await waitForText(page,'#mode','OFFLINE');
+  await waitForText(page,'#count','00');
+  await page.getByRole('button',{name:'Tham gia',exact:true}).click();
   await waitForText(page,'#party','Hỏa Hồ');
   await waitForText(page,'#party','Lv.2');
   assert.match(await page.locator('#ranking').textContent(),/Astra · [1-9]\d* điểm/);
@@ -175,7 +178,7 @@ try {
   await page.waitForFunction(() => document.querySelector('#inventory option[value="ember"]')?.textContent.includes('Đang dùng'));
   assert.equal((await send('/event',{...gift,complete:true})).status,202);
   await sleep(250);
-  assert.equal(await page.locator('#logs li').count(),0);
+  assert.equal(await page.locator('#logs li').filter({hasText:'Linh thú hỗ trợ'}).count(),0);
   await page.getByRole('button',{ name:'Raid luyện tập',exact:true }).click();
   await waitForText(page,'#phase','GIAI ĐOẠN I · LUYỆN TẬP');
   assert.equal(await overlay.locator('#raid-result').isVisible(),false);
