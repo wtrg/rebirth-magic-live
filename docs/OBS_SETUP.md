@@ -12,4 +12,6 @@ Bản QA sử dụng cấu hình OBS portable riêng. [OBS Portable Mode](https:
 
 ## Âm thanh chiến đấu
 
-Âm thanh tổng hợp mặc định tắt. Thêm `&audio=1` vào URL Browser Source, mở **Interact** của nguồn trong OBS rồi nhấn **Bật âm thanh**. Sau khi khởi tạo Web Audio, nút tự ẩn. Nếu nguồn tải lại, bật lại bằng **Interact**. Kiểm tra mức tín hiệu trong OBS Audio Mixer trước khi ghi.
+Âm thanh tổng hợp mặc định tắt. Thêm `&audio=1` vào URL Browser Source và bật **Control audio via OBS** trong thuộc tính nguồn. Overlay thử khởi tạo Web Audio khi tải trang. Nếu nút **Bật âm thanh** vẫn hiện, mở **Interact** và nhấn nút. Sau khi khởi tạo thành công, nút tự ẩn. Kiểm tra nguồn trong OBS Audio Mixer ở trạng thái không mute và ghi thử để kiểm tra mức tiếng.
+
+QA bằng OBS 33.0.1 đã xác nhận một bản ghi 17,5 giây có track AAC 48 kHz stereo từ Browser Source, với đoạn trước trận im lặng và tín hiệu chiến đấu không bị clipping. Xem [số liệu âm thanh](reports/evidence/obs-audio-levels.json).

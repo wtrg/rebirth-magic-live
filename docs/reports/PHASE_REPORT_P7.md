@@ -82,3 +82,10 @@ Windows integration tests split a multibyte Vietnamese character across HTTP chu
 On 2026-11-05, ran source commit `14b66c0` for 600 seconds with 64 synthetic players, eight WebSocket consumers and a fresh file-backed SQLite database. The server accepted 148,406 events, rate-limited 2,890, and reached stage 511. All eight consumers stayed connected, each receiving at least 9,916 updates including warm-up. The overload burst rejected 128 requests. Sampled queue depth peaked at 112 against the configured ceiling of 128.
 
 Local HTTP latency was 20.1 ms p50, 45.6 ms p95, 56.1 ms p99 and 122.3 ms maximum. Across 120 five-second samples, RSS ranged from 78.2 to 129.6 MiB and JS heap from 8.8 to 32.0 MiB. The final heap sample was 13.6 MiB, with RSS 129.6 MiB. Both RSS drops and later expansion occurred during the run. The test does not isolate native-memory allocation or establish leak-free operation. Browser rendering, OBS audio and upstream LIVE were outside this server run. [Full measurements](evidence/server-soak-600.json)
+
+
+## OBS audio path
+
+Recorded a 17.5-second H.264/AAC file using isolated portable OBS 33.0.1 with exactly one Browser Source and no other audio inputs. The source used audio=1 and Control audio via OBS. The overlay initialized Web Audio successfully at load. Three synthetic players then generated raid cues.
+
+FFprobe confirmed AAC stereo at 48 kHz. After decoding to mono PCM for measurement, the pre-raid interval had zero samples above silence, while combat measured -46.19 dBFS RMS and -22.58 dBFS peak. This establishes captured synthesized game audio in the local OBS file. No upstream LIVE or long audio soak was performed. [Measurement data](evidence/obs-audio-levels.json)
