@@ -2,7 +2,7 @@ import './style.css';
 import { classes, pets, items, achievements, attackStats, defenseOf, maxHp, type GameSnapshot } from '../../packages/shared/index.ts';
 
 import { createArena } from './scene.ts';
-import { loadRaidModels } from './asset-loader.ts';
+import { loadFireMagePreview, loadRaidModels } from './asset-loader.ts';
 import { createCombatAudio } from './audio.ts';
 
 const get = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
@@ -25,9 +25,10 @@ document.body.classList.toggle('overlay', overlay);
 const low = get<HTMLInputElement>('low');
 low.checked = params.get('quality') !== 'high';
 let render: ((state: GameSnapshot) => void) | undefined;
-void loadRaidModels().catch(() => undefined).then(models => {
+const firePreview = params.get('fire-preview') === '1' ? loadFireMagePreview().catch(() => undefined) : undefined;
+void Promise.all([loadRaidModels().catch(() => undefined), firePreview]).then(([models, fireMage]) => {
   try {
-    render = createArena(get('viewport'), () => low.checked, overlay, models);
+    render = createArena(get('viewport'), () => low.checked, overlay, models, fireMage);
     if (state) render(state);
   } catch {
     get('notice').textContent = 'WebGL 2 không khả dụng · HUD vẫn đang hoạt động';
