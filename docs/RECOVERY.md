@@ -21,6 +21,6 @@ $env:DB_PATH = 'data/restored-mock.sqlite'
 npm start
 ```
 
-Xác nhận cấp độ, pet, bảng xếp hạng và phụ bản đã mở khóa trong HUD. Máy chủ khởi động ở trạng thái chờ, với phụ bản đang mở gần nhất. HP boss và hiệu ứng tạm của trận dở được khởi tạo lại. Database v1 tự nâng lên v2 và bắt đầu lưu phụ bản từ mốc 1 vì bản cũ chưa từng ghi giá trị này.
+Gửi `!join` bằng định danh người chơi cũ rồi xác nhận cấp độ, pet, bảng xếp hạng và phụ bản đã mở khóa trong HUD. Máy chủ khởi động ở trạng thái chờ, với phụ bản đang mở gần nhất. HP boss và hiệu ứng tạm của trận dở được khởi tạo lại. Database v1 tự nâng lên v2 và bắt đầu lưu phụ bản từ mốc 1 vì bản cũ chưa từng ghi giá trị này.
 
 `node scripts/smoke.mjs` kiểm tra sao lưu khi server còn chạy, phục hồi vào database riêng, rồi đối chiếu pet, cấp độ, xếp hạng, phụ bản và việc chặn sự kiện đã xử lý. [Node SQLite Backup](https://nodejs.org/download/release/latest-v24.x/docs/api/sqlite.html#sqlitebackup-sourcedb-path-options)

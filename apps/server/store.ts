@@ -1,7 +1,7 @@
 import { DatabaseSync } from 'node:sqlite';
 import { mkdirSync } from 'node:fs';
 import { dirname } from 'node:path';
-import type { GameEvent, Player } from '../../packages/shared/index.ts';
+import type { GameEvent, Player, RankedPlayer } from '../../packages/shared/index.ts';
 
 export function openStore(path: string) {
   if (path !== ':memory:') mkdirSync(dirname(path), { recursive: true });
@@ -25,6 +25,8 @@ export function openStore(path: string) {
     throw error;
   }
   const profile = db.prepare('INSERT INTO players VALUES (?, ?) ON CONFLICT(id) DO UPDATE SET profile=excluded.profile WHERE profile<>excluded.profile');
+  const findPlayer = db.prepare('SELECT profile FROM players WHERE id = ?');
+  const ranking = db.prepare("SELECT id, json_extract(profile, '$.name') AS name, json_extract(profile, '$.score') AS score FROM players ORDER BY json_extract(profile, '$.score') DESC, id LIMIT 8");
   const receipt = db.prepare('INSERT OR IGNORE INTO event_receipts VALUES (?, ?)');
   const selectStage = db.prepare('SELECT stage FROM world_progress WHERE singleton = 1');
   const unlockStage = db.prepare('UPDATE world_progress SET stage = MAX(stage, ?) WHERE singleton = 1');
@@ -34,6 +36,11 @@ export function openStore(path: string) {
       const player = JSON.parse(String(row.profile)) as Player;
       return { ...player, ready: [0, 0, 0, 0], contribution: 0, lastHit: 0 };
     }),
+    find(id: string) {
+      const row = findPlayer.get(id);
+      return row ? JSON.parse(String(row.profile)) as Player : undefined;
+    },
+    leaderboard: () => ranking.all().map(row => ({ id: String(row.id), name: String(row.name), score: Number(row.score) } satisfies RankedPlayer)),
     loadStage: () => Number(selectStage.get()?.stage ?? 1),
     commit(players: Player[], event?: GameEvent, now = Date.now(), nextStage?: number) {
       db.exec('BEGIN');
