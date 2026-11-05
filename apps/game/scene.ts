@@ -1,16 +1,18 @@
 import * as T from 'three';
 import { clone as cloneSkinned } from 'three/addons/utils/SkeletonUtils.js';
 import { createModelFactory } from './models.ts';
-import type { ModelTemplates, loadVarkhazarPreview } from './asset-loader.ts';
+import type { FireMagePreview, ModelTemplates, loadVarkhazarPreview } from './asset-loader.ts';
 import { classes, pets, type GameSnapshot } from '../../packages/shared/index.ts';
 import { createClipPlayer, hasTemporaryPet } from './animation.ts';
 
 export function createArena(view: HTMLElement, low: () => boolean, portrait: boolean, models?: ModelTemplates,
-  varkhazar?: Awaited<ReturnType<typeof loadVarkhazarPreview>>) {
+  previews?: { fireMage?: FireMagePreview; varkhazar?: Awaited<ReturnType<typeof loadVarkhazarPreview>> }) {
+  const { fireMage, varkhazar } = previews ?? {};
   const renderer = new T.WebGLRenderer({ antialias: false, powerPreference: 'low-power' });
   renderer.domElement.setAttribute('aria-label', 'Đấu trường 3D Cổng Hư Vô');
   renderer.domElement.dataset.models = models ? 'glb' : 'procedural';
   if (varkhazar) renderer.domElement.dataset.bossPreview = 'skinned';
+  if (fireMage) renderer.domElement.dataset.firePreview = 'skinned';
   view.prepend(renderer.domElement);
   const scene = new T.Scene();
   scene.background = new T.Color(0x141123);
@@ -62,6 +64,15 @@ export function createArena(view: HTMLElement, low: () => boolean, portrait: boo
     return actor;
   }
 
+  function playerCharacter(id: keyof typeof classes) {
+    if (id !== 'fire' || !fireMage) return { ...character(id), clips: undefined };
+    const root = new T.Group();
+    const rig = cloneSkinned(fireMage.scene);
+    root.add(rig);
+    scene.add(root);
+    return { root, body: rig, weapon: undefined, clips: createClipPlayer(rig, fireMage.animations) };
+  }
+
   const boss = character('boss');
   const bossRig = varkhazar && cloneSkinned(varkhazar.scene);
   if (bossRig) {
@@ -84,7 +95,7 @@ export function createArena(view: HTMLElement, low: () => boolean, portrait: boo
     scene.add(root);
     return root;
   });
-  const squad = new Map<string, ReturnType<typeof character> & { classId: string; companion: T.Group; lastHit: number; strike: number; hp: number; recoil: number }>();
+  const squad = new Map<string, ReturnType<typeof playerCharacter> & { classId: string; companion: T.Group; lastHit: number; strike: number; hp: number; recoil: number }>();
   const flash = mesh(scene, new T.TorusGeometry(1.8,0.09,4,36), '#ffd3a4', [0,0.08,-1.45], [1,1,1], true);
   flash.rotation.x = -Math.PI/2;
   flash.material = flash.material.clone();
@@ -93,7 +104,7 @@ export function createArena(view: HTMLElement, low: () => boolean, portrait: boo
   scene.add(sparks);
   const spark = new T.Object3D();
   const petModels = pets.map((_pet, index) => models?.nodes.get('pet-' + index) ?? factory.pet(index));
-  const preview = character('fire');
+  const preview = playerCharacter('fire');
   preview.root.position.set(0,0,3.3);
   preview.root.rotation.y = Math.PI;
   let state: GameSnapshot | undefined;
@@ -182,8 +193,11 @@ export function createArena(view: HTMLElement, low: () => boolean, portrait: boo
       if (!clips.update(actionName, delta, serial)) boss.weapon.rotation.x = -burst;
     }
     preview.root.visible = !state?.players.length;
-    preview.body.position.y = Math.sin(time*0.004)*0.06;
-    animateLimbs(preview.body, Math.sin(time*0.004)*0.025,0,0);
+    if (preview.clips) preview.clips.update('Idle', delta);
+    else {
+      preview.body.position.y = Math.sin(time*0.004)*0.06;
+      animateLimbs(preview.body, Math.sin(time*0.004)*0.025,0,0);
+    }
     const players = state?.players.slice(0,low() ? 8 : 12) ?? [];
     const ids = new Set(players.map(player => player.id));
     for (const [id, actor] of squad) if (!ids.has(id)) { actor.root.removeFromParent(); squad.delete(id); }
@@ -191,7 +205,7 @@ export function createArena(view: HTMLElement, low: () => boolean, portrait: boo
       let actor = squad.get(player.id);
       if (actor?.classId !== player.classId) {
         actor?.root.removeFromParent();
-        const model = character(player.classId);
+        const model = playerCharacter(player.classId);
         const companion = new T.Group();
         model.root.add(companion);
         actor = { ...model, classId: player.classId, companion, lastHit: player.lastHit, strike: -1000, hp: player.hp, recoil: -1000 };
@@ -203,14 +217,23 @@ export function createArena(view: HTMLElement, low: () => boolean, portrait: boo
       const recoil = Math.max(0,1-(time-actor.recoil)/450);
       const strike = player.hp > 0 ? Math.max(0,1-(time-actor.strike)/520) : 0;
       const arc = (index-(players.length-1)/2)*Math.min(0.55,2.1/players.length);
-      actor.root.position.set(Math.sin(arc)*5,0,Math.cos(arc)*4.7-strike*1.15);
-      const lean = player.hp <= 0 ? 1.4 : strike*0.14;
+      const approach = actor.clips ? Math.min((1-strike)/0.27, strike/0.40) : strike;
+      actor.root.position.set(Math.sin(arc)*5,0,Math.cos(arc)*4.7-approach*1.15);
+      const lean = actor.clips ? 0 : player.hp <= 0 ? 1.4 : strike*0.14;
       actor.root.rotation.set(0,Math.PI+arc,T.MathUtils.lerp(actor.root.rotation.z,lean,Math.min(1,delta*10)));
-      actor.body.rotation.x = -recoil*0.23;
-      const stride = Math.sin(time*(strike > 0 ? 0.03 : 0.004)+index)*(strike > 0 ? 0.5*strike : 0.025);
-      animateLimbs(actor.body,stride,strike,recoil);
-      actor.body.position.y = Math.sin(time*0.005+index)*0.055 + strike*0.24;
-      actor.weapon.rotation.x = -strike*2.1;
+      if (actor.clips) {
+        if (player.hp <= 0) actor.clips.update('Defeat', delta);
+        else if (recoil > 0) actor.clips.update('Hit', delta * 0.833 / 0.45, actor.recoil);
+        else if (strike > 0.73) actor.clips.update('Run', delta);
+        else if (strike > 0) actor.clips.update('Attack', delta * 1.25 / 0.38, actor.strike);
+        else actor.clips.update('Idle', delta);
+      } else {
+        actor.body.rotation.x = -recoil*0.23;
+        const stride = Math.sin(time*(strike > 0 ? 0.03 : 0.004)+index)*(strike > 0 ? 0.5*strike : 0.025);
+        animateLimbs(actor.body,stride,strike,recoil);
+        actor.body.position.y = Math.sin(time*0.005+index)*0.055 + strike*0.24;
+        actor.weapon!.rotation.x = -strike*2.1;
+      }
       const temporary = state && hasTemporaryPet(state, player.id);
       const petIndex = temporary ? player.pet ?? 0 : player.pet;
       if (petIndex !== null) {

@@ -17,7 +17,8 @@ export function createClipPlayer(root: Object3D, clips: AnimationClip[]) {
       const impact = name === 'Hit' || name === 'Attack';
       if (action !== current || impact && trigger !== lastTrigger) {
         current?.stop();
-        action.reset().setLoop(name === 'Idle' ? LoopRepeat : LoopOnce, name === 'Idle' ? Infinity : 1);
+        const loop = name === 'Idle' || name === 'Run';
+        action.reset().setLoop(loop ? LoopRepeat : LoopOnce, loop ? Infinity : 1);
         action.clampWhenFinished = true;
         action.play();
         current = action;

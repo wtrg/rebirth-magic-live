@@ -1,6 +1,6 @@
 import * as T from 'three';
 import { createArena } from '../../apps/game/scene.ts';
-import { loadRaidModels, loadVarkhazarPreview } from '../../apps/game/asset-loader.ts';
+import { loadFireMagePreview, loadRaidModels, loadVarkhazarPreview } from '../../apps/game/asset-loader.ts';
 import { applyEvent, newGame } from '../../packages/combat/index.ts';
 import { classes, maxHp, type GameSnapshot } from '../../packages/shared/index.ts';
 
@@ -39,8 +39,9 @@ T.Scene.prototype.onAfterRender = function (renderer) {
 };
 const models = await loadRaidModels().catch(() => undefined);
 const varkhazar = new URLSearchParams(location.search).has('boss-preview') ? await loadVarkhazarPreview() : undefined;
+const fireMage = new URLSearchParams(location.search).has('fire-preview') ? await loadFireMagePreview() : undefined;
 const view = document.getElementById('viewport')!;
-const update = createArena(view, () => true, true, models, varkhazar);
+const update = createArena(view, () => true, true, models, { fireMage, varkhazar });
 const state: GameSnapshot = { ...newGame(), mode: 'mock', live: 'unconfigured' };
 const classIds = Object.keys(classes);
 for (let i = 0; i < (realClock ? 64 : classIds.length); i++) {
@@ -127,6 +128,18 @@ function bossPose() {
   const rig = captured.scene?.getObjectByName('Varkhazar_Rig');
   return rig?.getObjectByName('ArmR')?.quaternion.toArray();
 }
-Object.assign(window, { animationQA: { advance, poses, stage, state, beginMetrics, endMetrics, bossPose, realClock, models:models ? 'glb' : 'procedural' } });
+function firePose() {
+  for (const root of captured.scene!.children) {
+    if (!root.visible) continue;
+    const rig = root.getObjectByName('FireMage_Rig');
+    if (rig) return {
+      z: root.position.z,
+      hips: rig.getObjectByName('Hips')!.quaternion.toArray(),
+      leftLeg: rig.getObjectByName('LegL')!.quaternion.toArray(),
+      orb: rig.getObjectByName('Orb')!.position.toArray(),
+    };
+  }
+}
+Object.assign(window, { animationQA: { advance, poses, stage, state, beginMetrics, endMetrics, bossPose, firePose, realClock, models:models ? 'glb' : 'procedural' } });
 stage('idle');
 if (!realClock) advance(200);

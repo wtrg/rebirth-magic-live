@@ -3,6 +3,21 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { classes, pets } from '../../packages/shared/index.ts';
 
 export type ModelTemplates = { nodes: ReadonlyMap<string, Object3D>; animations: AnimationClip[] };
+export type FireMagePreview = { scene: Object3D; animations: AnimationClip[] };
+
+export async function loadFireMagePreview(): Promise<FireMagePreview> {
+  const url = new URL('../../assets/characters/fire-mage-preview/fire-mage.glb', import.meta.url);
+  const { scene, animations } = await new GLTFLoader().loadAsync(url.href);
+  const names = new Map([['idle', 'Idle'], ['move', 'Run'], ['attack', 'Attack'], ['hit', 'Hit'], ['defeat', 'Defeat']]);
+  if (animations.length !== names.size || ![...names.keys()].every(name => animations.some(clip => clip.name === name))) {
+    throw new Error('Missing Fire Mage preview clips');
+  }
+  return { scene, animations: animations.map(clip => {
+    const action = clip.clone();
+    action.name = names.get(clip.name)!;
+    return action;
+  }) };
+}
 
 export async function loadVarkhazarPreview() {
   const url = new URL('../../assets/bosses/varkhazar-preview/varkhazar.glb', import.meta.url);
