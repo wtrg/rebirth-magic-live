@@ -1,6 +1,6 @@
 # RE:BIRTH · Ma Pháp Bá Chủ Server
 
-Bản ứng viên 0.2.0-rc.3 cho Boss Raid 3D tương tác với bình luận. [Phạm vi và bằng chứng QA](docs/RELEASE_CANDIDATE.md). Chạy cục bộ trên Windows với Node 24 và WebGL 2.
+Bản ứng viên 0.2.0-rc.4 cho Boss Raid 3D tương tác với bình luận. [Phạm vi và bằng chứng QA](docs/RELEASE_CANDIDATE.md). Chạy cục bộ trên Windows với Node 24 và WebGL 2.
 
 ```powershell
 npm ci
@@ -34,8 +34,12 @@ npm run lint
 npm test
 npm run build
 npx playwright install chromium
+$env:QA_BROWSER = 'chromium'
 node scripts/smoke.mjs
+node scripts/animation-qa.mjs
 ```
+
+Các script browser mặc định dùng Chrome đã cài trên máy. Khối lệnh trên cài Chromium của Playwright và chọn nó qua `QA_BROWSER` khi cần môi trường QA riêng.
 
 ## Ghi và phát lại một phiên MOCK
 

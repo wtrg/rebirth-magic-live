@@ -15,7 +15,7 @@ Status LEADER_REVIEW_PENDING. Share the repository and phase evidence with the C
 - [P2 combat](reports/PHASE_REPORT_P2.md), [P3 progression and recovery](reports/PHASE_REPORT_P3.md) and [P4 pets](reports/PHASE_REPORT_P4.md).
 - [P5 interaction](reports/PHASE_REPORT_P5.md), [P6 visual and audio polish](reports/PHASE_REPORT_P6.md) and [P7 release and performance](reports/PHASE_REPORT_P7.md).
 
-The owner confirmed that a real TikTok LIVE test session is unavailable. Actual room events and gift pricing are unverified. The verified release is the Windows MOCK prerelease. [Public release](https://github.com/wtrg/rebirth-magic-live/releases/tag/v0.2.0-rc.3)
+The owner confirmed that a real TikTok LIVE test session is unavailable. Actual room events and gift pricing are unverified. The Windows MOCK candidate is documented in [release scope](RELEASE_CANDIDATE.md). Leader approval remains pending.
 
 P7 now includes a ten-minute combined OBS/audio recording at source `7b225ea`, followed by separate animation regression fixes. This evidence supports local MOCK operation; product and visual approval remain pending.
 
