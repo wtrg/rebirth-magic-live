@@ -35,3 +35,8 @@ Date 2026-11-05. Status partial. Leader review pending.
 The 3D client displays a short boss introduction, element-colored attack rings and pooled geometry for skill, ultimate and gift sparks. Low quality uses six spark instances and high quality uses twelve. The HUD respects reduced motion for its DOM animations. Combat cues are synthesized locally with Web Audio and muted by default. Replay version 4 records typed feedback while keeping the preceding replay versions readable.
 
 Windows typecheck, lint, build, 11 tests and Chrome smoke passed. The smoke confirms the boss intro, an oscillator created after operator opt-in, a typed gift reaction and deterministic replay. OBS audio routing remains unverified. The combined recording with these effects is documented in [P7](PHASE_REPORT_P7.md). Production character assets, broader animation polish and Leader review are still open. See [OBS audio setup](../OBS_SETUP.md).
+
+
+## Raid results and skill readiness
+
+The portrait and operator view now display a result panel for victory or defeat, the raid mode, contributor damage and the EXP/shard reward rule. The panel clears on the next raid. The MOCK console shows named skills with cooldown seconds, mana availability and pause status. Windows smoke verified ranked victory rewards, the contributor name, panel dismissal and readiness in the next practice raid. Typecheck, lint, build and 15 tests passed.

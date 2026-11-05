@@ -65,3 +65,20 @@ On 2026-11-05, tested commit `4da323a` with the new combat effects on Intel UHD 
 The workload ran for 180 seconds. The server accepted 9,260 event requests including initial joins, rate-limited 3,040, and completed 95 ranked raids. The observed queue peak was 33. FFprobe measured a 179.900-second H.264 recording. OBS output 5,395 frames. All 17 in-run samples reported 30 FPS with zero OBS rendering or encoding skips. The final sample reported 0.45 ms average OBS render time. OBS memory increased from 334.1 to 363.4 MiB across in-run samples. Server working set ranged from 75.4 to 80.7 MiB over 17 samples. See [the recording frame](evidence/obs-combined-raid.png).
 
 These metrics cover OBS output, including any duplicated browser frames. Audio was disabled in this run. No network stream or actual TikTok session was active. The short sample leaves long-run memory, OBS audio routing and TikTok upstream readiness unverified. The project owner confirmed that a real test LIVE session is currently unavailable.
+
+
+## Graceful shutdown regression
+
+The local shutdown request stops new ingress, drains accepted events and closes SQLite after HTTP connections complete. Windows integration QA submitted 64 joins immediately before shutdown and recovered all 64 profiles and receipts. SQLite quick_check returned ok. An incorrect Origin was rejected before shutdown. Emergency pause continues to clear its pending queue by design.
+
+
+## HTTP text and size regression
+
+Windows integration tests split a multibyte Vietnamese character across HTTP chunks and verified the stored name after controlled shutdown. Oversized Content-Length and chunked requests returned 413. Invalid UTF-8 returned 400. Typecheck, lint, the 16-test suite and build passed.
+
+
+## Ten-minute server soak
+
+On 2026-11-05, ran source commit `14b66c0` for 600 seconds with 64 synthetic players, eight WebSocket consumers and a fresh file-backed SQLite database. The server accepted 148,406 events, rate-limited 2,890, and reached stage 511. All eight consumers stayed connected, each receiving at least 9,916 updates including warm-up. The overload burst rejected 128 requests. Sampled queue depth peaked at 112 against the configured ceiling of 128.
+
+Local HTTP latency was 20.1 ms p50, 45.6 ms p95, 56.1 ms p99 and 122.3 ms maximum. Across 120 five-second samples, RSS ranged from 78.2 to 129.6 MiB and JS heap from 8.8 to 32.0 MiB. The final heap sample was 13.6 MiB, with RSS 129.6 MiB. Both RSS drops and later expansion occurred during the run. The test does not isolate native-memory allocation or establish leak-free operation. Browser rendering, OBS audio and upstream LIVE were outside this server run. [Full measurements](evidence/server-soak-600.json)

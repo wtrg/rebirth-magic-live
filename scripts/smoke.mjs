@@ -118,6 +118,9 @@ try {
   await overlay.locator('#phase').filter({hasText:'CHIẾN THẮNG'}).waitFor({timeout:45000});
   await page.locator('#auto').uncheck();
   await waitForText(page,'#party','Lv.2');
+  await waitForText(overlay,'#result-title','Chiến thắng');
+  await waitForText(overlay,'#result-reward','120 EXP');
+  await waitForText(overlay,'#result-contributors','Astra');
   await overlay.screenshot({path:join(evidence,'portrait-victory.png')});
   await sleep(250);
   await page.locator('#pet-list').selectOption('1');
@@ -166,6 +169,8 @@ try {
   assert.equal(await page.locator('#logs li').count(),0);
   await page.getByRole('button',{ name:'Raid luyện tập',exact:true }).click();
   await waitForText(page,'#phase','GIAI ĐOẠN I · LUYỆN TẬP');
+  assert.equal(await overlay.locator('#raid-result').isVisible(),false);
+  await waitForText(page,'#skill-status','Sẵn sàng');
   await page.getByRole('button',{ name:'10 xu',exact:true }).click();
   await waitForText(page,'#boss-value','480 / 520');
   await waitForText(page,'#phase','CÓ HỖ TRỢ');

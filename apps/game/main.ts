@@ -60,6 +60,8 @@ function line(text: string, tag = 'li') {
 function update(next: GameSnapshot) {
   const previous = state;
   state = next;
+  if (next.paused && !previous?.paused) skillPausedAt = Date.now();
+  updateSkillStatus();
   const mock = next.mode === 'mock';
   const status = { unconfigured: 'CHƯA CẤU HÌNH', connecting: 'ĐANG KẾT NỐI', connected: 'ĐÃ KẾT NỐI', retrying: 'MẤT KẾT NỐI', rejected: 'BỊ TỪ CHỐI' };
   get('mode').textContent = mock ? '● MOCK / OFFLINE' : 'LIVE · ' + status[next.live];
@@ -69,6 +71,18 @@ function update(next: GameSnapshot) {
   render?.(next);
   const { raid, players } = next;
   get('boss-intro').hidden = raid.phase !== 'SPAWN';
+  get('raid-result').hidden = !raid.result;
+  if (raid.result) {
+    get('result-mode').textContent = 'PHỤ BẢN ' + raid.stage + (raid.practice ? ' · LUYỆN TẬP' : ' · XẾP HẠNG');
+    get('result-title').textContent = raid.result === 'victory' ? 'Chiến thắng' : 'Thất bại';
+    get('result-reward').textContent = raid.result === 'defeat' ? 'Tập hợp đội hình để thử lại.' :
+      raid.practice ? 'Raid luyện tập hoàn tất.' :
+      'Người có đóng góp nhận +' + (100 + raid.stage * 20) + ' EXP · +1 mảnh linh thú';
+    const contributors = [...players].filter(player => player.contribution > 0)
+      .sort((a,b) => b.contribution - a.contribution);
+    get('result-contributors').replaceChildren(...contributors.slice(0,3).map(player =>
+      line(player.name + ' · ' + player.contribution + ' sát thương')));
+  }
   if (previous && previous.raid.phase !== raid.phase && raid.phase === 'SPAWN') audio.play('spawn');
   if (previous && previous.raid.result !== raid.result && raid.result) audio.play(raid.result);
   get('stage').textContent = 'PHỤ BẢN ' + String(raid.stage).padStart(2,'0') + ' · CỔNG HƯ VÔ';
@@ -183,4 +197,20 @@ if (!overlay) setInterval(() => {
     void chat(index === undefined ? '!attack' : ['!skill1','!skill2','!ult'][index]);
   }
 }, 650);
+function updateSkillStatus() {
+  const player = state?.players.find(player => player.id === 'mock:' + username.value.toLowerCase());
+  const status = get('skill-status');
+  if (!player || !state) { status.replaceChildren(); return; }
+  const snapshot = state;
+  const now = snapshot.paused ? skillPausedAt : Date.now();
+  status.replaceChildren(...classes[player.classId].skills.map((name,index) => {
+    const seconds = Math.max(0, Math.ceil((player.ready[index] - now) / 1000));
+    const readiness = snapshot.paused ? 'Tạm dừng' : player.hp <= 0 ? 'Bị hạ' :
+      !['PHASE_1','PHASE_2','ENRAGED'].includes(snapshot.raid.phase) ? 'Chờ trận' :
+      seconds > 0 ? seconds + 's' : player.mp < [8,16,30][index] ? 'Thiếu MP' : 'Sẵn sàng';
+    return line(name + ' · ' + readiness,'small');
+  }));
+}
+let skillPausedAt = 0;
+setInterval(updateSkillStatus,250);
 connect();
