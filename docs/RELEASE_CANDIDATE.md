@@ -20,7 +20,7 @@ Open `http://127.0.0.1:4173`. Use [README](../README.md) for the first raid, [OB
 - Combat and progression: server-authoritative phases, six class signatures, critical cadence, stage-3 wraith targets and Fire splash, victory and defeat, EXP, stage progression, rebirth, ranked loot, achievements and SQLite recovery. See [combat tests](../tests/combat.test.ts), [recovery tests](../tests/recovery.test.ts) and [browser smoke](../scripts/smoke.mjs).
 - Pets: three earned pets, individual skills, upgrading and persistence. See [P4](reports/PHASE_REPORT_P4.md).
 - Interaction: separate ranked and gift-enabled practice modes, offline MOCK ingress and deterministic replay. The TikTok adapter has local WebSocket fixture coverage. A local fixture verifies player renames without losing progress. Actual room, gift IDs and platform permissions remain open. See [LIVE setup](LIVE_SETUP.md).
-- OBS and server capacity: local 1080×1920 OBS video and audio recordings, a three-minute combined capture and a ten-minute server soak. See [P7](reports/PHASE_REPORT_P7.md). Combined long-run stability and live broadcast remain open.
+- OBS and server capacity: local 1080×1920 OBS video and audio recordings, a ten-minute combined capture with audio and a separate ten-minute server soak. See [P7](reports/PHASE_REPORT_P7.md). Combined long-run stability and live broadcast remain open.
 
 Technical handoff is in [Leader review](LEADER_REVIEW_REQUEST.md). Leader approval remains pending. This RC does not establish full MVP acceptance or production streaming readiness.
 
@@ -31,3 +31,8 @@ Technical handoff is in [Leader review](LEADER_REVIEW_REQUEST.md). Leader approv
 The raid end panel shows outcome, rewards and contributor damage. The operator sees skill cooldown and mana readiness. Controlled shutdown drains accepted pending events. HTTP preserves multibyte Vietnamese names across chunks and enforces the input limit by bytes. Windows regression coverage totals 16 tests with an end-to-end browser smoke.
 
 The full [MVP evidence audit](reports/MVP_ACCEPTANCE.md) lists remaining gates. The owner confirmed a real TikTok LIVE test session is currently unavailable.
+
+
+## Post-RC3 main follow-ups
+
+Main additionally separates the session roster from archived profiles and preserves global ranking. Animation fixes restart consecutive boss impacts, keep idle looping and preserve temporary-pet expiry across pause, including newly opened clients. The 19-test suite includes actual GLB mixer and HTTP pause-metadata regressions. These follow-ups are not in the published RC3 tag. The combined ten-minute recording measured main at `7b225ea`, before the animation fixes. See P7 for exact scope and limitations.

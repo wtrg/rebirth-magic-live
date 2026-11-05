@@ -1,0 +1,1815 @@
+{
+  "sourceCommit": "7b225ea08edf1ee788a3fd6903c60895323b2472",
+  "durationSeconds": 600,
+  "recordingDurationSeconds": 600.3,
+  "obs": "33.0.1",
+  "video": {
+    "baseHeight": 1920,
+    "baseWidth": 1080,
+    "fpsDenominator": 1,
+    "fpsNumerator": 30,
+    "outputHeight": 1920,
+    "outputWidth": 1080
+  },
+  "encoder": "Intel Quick Sync H.264 / AAC stereo 48000 Hz",
+  "players": 32,
+  "classes": [
+    "fire",
+    "ice",
+    "thunder",
+    "knight",
+    "healer",
+    "summon"
+  ],
+  "equippedPets": 32,
+  "eventsAccepted": 28796,
+  "eventsThrottled": 11104,
+  "rankedWins": 348,
+  "sampledPeakQueue": 32,
+  "obsBefore": {
+    "activeFps": 30.000000300000007,
+    "availableDiskSpace": 359442.37109375,
+    "averageFrameRenderTime": 0.28648,
+    "cpuUsage": 1.3893476892494472,
+    "memoryUsage": 254.671875,
+    "outputSkippedFrames": 0,
+    "outputTotalFrames": 0,
+    "renderSkippedFrames": 0,
+    "renderTotalFrames": 5585,
+    "webSocketSessionIncomingMessages": 12,
+    "webSocketSessionOutgoingMessages": 12
+  },
+  "obsAfter": {
+    "activeFps": 30.000000300000007,
+    "availableDiskSpace": 359325.82421875,
+    "averageFrameRenderTime": 0.483035,
+    "cpuUsage": 1.8689340565905532,
+    "memoryUsage": 352.87109375,
+    "outputSkippedFrames": 0,
+    "outputTotalFrames": 18006,
+    "renderSkippedFrames": 0,
+    "renderTotalFrames": 23609,
+    "webSocketSessionIncomingMessages": 123,
+    "webSocketSessionOutgoingMessages": 123
+  },
+  "obsSamples": [
+    {
+      "activeFps": 30.000000300000007,
+      "availableDiskSpace": 359434.9140625,
+      "averageFrameRenderTime": 0.455825,
+      "cpuUsage": 2.632877766073198,
+      "memoryUsage": 348.2578125,
+      "outputSkippedFrames": 0,
+      "outputTotalFrames": 298,
+      "renderSkippedFrames": 0,
+      "renderTotalFrames": 5901,
+      "webSocketSessionIncomingMessages": 13,
+      "webSocketSessionOutgoingMessages": 13
+    },
+    {
+      "activeFps": 30.000000300000007,
+      "availableDiskSpace": 359434.890625,
+      "averageFrameRenderTime": 0.396529,
+      "cpuUsage": 2.2967871833468894,
+      "memoryUsage": 348.44921875,
+      "outputSkippedFrames": 0,
+      "outputTotalFrames": 625,
+      "renderSkippedFrames": 0,
+      "renderTotalFrames": 6228,
+      "webSocketSessionIncomingMessages": 15,
+      "webSocketSessionOutgoingMessages": 15
+    },
+    {
+      "activeFps": 30.000000300000007,
+      "availableDiskSpace": 359428.37890625,
+      "averageFrameRenderTime": 0.462948,
+      "cpuUsage": 2.311193987035015,
+      "memoryUsage": 348.7265625,
+      "outputSkippedFrames": 0,
+      "outputTotalFrames": 949,
+      "renderSkippedFrames": 0,
+      "renderTotalFrames": 6552,
+      "webSocketSessionIncomingMessages": 17,
+      "webSocketSessionOutgoingMessages": 17
+    },
+    {
+      "activeFps": 30.000000300000007,
+      "availableDiskSpace": 359428.35546875,
+      "averageFrameRenderTime": 0.377758,
+      "cpuUsage": 3.1915136325846802,
+      "memoryUsage": 349.31640625,
+      "outputSkippedFrames": 0,
+      "outputTotalFrames": 1275,
+      "renderSkippedFrames": 0,
+      "renderTotalFrames": 6878,
+      "webSocketSessionIncomingMessages": 19,
+      "webSocketSessionOutgoingMessages": 19
+    },
+    {
+      "activeFps": 30.000000300000007,
+      "availableDiskSpace": 359428.30859375,
+      "averageFrameRenderTime": 0.4272,
+      "cpuUsage": 2.7960488914390536,
+      "memoryUsage": 349.3203125,
+      "outputSkippedFrames": 0,
+      "outputTotalFrames": 1602,
+      "renderSkippedFrames": 0,
+      "renderTotalFrames": 7205,
+      "webSocketSessionIncomingMessages": 21,
+      "webSocketSessionOutgoingMessages": 21
+    },
+    {
+      "activeFps": 30.000000300000007,
+      "availableDiskSpace": 359421.890625,
+      "averageFrameRenderTime": 0.402754,
+      "cpuUsage": 2.5207286517456615,
+      "memoryUsage": 349.578125,
+      "outputSkippedFrames": 0,
+      "outputTotalFrames": 1927,
+      "renderSkippedFrames": 0,
+      "renderTotalFrames": 7530,
+      "webSocketSessionIncomingMessages": 23,
+      "webSocketSessionOutgoingMessages": 23
+    },
+    {
+      "activeFps": 30.000000300000007,
+      "availableDiskSpace": 359421.86328125,
+      "averageFrameRenderTime": 0.463219,
+      "cpuUsage": 3.1980898775687105,
+      "memoryUsage": 349.8359375,
+      "outputSkippedFrames": 0,
+      "outputTotalFrames": 2252,
+      "renderSkippedFrames": 0,
+      "renderTotalFrames": 7855,
+      "webSocketSessionIncomingMessages": 25,
+      "webSocketSessionOutgoingMessages": 25
+    },
+    {
+      "activeFps": 30.000000300000007,
+      "availableDiskSpace": 359421.7578125,
+      "averageFrameRenderTime": 0.390451,
+      "cpuUsage": 2.4332354137034558,
+      "memoryUsage": 349.84765625,
+      "outputSkippedFrames": 0,
+      "outputTotalFrames": 2575,
+      "renderSkippedFrames": 0,
+      "renderTotalFrames": 8178,
+      "webSocketSessionIncomingMessages": 27,
+      "webSocketSessionOutgoingMessages": 27
+    },
+    {
+      "activeFps": 30.000000300000007,
+      "availableDiskSpace": 359416.98046875,
+      "averageFrameRenderTime": 0.452316,
+      "cpuUsage": 2.6339135686568844,
+      "memoryUsage": 350.05859375,
+      "outputSkippedFrames": 0,
+      "outputTotalFrames": 2903,
+      "renderSkippedFrames": 0,
+      "renderTotalFrames": 8506,
+      "webSocketSessionIncomingMessages": 29,
+      "webSocketSessionOutgoingMessages": 29
+    },
+    {
+      "activeFps": 30.000000300000007,
+      "availableDiskSpace": 359416.93359375,
+      "averageFrameRenderTime": 0.408916,
+      "cpuUsage": 3.269022467892848,
+      "memoryUsage": 350.18359375,
+      "outputSkippedFrames": 0,
+      "outputTotalFrames": 3229,
+      "renderSkippedFrames": 0,
+      "renderTotalFrames": 8832,
+      "webSocketSessionIncomingMessages": 31,
+      "webSocketSessionOutgoingMessages": 31
+    },
+    {
+      "activeFps": 30.000000300000007,
+      "availableDiskSpace": 359414.953125,
+      "averageFrameRenderTime": 0.427935,
+      "cpuUsage": 2.8127374423371196,
+      "memoryUsage": 350.68359375,
+      "outputSkippedFrames": 0,
+      "outputTotalFrames": 3557,
+      "renderSkippedFrames": 0,
+      "renderTotalFrames": 9160,
+      "webSocketSessionIncomingMessages": 33,
+      "webSocketSessionOutgoingMessages": 33
+    },
+    {
+      "activeFps": 30.000000300000007,
+      "availableDiskSpace": 359405.8671875,
+      "averageFrameRenderTime": 0.348077,
+      "cpuUsage": 2.9181159543593176,
+      "memoryUsage": 350.85546875,
+      "outputSkippedFrames": 0,
+      "outputTotalFrames": 3882,
+      "renderSkippedFrames": 0,
+      "renderTotalFrames": 9485,
+      "webSocketSessionIncomingMessages": 35,
+      "webSocketSessionOutgoingMessages": 35
+    },
+    {
+      "activeFps": 30.000000300000007,
+      "availableDiskSpace": 359405.8203125,
+      "averageFrameRenderTime": 0.39709,
+      "cpuUsage": 2.846604895073319,
+      "memoryUsage": 350.95703125,
+      "outputSkippedFrames": 0,
+      "outputTotalFrames": 4207,
+      "renderSkippedFrames": 0,
+      "renderTotalFrames": 9810,
+      "webSocketSessionIncomingMessages": 37,
+      "webSocketSessionOutgoingMessages": 37
+    },
+    {
+      "activeFps": 30.000000300000007,
+      "availableDiskSpace": 359405.796875,
+      "averageFrameRenderTime": 0.406512,
+      "cpuUsage": 2.8486829992989477,
+      "memoryUsage": 350.984375,
+      "outputSkippedFrames": 0,
+      "outputTotalFrames": 4532,
+      "renderSkippedFrames": 0,
+      "renderTotalFrames": 10135,
+      "webSocketSessionIncomingMessages": 39,
+      "webSocketSessionOutgoingMessages": 39
+    },
+    {
+      "activeFps": 30.000000300000007,
+      "availableDiskSpace": 359405.75390625,
+      "averageFrameRenderTime": 0.4552,
+      "cpuUsage": 2.4522116331226287,
+      "memoryUsage": 350.98046875,
+      "outputSkippedFrames": 0,
+      "outputTotalFrames": 4858,
+      "renderSkippedFrames": 0,
+      "renderTotalFrames": 10461,
+      "webSocketSessionIncomingMessages": 41,
+      "webSocketSessionOutgoingMessages": 41
+    },
+    {
+      "activeFps": 30.000000300000007,
+      "availableDiskSpace": 359405.703125,
+      "averageFrameRenderTime": 0.51728,
+      "cpuUsage": 2.4281929234413444,
+      "memoryUsage": 350.984375,
+      "outputSkippedFrames": 0,
+      "outputTotalFrames": 5184,
+      "renderSkippedFrames": 0,
+      "renderTotalFrames": 10787,
+      "webSocketSessionIncomingMessages": 43,
+      "webSocketSessionOutgoingMessages": 43
+    },
+    {
+      "activeFps": 30.000000300000007,
+      "availableDiskSpace": 359402.6796875,
+      "averageFrameRenderTime": 0.434764,
+      "cpuUsage": 2.355833259412201,
+      "memoryUsage": 351.0390625,
+      "outputSkippedFrames": 0,
+      "outputTotalFrames": 5510,
+      "renderSkippedFrames": 0,
+      "renderTotalFrames": 11113,
+      "webSocketSessionIncomingMessages": 45,
+      "webSocketSessionOutgoingMessages": 45
+    },
+    {
+      "activeFps": 30.000000300000007,
+      "availableDiskSpace": 359393.76171875,
+      "averageFrameRenderTime": 0.466277,
+      "cpuUsage": 2.315357554112007,
+      "memoryUsage": 351.1875,
+      "outputSkippedFrames": 0,
+      "outputTotalFrames": 5835,
+      "renderSkippedFrames": 0,
+      "renderTotalFrames": 11438,
+      "webSocketSessionIncomingMessages": 47,
+      "webSocketSessionOutgoingMessages": 47
+    },
+    {
+      "activeFps": 30.000000300000007,
+      "availableDiskSpace": 359393.73828125,
+      "averageFrameRenderTime": 0.377761,
+      "cpuUsage": 2.436619882005495,
+      "memoryUsage": 351.171875,
+      "outputSkippedFrames": 0,
+      "outputTotalFrames": 6162,
+      "renderSkippedFrames": 0,
+      "renderTotalFrames": 11765,
+      "webSocketSessionIncomingMessages": 49,
+      "webSocketSessionOutgoingMessages": 49
+    },
+    {
+      "activeFps": 30.000000300000007,
+      "availableDiskSpace": 359393.62890625,
+      "averageFrameRenderTime": 0.508951,
+      "cpuUsage": 2.979824936552187,
+      "memoryUsage": 351.2109375,
+      "outputSkippedFrames": 0,
+      "outputTotalFrames": 6498,
+      "renderSkippedFrames": 0,
+      "renderTotalFrames": 12101,
+      "webSocketSessionIncomingMessages": 51,
+      "webSocketSessionOutgoingMessages": 51
+    },
+    {
+      "activeFps": 30.000000300000007,
+      "availableDiskSpace": 359393.609375,
+      "averageFrameRenderTime": 0.404861,
+      "cpuUsage": 2.882587244331319,
+      "memoryUsage": 351.23046875,
+      "outputSkippedFrames": 0,
+      "outputTotalFrames": 6822,
+      "renderSkippedFrames": 0,
+      "renderTotalFrames": 12425,
+      "webSocketSessionIncomingMessages": 53,
+      "webSocketSessionOutgoingMessages": 53
+    },
+    {
+      "activeFps": 30.000000300000007,
+      "availableDiskSpace": 359391.0859375,
+      "averageFrameRenderTime": 0.53049,
+      "cpuUsage": 2.394469715116908,
+      "memoryUsage": 351.375,
+      "outputSkippedFrames": 0,
+      "outputTotalFrames": 7148,
+      "renderSkippedFrames": 0,
+      "renderTotalFrames": 12751,
+      "webSocketSessionIncomingMessages": 55,
+      "webSocketSessionOutgoingMessages": 55
+    },
+    {
+      "activeFps": 30.000000300000007,
+      "availableDiskSpace": 359389.75390625,
+      "averageFrameRenderTime": 0.511245,
+      "cpuUsage": 1.9501094266202632,
+      "memoryUsage": 351.515625,
+      "outputSkippedFrames": 0,
+      "outputTotalFrames": 7472,
+      "renderSkippedFrames": 0,
+      "renderTotalFrames": 13075,
+      "webSocketSessionIncomingMessages": 57,
+      "webSocketSessionOutgoingMessages": 57
+    },
+    {
+      "activeFps": 30.000000300000007,
+      "availableDiskSpace": 359388.5859375,
+      "averageFrameRenderTime": 0.438529,
+      "cpuUsage": 1.8970328494169857,
+      "memoryUsage": 351.51953125,
+      "outputSkippedFrames": 0,
+      "outputTotalFrames": 7798,
+      "renderSkippedFrames": 0,
+      "renderTotalFrames": 13401,
+      "webSocketSessionIncomingMessages": 59,
+      "webSocketSessionOutgoingMessages": 59
+    },
+    {
+      "activeFps": 30.000000300000007,
+      "availableDiskSpace": 359386.56640625,
+      "averageFrameRenderTime": 0.542512,
+      "cpuUsage": 1.7654260273970317,
+      "memoryUsage": 351.51953125,
+      "outputSkippedFrames": 0,
+      "outputTotalFrames": 8122,
+      "renderSkippedFrames": 0,
+      "renderTotalFrames": 13725,
+      "webSocketSessionIncomingMessages": 61,
+      "webSocketSessionOutgoingMessages": 61
+    },
+    {
+      "activeFps": 30.000000300000007,
+      "availableDiskSpace": 359382.35546875,
+      "averageFrameRenderTime": 0.415641,
+      "cpuUsage": 2.0232519186295437,
+      "memoryUsage": 351.73828125,
+      "outputSkippedFrames": 0,
+      "outputTotalFrames": 8448,
+      "renderSkippedFrames": 0,
+      "renderTotalFrames": 14051,
+      "webSocketSessionIncomingMessages": 63,
+      "webSocketSessionOutgoingMessages": 63
+    },
+    {
+      "activeFps": 30.000000300000007,
+      "availableDiskSpace": 359382.3359375,
+      "averageFrameRenderTime": 0.529306,
+      "cpuUsage": 2.141250500656756,
+      "memoryUsage": 352.06640625,
+      "outputSkippedFrames": 0,
+      "outputTotalFrames": 8773,
+      "renderSkippedFrames": 0,
+      "renderTotalFrames": 14376,
+      "webSocketSessionIncomingMessages": 65,
+      "webSocketSessionOutgoingMessages": 65
+    },
+    {
+      "activeFps": 30.000000300000007,
+      "availableDiskSpace": 359376.8125,
+      "averageFrameRenderTime": 0.426751,
+      "cpuUsage": 1.733893857272712,
+      "memoryUsage": 352.140625,
+      "outputSkippedFrames": 0,
+      "outputTotalFrames": 9096,
+      "renderSkippedFrames": 0,
+      "renderTotalFrames": 14699,
+      "webSocketSessionIncomingMessages": 67,
+      "webSocketSessionOutgoingMessages": 67
+    },
+    {
+      "activeFps": 30.000000300000007,
+      "availableDiskSpace": 359376.76953125,
+      "averageFrameRenderTime": 0.442906,
+      "cpuUsage": 2.639428735546783,
+      "memoryUsage": 352.22265625,
+      "outputSkippedFrames": 0,
+      "outputTotalFrames": 9420,
+      "renderSkippedFrames": 0,
+      "renderTotalFrames": 15023,
+      "webSocketSessionIncomingMessages": 69,
+      "webSocketSessionOutgoingMessages": 69
+    },
+    {
+      "activeFps": 30.000000300000007,
+      "availableDiskSpace": 359376.74609375,
+      "averageFrameRenderTime": 0.389519,
+      "cpuUsage": 2.7617147711222096,
+      "memoryUsage": 352.234375,
+      "outputSkippedFrames": 0,
+      "outputTotalFrames": 9747,
+      "renderSkippedFrames": 0,
+      "renderTotalFrames": 15350,
+      "webSocketSessionIncomingMessages": 71,
+      "webSocketSessionOutgoingMessages": 71
+    },
+    {
+      "activeFps": 30.000000300000007,
+      "availableDiskSpace": 359373.9140625,
+      "averageFrameRenderTime": 0.401348,
+      "cpuUsage": 2.3085336581113918,
+      "memoryUsage": 352.17578125,
+      "outputSkippedFrames": 0,
+      "outputTotalFrames": 10072,
+      "renderSkippedFrames": 0,
+      "renderTotalFrames": 15675,
+      "webSocketSessionIncomingMessages": 73,
+      "webSocketSessionOutgoingMessages": 73
+    },
+    {
+      "activeFps": 30.000000300000007,
+      "availableDiskSpace": 359369.515625,
+      "averageFrameRenderTime": 0.582406,
+      "cpuUsage": 2.4641125525506213,
+      "memoryUsage": 352.22265625,
+      "outputSkippedFrames": 0,
+      "outputTotalFrames": 10398,
+      "renderSkippedFrames": 0,
+      "renderTotalFrames": 16001,
+      "webSocketSessionIncomingMessages": 75,
+      "webSocketSessionOutgoingMessages": 75
+    },
+    {
+      "activeFps": 30.000000300000007,
+      "availableDiskSpace": 359369.47265625,
+      "averageFrameRenderTime": 0.514351,
+      "cpuUsage": 2.215092787773125,
+      "memoryUsage": 352.37109375,
+      "outputSkippedFrames": 0,
+      "outputTotalFrames": 10726,
+      "renderSkippedFrames": 0,
+      "renderTotalFrames": 16329,
+      "webSocketSessionIncomingMessages": 77,
+      "webSocketSessionOutgoingMessages": 77
+    },
+    {
+      "activeFps": 30.000000300000007,
+      "availableDiskSpace": 359367.265625,
+      "averageFrameRenderTime": 0.64039,
+      "cpuUsage": 2.1213967815345085,
+      "memoryUsage": 352.37890625,
+      "outputSkippedFrames": 0,
+      "outputTotalFrames": 11051,
+      "renderSkippedFrames": 0,
+      "renderTotalFrames": 16654,
+      "webSocketSessionIncomingMessages": 79,
+      "webSocketSessionOutgoingMessages": 79
+    },
+    {
+      "activeFps": 30.000000300000007,
+      "availableDiskSpace": 359367.234375,
+      "averageFrameRenderTime": 0.534748,
+      "cpuUsage": 2.3089054705654637,
+      "memoryUsage": 352.375,
+      "outputSkippedFrames": 0,
+      "outputTotalFrames": 11376,
+      "renderSkippedFrames": 0,
+      "renderTotalFrames": 16979,
+      "webSocketSessionIncomingMessages": 81,
+      "webSocketSessionOutgoingMessages": 81
+    },
+    {
+      "activeFps": 30.000000300000007,
+      "availableDiskSpace": 359358.3984375,
+      "averageFrameRenderTime": 0.600832,
+      "cpuUsage": 2.1867052427961178,
+      "memoryUsage": 352.375,
+      "outputSkippedFrames": 0,
+      "outputTotalFrames": 11699,
+      "renderSkippedFrames": 0,
+      "renderTotalFrames": 17302,
+      "webSocketSessionIncomingMessages": 83,
+      "webSocketSessionOutgoingMessages": 83
+    },
+    {
+      "activeFps": 30.000000300000007,
+      "availableDiskSpace": 359358.37890625,
+      "averageFrameRenderTime": 0.585803,
+      "cpuUsage": 2.0524275860485925,
+      "memoryUsage": 352.375,
+      "outputSkippedFrames": 0,
+      "outputTotalFrames": 12027,
+      "renderSkippedFrames": 0,
+      "renderTotalFrames": 17630,
+      "webSocketSessionIncomingMessages": 85,
+      "webSocketSessionOutgoingMessages": 85
+    },
+    {
+      "activeFps": 30.000000300000007,
+      "availableDiskSpace": 359358.33203125,
+      "averageFrameRenderTime": 0.624154,
+      "cpuUsage": 1.9863016312350459,
+      "memoryUsage": 352.48046875,
+      "outputSkippedFrames": 0,
+      "outputTotalFrames": 12349,
+      "renderSkippedFrames": 0,
+      "renderTotalFrames": 17952,
+      "webSocketSessionIncomingMessages": 87,
+      "webSocketSessionOutgoingMessages": 87
+    },
+    {
+      "activeFps": 30.000000300000007,
+      "availableDiskSpace": 359358.30859375,
+      "averageFrameRenderTime": 0.583835,
+      "cpuUsage": 2.083462579584908,
+      "memoryUsage": 352.3828125,
+      "outputSkippedFrames": 0,
+      "outputTotalFrames": 12671,
+      "renderSkippedFrames": 0,
+      "renderTotalFrames": 18274,
+      "webSocketSessionIncomingMessages": 89,
+      "webSocketSessionOutgoingMessages": 89
+    },
+    {
+      "activeFps": 30.000000300000007,
+      "availableDiskSpace": 359349.84765625,
+      "averageFrameRenderTime": 0.613435,
+      "cpuUsage": 2.5455241216170816,
+      "memoryUsage": 352.36328125,
+      "outputSkippedFrames": 0,
+      "outputTotalFrames": 12996,
+      "renderSkippedFrames": 0,
+      "renderTotalFrames": 18599,
+      "webSocketSessionIncomingMessages": 91,
+      "webSocketSessionOutgoingMessages": 91
+    },
+    {
+      "activeFps": 30.000000300000007,
+      "availableDiskSpace": 359349.828125,
+      "averageFrameRenderTime": 0.56279,
+      "cpuUsage": 2.6273804305060673,
+      "memoryUsage": 352.3671875,
+      "outputSkippedFrames": 0,
+      "outputTotalFrames": 13320,
+      "renderSkippedFrames": 0,
+      "renderTotalFrames": 18923,
+      "webSocketSessionIncomingMessages": 93,
+      "webSocketSessionOutgoingMessages": 93
+    },
+    {
+      "activeFps": 30.000000300000007,
+      "availableDiskSpace": 359349.8046875,
+      "averageFrameRenderTime": 0.494551,
+      "cpuUsage": 2.090526259221176,
+      "memoryUsage": 352.37109375,
+      "outputSkippedFrames": 0,
+      "outputTotalFrames": 13644,
+      "renderSkippedFrames": 0,
+      "renderTotalFrames": 19247,
+      "webSocketSessionIncomingMessages": 95,
+      "webSocketSessionOutgoingMessages": 95
+    },
+    {
+      "activeFps": 30.000000300000007,
+      "availableDiskSpace": 359349.76171875,
+      "averageFrameRenderTime": 0.530232,
+      "cpuUsage": 2.0277086459684432,
+      "memoryUsage": 352.37109375,
+      "outputSkippedFrames": 0,
+      "outputTotalFrames": 13970,
+      "renderSkippedFrames": 0,
+      "renderTotalFrames": 19573,
+      "webSocketSessionIncomingMessages": 97,
+      "webSocketSessionOutgoingMessages": 97
+    },
+    {
+      "activeFps": 30.000000300000007,
+      "availableDiskSpace": 359349.73828125,
+      "averageFrameRenderTime": 0.49328,
+      "cpuUsage": 1.913738659120735,
+      "memoryUsage": 352.4453125,
+      "outputSkippedFrames": 0,
+      "outputTotalFrames": 14296,
+      "renderSkippedFrames": 0,
+      "renderTotalFrames": 19899,
+      "webSocketSessionIncomingMessages": 99,
+      "webSocketSessionOutgoingMessages": 99
+    },
+    {
+      "activeFps": 30.000000300000007,
+      "availableDiskSpace": 359343.96875,
+      "averageFrameRenderTime": 0.64779,
+      "cpuUsage": 1.8688637132968022,
+      "memoryUsage": 352.390625,
+      "outputSkippedFrames": 0,
+      "outputTotalFrames": 14621,
+      "renderSkippedFrames": 0,
+      "renderTotalFrames": 20224,
+      "webSocketSessionIncomingMessages": 101,
+      "webSocketSessionOutgoingMessages": 101
+    },
+    {
+      "activeFps": 30.000000300000007,
+      "availableDiskSpace": 359343.9453125,
+      "averageFrameRenderTime": 0.567203,
+      "cpuUsage": 2.0989166320696984,
+      "memoryUsage": 352.390625,
+      "outputSkippedFrames": 0,
+      "outputTotalFrames": 14946,
+      "renderSkippedFrames": 0,
+      "renderTotalFrames": 20549,
+      "webSocketSessionIncomingMessages": 103,
+      "webSocketSessionOutgoingMessages": 103
+    },
+    {
+      "activeFps": 30.000000300000007,
+      "availableDiskSpace": 359343.92578125,
+      "averageFrameRenderTime": 0.673641,
+      "cpuUsage": 2.453193960133143,
+      "memoryUsage": 352.390625,
+      "outputSkippedFrames": 0,
+      "outputTotalFrames": 15270,
+      "renderSkippedFrames": 0,
+      "renderTotalFrames": 20873,
+      "webSocketSessionIncomingMessages": 105,
+      "webSocketSessionOutgoingMessages": 105
+    },
+    {
+      "activeFps": 30.000000300000007,
+      "availableDiskSpace": 359341.77734375,
+      "averageFrameRenderTime": 0.616319,
+      "cpuUsage": 2.1031978174109733,
+      "memoryUsage": 352.97265625,
+      "outputSkippedFrames": 0,
+      "outputTotalFrames": 15596,
+      "renderSkippedFrames": 0,
+      "renderTotalFrames": 21199,
+      "webSocketSessionIncomingMessages": 107,
+      "webSocketSessionOutgoingMessages": 107
+    },
+    {
+      "activeFps": 30.000000300000007,
+      "availableDiskSpace": 359337.484375,
+      "averageFrameRenderTime": 0.521125,
+      "cpuUsage": 1.9475693240734397,
+      "memoryUsage": 352.97265625,
+      "outputSkippedFrames": 0,
+      "outputTotalFrames": 15921,
+      "renderSkippedFrames": 0,
+      "renderTotalFrames": 21524,
+      "webSocketSessionIncomingMessages": 109,
+      "webSocketSessionOutgoingMessages": 109
+    },
+    {
+      "activeFps": 30.000000300000007,
+      "availableDiskSpace": 359337.4609375,
+      "averageFrameRenderTime": 0.45617,
+      "cpuUsage": 2.07971401339303,
+      "memoryUsage": 353.05859375,
+      "outputSkippedFrames": 0,
+      "outputTotalFrames": 16243,
+      "renderSkippedFrames": 0,
+      "renderTotalFrames": 21846,
+      "webSocketSessionIncomingMessages": 111,
+      "webSocketSessionOutgoingMessages": 111
+    },
+    {
+      "activeFps": 30.000000300000007,
+      "availableDiskSpace": 359335.25,
+      "averageFrameRenderTime": 0.554154,
+      "cpuUsage": 1.8785797406303102,
+      "memoryUsage": 352.84375,
+      "outputSkippedFrames": 0,
+      "outputTotalFrames": 16568,
+      "renderSkippedFrames": 0,
+      "renderTotalFrames": 22171,
+      "webSocketSessionIncomingMessages": 113,
+      "webSocketSessionOutgoingMessages": 113
+    },
+    {
+      "activeFps": 30.000000300000007,
+      "availableDiskSpace": 359328.98046875,
+      "averageFrameRenderTime": 0.564841,
+      "cpuUsage": 2.3004120270227673,
+      "memoryUsage": 352.84375,
+      "outputSkippedFrames": 0,
+      "outputTotalFrames": 16891,
+      "renderSkippedFrames": 0,
+      "renderTotalFrames": 22494,
+      "webSocketSessionIncomingMessages": 115,
+      "webSocketSessionOutgoingMessages": 115
+    },
+    {
+      "activeFps": 30.000000300000007,
+      "availableDiskSpace": 359328.95703125,
+      "averageFrameRenderTime": 0.595848,
+      "cpuUsage": 1.7592188859969544,
+      "memoryUsage": 352.84375,
+      "outputSkippedFrames": 0,
+      "outputTotalFrames": 17217,
+      "renderSkippedFrames": 0,
+      "renderTotalFrames": 22820,
+      "webSocketSessionIncomingMessages": 117,
+      "webSocketSessionOutgoingMessages": 117
+    },
+    {
+      "activeFps": 30.000000300000007,
+      "availableDiskSpace": 359328.91015625,
+      "averageFrameRenderTime": 0.422635,
+      "cpuUsage": 1.8318254359479744,
+      "memoryUsage": 352.82421875,
+      "outputSkippedFrames": 0,
+      "outputTotalFrames": 17542,
+      "renderSkippedFrames": 0,
+      "renderTotalFrames": 23145,
+      "webSocketSessionIncomingMessages": 119,
+      "webSocketSessionOutgoingMessages": 119
+    },
+    {
+      "activeFps": 30.000000300000007,
+      "availableDiskSpace": 359327.44921875,
+      "averageFrameRenderTime": 0.53349,
+      "cpuUsage": 2.195965755603796,
+      "memoryUsage": 352.82421875,
+      "outputSkippedFrames": 0,
+      "outputTotalFrames": 17866,
+      "renderSkippedFrames": 0,
+      "renderTotalFrames": 23469,
+      "webSocketSessionIncomingMessages": 121,
+      "webSocketSessionOutgoingMessages": 121
+    }
+  ],
+  "recordStatus": [
+    {
+      "outputActive": true,
+      "outputBytes": 2141312,
+      "outputDuration": 9633,
+      "outputPaused": false,
+      "outputTimecode": "00:00:09.633"
+    },
+    {
+      "outputActive": true,
+      "outputBytes": 4473026,
+      "outputDuration": 20533,
+      "outputPaused": false,
+      "outputTimecode": "00:00:20.533"
+    },
+    {
+      "outputActive": true,
+      "outputBytes": 6709810,
+      "outputDuration": 31333,
+      "outputPaused": false,
+      "outputTimecode": "00:00:31.333"
+    },
+    {
+      "outputActive": true,
+      "outputBytes": 9098737,
+      "outputDuration": 42199,
+      "outputPaused": false,
+      "outputTimecode": "00:00:42.199"
+    },
+    {
+      "outputActive": true,
+      "outputBytes": 11360470,
+      "outputDuration": 53099,
+      "outputPaused": false,
+      "outputTimecode": "00:00:53.099"
+    },
+    {
+      "outputActive": true,
+      "outputBytes": 13621395,
+      "outputDuration": 63966,
+      "outputPaused": false,
+      "outputTimecode": "00:01:03.966"
+    },
+    {
+      "outputActive": true,
+      "outputBytes": 15931504,
+      "outputDuration": 74799,
+      "outputPaused": false,
+      "outputTimecode": "00:01:14.799"
+    },
+    {
+      "outputActive": true,
+      "outputBytes": 18028578,
+      "outputDuration": 85533,
+      "outputPaused": false,
+      "outputTimecode": "00:01:25.533"
+    },
+    {
+      "outputActive": true,
+      "outputBytes": 20374783,
+      "outputDuration": 96499,
+      "outputPaused": false,
+      "outputTimecode": "00:01:36.499"
+    },
+    {
+      "outputActive": true,
+      "outputBytes": 22515782,
+      "outputDuration": 107333,
+      "outputPaused": false,
+      "outputTimecode": "00:01:47.333"
+    },
+    {
+      "outputActive": true,
+      "outputBytes": 24578623,
+      "outputDuration": 118266,
+      "outputPaused": false,
+      "outputTimecode": "00:01:58.266"
+    },
+    {
+      "outputActive": true,
+      "outputBytes": 26823136,
+      "outputDuration": 129099,
+      "outputPaused": false,
+      "outputTimecode": "00:02:09.099"
+    },
+    {
+      "outputActive": true,
+      "outputBytes": 28789162,
+      "outputDuration": 139933,
+      "outputPaused": false,
+      "outputTimecode": "00:02:19.933"
+    },
+    {
+      "outputActive": true,
+      "outputBytes": 31060673,
+      "outputDuration": 150766,
+      "outputPaused": false,
+      "outputTimecode": "00:02:30.766"
+    },
+    {
+      "outputActive": true,
+      "outputBytes": 33360551,
+      "outputDuration": 161633,
+      "outputPaused": false,
+      "outputTimecode": "00:02:41.633"
+    },
+    {
+      "outputActive": true,
+      "outputBytes": 35535119,
+      "outputDuration": 172499,
+      "outputPaused": false,
+      "outputTimecode": "00:02:52.499"
+    },
+    {
+      "outputActive": true,
+      "outputBytes": 37661089,
+      "outputDuration": 183366,
+      "outputPaused": false,
+      "outputTimecode": "00:03:03.366"
+    },
+    {
+      "outputActive": true,
+      "outputBytes": 39920779,
+      "outputDuration": 194199,
+      "outputPaused": false,
+      "outputTimecode": "00:03:14.199"
+    },
+    {
+      "outputActive": true,
+      "outputBytes": 42069827,
+      "outputDuration": 205099,
+      "outputPaused": false,
+      "outputTimecode": "00:03:25.099"
+    },
+    {
+      "outputActive": true,
+      "outputBytes": 44350113,
+      "outputDuration": 216333,
+      "outputPaused": false,
+      "outputTimecode": "00:03:36.333"
+    },
+    {
+      "outputActive": true,
+      "outputBytes": 46368484,
+      "outputDuration": 227099,
+      "outputPaused": false,
+      "outputTimecode": "00:03:47.099"
+    },
+    {
+      "outputActive": true,
+      "outputBytes": 48409459,
+      "outputDuration": 237966,
+      "outputPaused": false,
+      "outputTimecode": "00:03:57.966"
+    },
+    {
+      "outputActive": true,
+      "outputBytes": 50373233,
+      "outputDuration": 248799,
+      "outputPaused": false,
+      "outputTimecode": "00:04:08.799"
+    },
+    {
+      "outputActive": true,
+      "outputBytes": 52324538,
+      "outputDuration": 259633,
+      "outputPaused": false,
+      "outputTimecode": "00:04:19.633"
+    },
+    {
+      "outputActive": true,
+      "outputBytes": 54321169,
+      "outputDuration": 270433,
+      "outputPaused": false,
+      "outputTimecode": "00:04:30.433"
+    },
+    {
+      "outputActive": true,
+      "outputBytes": 56485985,
+      "outputDuration": 281299,
+      "outputPaused": false,
+      "outputTimecode": "00:04:41.299"
+    },
+    {
+      "outputActive": true,
+      "outputBytes": 58446550,
+      "outputDuration": 292166,
+      "outputPaused": false,
+      "outputTimecode": "00:04:52.166"
+    },
+    {
+      "outputActive": true,
+      "outputBytes": 60390866,
+      "outputDuration": 302899,
+      "outputPaused": false,
+      "outputTimecode": "00:05:02.899"
+    },
+    {
+      "outputActive": true,
+      "outputBytes": 62544473,
+      "outputDuration": 313699,
+      "outputPaused": false,
+      "outputTimecode": "00:05:13.699"
+    },
+    {
+      "outputActive": true,
+      "outputBytes": 64588193,
+      "outputDuration": 324599,
+      "outputPaused": false,
+      "outputTimecode": "00:05:24.599"
+    },
+    {
+      "outputActive": true,
+      "outputBytes": 66601356,
+      "outputDuration": 335433,
+      "outputPaused": false,
+      "outputTimecode": "00:05:35.433"
+    },
+    {
+      "outputActive": true,
+      "outputBytes": 68738589,
+      "outputDuration": 346299,
+      "outputPaused": false,
+      "outputTimecode": "00:05:46.299"
+    },
+    {
+      "outputActive": true,
+      "outputBytes": 70670873,
+      "outputDuration": 357233,
+      "outputPaused": false,
+      "outputTimecode": "00:05:57.233"
+    },
+    {
+      "outputActive": true,
+      "outputBytes": 72750877,
+      "outputDuration": 368099,
+      "outputPaused": false,
+      "outputTimecode": "00:06:08.099"
+    },
+    {
+      "outputActive": true,
+      "outputBytes": 74776674,
+      "outputDuration": 378933,
+      "outputPaused": false,
+      "outputTimecode": "00:06:18.933"
+    },
+    {
+      "outputActive": true,
+      "outputBytes": 76663660,
+      "outputDuration": 389666,
+      "outputPaused": false,
+      "outputTimecode": "00:06:29.666"
+    },
+    {
+      "outputActive": true,
+      "outputBytes": 78746659,
+      "outputDuration": 400633,
+      "outputPaused": false,
+      "outputTimecode": "00:06:40.633"
+    },
+    {
+      "outputActive": true,
+      "outputBytes": 80706155,
+      "outputDuration": 411333,
+      "outputPaused": false,
+      "outputTimecode": "00:06:51.333"
+    },
+    {
+      "outputActive": true,
+      "outputBytes": 82809064,
+      "outputDuration": 422066,
+      "outputPaused": false,
+      "outputTimecode": "00:07:02.066"
+    },
+    {
+      "outputActive": true,
+      "outputBytes": 84747089,
+      "outputDuration": 432899,
+      "outputPaused": false,
+      "outputTimecode": "00:07:12.899"
+    },
+    {
+      "outputActive": true,
+      "outputBytes": 86708455,
+      "outputDuration": 443699,
+      "outputPaused": false,
+      "outputTimecode": "00:07:23.699"
+    },
+    {
+      "outputActive": true,
+      "outputBytes": 88637101,
+      "outputDuration": 454499,
+      "outputPaused": false,
+      "outputTimecode": "00:07:34.499"
+    },
+    {
+      "outputActive": true,
+      "outputBytes": 90774667,
+      "outputDuration": 465399,
+      "outputPaused": false,
+      "outputTimecode": "00:07:45.399"
+    },
+    {
+      "outputActive": true,
+      "outputBytes": 92700502,
+      "outputDuration": 476233,
+      "outputPaused": false,
+      "outputTimecode": "00:07:56.233"
+    },
+    {
+      "outputActive": true,
+      "outputBytes": 94670752,
+      "outputDuration": 487066,
+      "outputPaused": false,
+      "outputTimecode": "00:08:07.066"
+    },
+    {
+      "outputActive": true,
+      "outputBytes": 96675011,
+      "outputDuration": 497933,
+      "outputPaused": false,
+      "outputTimecode": "00:08:17.933"
+    },
+    {
+      "outputActive": true,
+      "outputBytes": 98708826,
+      "outputDuration": 508699,
+      "outputPaused": false,
+      "outputTimecode": "00:08:28.699"
+    },
+    {
+      "outputActive": true,
+      "outputBytes": 100744087,
+      "outputDuration": 519566,
+      "outputPaused": false,
+      "outputTimecode": "00:08:39.566"
+    },
+    {
+      "outputActive": true,
+      "outputBytes": 102686511,
+      "outputDuration": 530399,
+      "outputPaused": false,
+      "outputTimecode": "00:08:50.399"
+    },
+    {
+      "outputActive": true,
+      "outputBytes": 104630661,
+      "outputDuration": 541133,
+      "outputPaused": false,
+      "outputTimecode": "00:09:01.133"
+    },
+    {
+      "outputActive": true,
+      "outputBytes": 106651222,
+      "outputDuration": 551966,
+      "outputPaused": false,
+      "outputTimecode": "00:09:11.966"
+    },
+    {
+      "outputActive": true,
+      "outputBytes": 108836213,
+      "outputDuration": 562766,
+      "outputPaused": false,
+      "outputTimecode": "00:09:22.766"
+    },
+    {
+      "outputActive": true,
+      "outputBytes": 110919731,
+      "outputDuration": 573633,
+      "outputPaused": false,
+      "outputTimecode": "00:09:33.633"
+    },
+    {
+      "outputActive": true,
+      "outputBytes": 113052118,
+      "outputDuration": 584433,
+      "outputPaused": false,
+      "outputTimecode": "00:09:44.433"
+    },
+    {
+      "outputActive": true,
+      "outputBytes": 115080253,
+      "outputDuration": 595233,
+      "outputPaused": false,
+      "outputTimecode": "00:09:55.233"
+    }
+  ],
+  "backendMemory": [
+    {
+      "at": "2026-11-05T00:43:35.2728211Z",
+      "rssMiB": 76.01,
+      "privateMiB": 75.76
+    },
+    {
+      "at": "2026-11-05T00:43:40.3408449Z",
+      "rssMiB": 79.86,
+      "privateMiB": 81.09
+    },
+    {
+      "at": "2026-11-05T00:43:45.3623510Z",
+      "rssMiB": 79.78,
+      "privateMiB": 80.91
+    },
+    {
+      "at": "2026-11-05T00:43:50.3769517Z",
+      "rssMiB": 80.52,
+      "privateMiB": 82.23
+    },
+    {
+      "at": "2026-11-05T00:43:55.4033295Z",
+      "rssMiB": 80.46,
+      "privateMiB": 81.12
+    },
+    {
+      "at": "2026-11-05T00:44:00.4176641Z",
+      "rssMiB": 80.46,
+      "privateMiB": 81.12
+    },
+    {
+      "at": "2026-11-05T00:44:05.4324782Z",
+      "rssMiB": 80.68,
+      "privateMiB": 81.59
+    },
+    {
+      "at": "2026-11-05T00:44:10.4603490Z",
+      "rssMiB": 80.69,
+      "privateMiB": 81.59
+    },
+    {
+      "at": "2026-11-05T00:44:15.4803992Z",
+      "rssMiB": 80.75,
+      "privateMiB": 81.59
+    },
+    {
+      "at": "2026-11-05T00:44:20.5045583Z",
+      "rssMiB": 80.48,
+      "privateMiB": 81.27
+    },
+    {
+      "at": "2026-11-05T00:44:25.5347720Z",
+      "rssMiB": 80.98,
+      "privateMiB": 83.09
+    },
+    {
+      "at": "2026-11-05T00:44:30.5515682Z",
+      "rssMiB": 80.76,
+      "privateMiB": 82.46
+    },
+    {
+      "at": "2026-11-05T00:44:35.5718590Z",
+      "rssMiB": 80.79,
+      "privateMiB": 82.46
+    },
+    {
+      "at": "2026-11-05T00:44:40.5951152Z",
+      "rssMiB": 80.89,
+      "privateMiB": 82.59
+    },
+    {
+      "at": "2026-11-05T00:44:45.6154946Z",
+      "rssMiB": 80.99,
+      "privateMiB": 82.79
+    },
+    {
+      "at": "2026-11-05T00:44:50.6283473Z",
+      "rssMiB": 81.03,
+      "privateMiB": 82.79
+    },
+    {
+      "at": "2026-11-05T00:44:55.6582108Z",
+      "rssMiB": 80.69,
+      "privateMiB": 81.24
+    },
+    {
+      "at": "2026-11-05T00:45:00.6845748Z",
+      "rssMiB": 81.05,
+      "privateMiB": 81.59
+    },
+    {
+      "at": "2026-11-05T00:45:05.7000028Z",
+      "rssMiB": 81.11,
+      "privateMiB": 81.87
+    },
+    {
+      "at": "2026-11-05T00:45:10.7182608Z",
+      "rssMiB": 81.33,
+      "privateMiB": 82.87
+    },
+    {
+      "at": "2026-11-05T00:45:15.7289165Z",
+      "rssMiB": 81.34,
+      "privateMiB": 83.03
+    },
+    {
+      "at": "2026-11-05T00:45:20.7396439Z",
+      "rssMiB": 81.27,
+      "privateMiB": 81.56
+    },
+    {
+      "at": "2026-11-05T00:45:25.7573138Z",
+      "rssMiB": 81.45,
+      "privateMiB": 82.19
+    },
+    {
+      "at": "2026-11-05T00:45:30.7735677Z",
+      "rssMiB": 81.37,
+      "privateMiB": 81.99
+    },
+    {
+      "at": "2026-11-05T00:45:35.7950785Z",
+      "rssMiB": 81.17,
+      "privateMiB": 81.35
+    },
+    {
+      "at": "2026-11-05T00:45:40.8092462Z",
+      "rssMiB": 81.9,
+      "privateMiB": 81.9
+    },
+    {
+      "at": "2026-11-05T00:45:45.8271594Z",
+      "rssMiB": 82.3,
+      "privateMiB": 90.49
+    },
+    {
+      "at": "2026-11-05T00:45:50.8497303Z",
+      "rssMiB": 87.7,
+      "privateMiB": 90.75
+    },
+    {
+      "at": "2026-11-05T00:45:55.8599063Z",
+      "rssMiB": 88.65,
+      "privateMiB": 91.28
+    },
+    {
+      "at": "2026-11-05T00:46:00.8786086Z",
+      "rssMiB": 88.75,
+      "privateMiB": 91.27
+    },
+    {
+      "at": "2026-11-05T00:46:05.8954661Z",
+      "rssMiB": 88.49,
+      "privateMiB": 90.42
+    },
+    {
+      "at": "2026-11-05T00:46:10.9198836Z",
+      "rssMiB": 88.75,
+      "privateMiB": 90.73
+    },
+    {
+      "at": "2026-11-05T00:46:15.9296857Z",
+      "rssMiB": 88.7,
+      "privateMiB": 91.09
+    },
+    {
+      "at": "2026-11-05T00:46:20.9469372Z",
+      "rssMiB": 88.73,
+      "privateMiB": 91.15
+    },
+    {
+      "at": "2026-11-05T00:46:25.9715435Z",
+      "rssMiB": 88.73,
+      "privateMiB": 91.15
+    },
+    {
+      "at": "2026-11-05T00:46:30.9925021Z",
+      "rssMiB": 88.73,
+      "privateMiB": 91.15
+    },
+    {
+      "at": "2026-11-05T00:46:36.0069712Z",
+      "rssMiB": 88.82,
+      "privateMiB": 90.73
+    },
+    {
+      "at": "2026-11-05T00:46:41.0259259Z",
+      "rssMiB": 89.09,
+      "privateMiB": 91.14
+    },
+    {
+      "at": "2026-11-05T00:46:46.0411673Z",
+      "rssMiB": 89.09,
+      "privateMiB": 91.14
+    },
+    {
+      "at": "2026-11-05T00:46:51.0658863Z",
+      "rssMiB": 89.11,
+      "privateMiB": 91.14
+    },
+    {
+      "at": "2026-11-05T00:46:56.0898968Z",
+      "rssMiB": 89.11,
+      "privateMiB": 91.14
+    },
+    {
+      "at": "2026-11-05T00:47:01.1087005Z",
+      "rssMiB": 89.11,
+      "privateMiB": 91.14
+    },
+    {
+      "at": "2026-11-05T00:47:06.1239221Z",
+      "rssMiB": 88.79,
+      "privateMiB": 90.52
+    },
+    {
+      "at": "2026-11-05T00:47:11.1380987Z",
+      "rssMiB": 88.79,
+      "privateMiB": 90.52
+    },
+    {
+      "at": "2026-11-05T00:47:16.1488051Z",
+      "rssMiB": 88.79,
+      "privateMiB": 90.52
+    },
+    {
+      "at": "2026-11-05T00:47:21.1616222Z",
+      "rssMiB": 88.89,
+      "privateMiB": 90.65
+    },
+    {
+      "at": "2026-11-05T00:47:26.1755739Z",
+      "rssMiB": 88.89,
+      "privateMiB": 90.65
+    },
+    {
+      "at": "2026-11-05T00:47:31.1911991Z",
+      "rssMiB": 88.89,
+      "privateMiB": 90.65
+    },
+    {
+      "at": "2026-11-05T00:47:36.2096396Z",
+      "rssMiB": 88.89,
+      "privateMiB": 90.65
+    },
+    {
+      "at": "2026-11-05T00:47:41.2218647Z",
+      "rssMiB": 88.89,
+      "privateMiB": 90.65
+    },
+    {
+      "at": "2026-11-05T00:47:46.2367632Z",
+      "rssMiB": 89.18,
+      "privateMiB": 91.0
+    },
+    {
+      "at": "2026-11-05T00:47:51.2577881Z",
+      "rssMiB": 89.18,
+      "privateMiB": 91.01
+    },
+    {
+      "at": "2026-11-05T00:47:56.2830496Z",
+      "rssMiB": 89.18,
+      "privateMiB": 91.01
+    },
+    {
+      "at": "2026-11-05T00:48:01.3058107Z",
+      "rssMiB": 89.22,
+      "privateMiB": 92.27
+    },
+    {
+      "at": "2026-11-05T00:48:06.3286302Z",
+      "rssMiB": 89.62,
+      "privateMiB": 93.47
+    },
+    {
+      "at": "2026-11-05T00:48:11.3521005Z",
+      "rssMiB": 89.85,
+      "privateMiB": 93.47
+    },
+    {
+      "at": "2026-11-05T00:48:16.3707816Z",
+      "rssMiB": 89.86,
+      "privateMiB": 93.47
+    },
+    {
+      "at": "2026-11-05T00:48:21.3806834Z",
+      "rssMiB": 89.86,
+      "privateMiB": 93.47
+    },
+    {
+      "at": "2026-11-05T00:48:26.4043371Z",
+      "rssMiB": 89.86,
+      "privateMiB": 93.47
+    },
+    {
+      "at": "2026-11-05T00:48:31.4205499Z",
+      "rssMiB": 90.05,
+      "privateMiB": 93.66
+    },
+    {
+      "at": "2026-11-05T00:48:36.4461582Z",
+      "rssMiB": 90.06,
+      "privateMiB": 93.66
+    },
+    {
+      "at": "2026-11-05T00:48:41.4609411Z",
+      "rssMiB": 90.06,
+      "privateMiB": 93.66
+    },
+    {
+      "at": "2026-11-05T00:48:46.4741915Z",
+      "rssMiB": 90.06,
+      "privateMiB": 93.66
+    },
+    {
+      "at": "2026-11-05T00:48:51.4920970Z",
+      "rssMiB": 90.06,
+      "privateMiB": 93.66
+    },
+    {
+      "at": "2026-11-05T00:48:56.5167199Z",
+      "rssMiB": 90.07,
+      "privateMiB": 93.66
+    },
+    {
+      "at": "2026-11-05T00:49:01.5373826Z",
+      "rssMiB": 90.07,
+      "privateMiB": 93.66
+    },
+    {
+      "at": "2026-11-05T00:49:06.5576532Z",
+      "rssMiB": 90.07,
+      "privateMiB": 93.66
+    },
+    {
+      "at": "2026-11-05T00:49:11.5732979Z",
+      "rssMiB": 90.07,
+      "privateMiB": 93.66
+    },
+    {
+      "at": "2026-11-05T00:49:16.5869911Z",
+      "rssMiB": 90.07,
+      "privateMiB": 93.66
+    },
+    {
+      "at": "2026-11-05T00:49:21.6054739Z",
+      "rssMiB": 90.14,
+      "privateMiB": 93.66
+    },
+    {
+      "at": "2026-11-05T00:49:26.6488951Z",
+      "rssMiB": 90.16,
+      "privateMiB": 93.66
+    },
+    {
+      "at": "2026-11-05T00:49:31.6658426Z",
+      "rssMiB": 90.16,
+      "privateMiB": 93.66
+    },
+    {
+      "at": "2026-11-05T00:49:36.6904901Z",
+      "rssMiB": 90.17,
+      "privateMiB": 93.66
+    },
+    {
+      "at": "2026-11-05T00:49:41.7017279Z",
+      "rssMiB": 90.39,
+      "privateMiB": 93.66
+    },
+    {
+      "at": "2026-11-05T00:49:46.7128757Z",
+      "rssMiB": 90.36,
+      "privateMiB": 93.59
+    },
+    {
+      "at": "2026-11-05T00:49:51.7237509Z",
+      "rssMiB": 90.42,
+      "privateMiB": 93.59
+    },
+    {
+      "at": "2026-11-05T00:49:56.7318200Z",
+      "rssMiB": 90.42,
+      "privateMiB": 93.59
+    },
+    {
+      "at": "2026-11-05T00:50:01.7516601Z",
+      "rssMiB": 90.61,
+      "privateMiB": 93.59
+    },
+    {
+      "at": "2026-11-05T00:50:06.7699071Z",
+      "rssMiB": 90.61,
+      "privateMiB": 93.59
+    },
+    {
+      "at": "2026-11-05T00:50:11.7941831Z",
+      "rssMiB": 90.62,
+      "privateMiB": 93.59
+    },
+    {
+      "at": "2026-11-05T00:50:16.8106880Z",
+      "rssMiB": 90.62,
+      "privateMiB": 93.59
+    },
+    {
+      "at": "2026-11-05T00:50:21.8348814Z",
+      "rssMiB": 90.62,
+      "privateMiB": 93.59
+    },
+    {
+      "at": "2026-11-05T00:50:26.8501215Z",
+      "rssMiB": 90.68,
+      "privateMiB": 93.59
+    },
+    {
+      "at": "2026-11-05T00:50:31.8742379Z",
+      "rssMiB": 90.68,
+      "privateMiB": 93.59
+    },
+    {
+      "at": "2026-11-05T00:50:36.8908396Z",
+      "rssMiB": 90.68,
+      "privateMiB": 93.59
+    },
+    {
+      "at": "2026-11-05T00:50:41.9030512Z",
+      "rssMiB": 90.69,
+      "privateMiB": 93.59
+    },
+    {
+      "at": "2026-11-05T00:50:46.9275403Z",
+      "rssMiB": 90.69,
+      "privateMiB": 93.59
+    },
+    {
+      "at": "2026-11-05T00:50:51.9491051Z",
+      "rssMiB": 90.38,
+      "privateMiB": 92.25
+    },
+    {
+      "at": "2026-11-05T00:50:56.9782239Z",
+      "rssMiB": 90.39,
+      "privateMiB": 93.04
+    },
+    {
+      "at": "2026-11-05T00:51:01.9963420Z",
+      "rssMiB": 90.39,
+      "privateMiB": 93.04
+    },
+    {
+      "at": "2026-11-05T00:51:07.0160307Z",
+      "rssMiB": 90.39,
+      "privateMiB": 93.04
+    },
+    {
+      "at": "2026-11-05T00:51:12.0294737Z",
+      "rssMiB": 90.62,
+      "privateMiB": 93.63
+    },
+    {
+      "at": "2026-11-05T00:51:17.0451072Z",
+      "rssMiB": 90.62,
+      "privateMiB": 93.63
+    },
+    {
+      "at": "2026-11-05T00:51:22.0688613Z",
+      "rssMiB": 90.86,
+      "privateMiB": 93.76
+    },
+    {
+      "at": "2026-11-05T00:51:27.0825192Z",
+      "rssMiB": 90.86,
+      "privateMiB": 93.76
+    },
+    {
+      "at": "2026-11-05T00:51:32.1012197Z",
+      "rssMiB": 90.86,
+      "privateMiB": 93.76
+    },
+    {
+      "at": "2026-11-05T00:51:37.1244256Z",
+      "rssMiB": 90.86,
+      "privateMiB": 93.76
+    },
+    {
+      "at": "2026-11-05T00:51:42.1362724Z",
+      "rssMiB": 90.86,
+      "privateMiB": 93.76
+    },
+    {
+      "at": "2026-11-05T00:51:47.1508506Z",
+      "rssMiB": 90.86,
+      "privateMiB": 93.76
+    },
+    {
+      "at": "2026-11-05T00:51:52.1628317Z",
+      "rssMiB": 90.97,
+      "privateMiB": 93.76
+    },
+    {
+      "at": "2026-11-05T00:51:57.1855103Z",
+      "rssMiB": 90.97,
+      "privateMiB": 93.76
+    },
+    {
+      "at": "2026-11-05T00:52:02.2087174Z",
+      "rssMiB": 90.97,
+      "privateMiB": 93.76
+    },
+    {
+      "at": "2026-11-05T00:52:07.2197753Z",
+      "rssMiB": 90.97,
+      "privateMiB": 93.76
+    },
+    {
+      "at": "2026-11-05T00:52:12.2434955Z",
+      "rssMiB": 90.98,
+      "privateMiB": 93.76
+    },
+    {
+      "at": "2026-11-05T00:52:17.2563581Z",
+      "rssMiB": 90.98,
+      "privateMiB": 93.76
+    },
+    {
+      "at": "2026-11-05T00:52:22.2645992Z",
+      "rssMiB": 90.98,
+      "privateMiB": 93.76
+    },
+    {
+      "at": "2026-11-05T00:52:27.2858223Z",
+      "rssMiB": 90.98,
+      "privateMiB": 93.76
+    },
+    {
+      "at": "2026-11-05T00:52:32.2992005Z",
+      "rssMiB": 91.18,
+      "privateMiB": 93.76
+    },
+    {
+      "at": "2026-11-05T00:52:37.3204813Z",
+      "rssMiB": 91.19,
+      "privateMiB": 93.76
+    },
+    {
+      "at": "2026-11-05T00:52:42.3443485Z",
+      "rssMiB": 91.21,
+      "privateMiB": 93.76
+    },
+    {
+      "at": "2026-11-05T00:52:47.3648983Z",
+      "rssMiB": 91.21,
+      "privateMiB": 93.76
+    },
+    {
+      "at": "2026-11-05T00:52:52.3795867Z",
+      "rssMiB": 91.21,
+      "privateMiB": 93.76
+    },
+    {
+      "at": "2026-11-05T00:52:57.4004457Z",
+      "rssMiB": 91.28,
+      "privateMiB": 93.76
+    },
+    {
+      "at": "2026-11-05T00:53:02.4151346Z",
+      "rssMiB": 91.31,
+      "privateMiB": 93.79
+    },
+    {
+      "at": "2026-11-05T00:53:07.4312147Z",
+      "rssMiB": 90.79,
+      "privateMiB": 91.91
+    },
+    {
+      "at": "2026-11-05T00:53:12.4510377Z",
+      "rssMiB": 90.8,
+      "privateMiB": 91.91
+    }
+  ],
+  "audio": {
+    "decodedMonoRate": 48000,
+    "durationSeconds": 600.2133333333334,
+    "windows": [
+      {
+        "startSeconds": 0,
+        "rmsDbFS": -38.24,
+        "peakDbFS": -19.95,
+        "clippedSamples": 0
+      },
+      {
+        "startSeconds": 60,
+        "rmsDbFS": -38.23,
+        "peakDbFS": -21.31,
+        "clippedSamples": 0
+      },
+      {
+        "startSeconds": 120,
+        "rmsDbFS": -38.37,
+        "peakDbFS": -19.95,
+        "clippedSamples": 0
+      },
+      {
+        "startSeconds": 180,
+        "rmsDbFS": -37.67,
+        "peakDbFS": -21.3,
+        "clippedSamples": 0
+      },
+      {
+        "startSeconds": 240,
+        "rmsDbFS": -36.98,
+        "peakDbFS": -21.91,
+        "clippedSamples": 0
+      },
+      {
+        "startSeconds": 300,
+        "rmsDbFS": -36.97,
+        "peakDbFS": -21.91,
+        "clippedSamples": 0
+      },
+      {
+        "startSeconds": 360,
+        "rmsDbFS": -37.02,
+        "peakDbFS": -22.3,
+        "clippedSamples": 0
+      },
+      {
+        "startSeconds": 420,
+        "rmsDbFS": -36.98,
+        "peakDbFS": -22.29,
+        "clippedSamples": 0
+      },
+      {
+        "startSeconds": 480,
+        "rmsDbFS": -37.03,
+        "peakDbFS": -22.29,
+        "clippedSamples": 0
+      },
+      {
+        "startSeconds": 540,
+        "rmsDbFS": -36.98,
+        "peakDbFS": -22.29,
+        "clippedSamples": 0
+      }
+    ]
+  },
+  "recordingFrames": 18009,
+  "limitations": [
+    "32 simulated players; low quality displays at most 8 actors.",
+    "OBS statistics do not establish unique browser frame cadence.",
+    "Backend working-set sampling began about 19 seconds after recording start.",
+    "Recording is from source 7b225ea, before subsequent animation fixes.",
+    "No network stream or TikTok LIVE session."
+  ]
+}
