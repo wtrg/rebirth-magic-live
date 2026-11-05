@@ -1,0 +1,63 @@
+import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
+import { test } from 'node:test';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { createClipPlayer, hasTemporaryPet } from '../apps/game/animation.ts';
+import { newGame } from '../packages/combat/index.ts';
+import type { GameSnapshot } from '../packages/shared/index.ts';
+
+test('actual GLB replays consecutive impacts and freezes one-shot playback', async () => {
+  const bytes = await readFile(new URL('../public/models/raid.glb', import.meta.url));
+  const buffer = bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength);
+  const gltf = await new GLTFLoader().parseAsync(buffer, '');
+  const boss = gltf.scene.getObjectByName('boss');
+  assert.ok(boss);
+  const clips = createClipPlayer(boss, gltf.animations);
+  const hit = clips.update('Hit', 0.5, 1)!;
+  assert.equal(hit.paused, true);
+  assert.ok(Math.abs(hit.time - 0.32) < 0.001);
+  assert.equal(clips.update('Hit', 0.05, 2), hit);
+  assert.equal(hit.paused, false);
+  assert.equal(hit.time, 0.05);
+  clips.update('Hit', 0.05, 2);
+  assert.equal(hit.time, 0.1);
+  clips.update('Hit', 0.05, 3);
+  assert.equal(hit.time, 0.05);
+  const weapon = boss.getObjectByName('bossWeapon')!;
+  const pose = weapon.quaternion.clone();
+  clips.update('Hit', 0, 3);
+  assert.equal(hit.time, 0.05);
+  assert.ok(weapon.quaternion.equals(pose));
+
+  const attack = clips.update('Attack', 0.6, 4)!;
+  assert.equal(attack.paused, true);
+  clips.update('Attack', 0.05, 5);
+  assert.equal(attack.time, 0.05);
+  assert.equal(attack.paused, false);
+  const defeat = clips.update('Defeat', 1, 6)!;
+  const defeatedAt = defeat.time;
+  clips.update('Defeat', 0.05, 7);
+  assert.equal(defeat.time, defeatedAt);
+  assert.equal(defeat.paused, true);
+  const idle = clips.update('Idle', 2, 8)!;
+  assert.equal(idle.paused, false);
+  assert.ok(idle.time < idle.getClip().duration);
+  assert.equal(clips.update('Missing', 0.1), undefined);
+});
+
+test('temporary pet keeps its server pause boundary for existing and late clients', () => {
+  const state: GameSnapshot = { ...newGame(), mode:'mock', live:'unconfigured' };
+  state.raid.supportPet = { player:'mage', until:6000 };
+  assert.equal(hasTemporaryPet(state, 'mage', 5999), true);
+  assert.equal(hasTemporaryPet(state, 'mage', 6000), false);
+  state.paused = true;
+  state.pausedAt = 6001;
+  assert.equal(hasTemporaryPet(state, 'mage', 20000), false);
+  state.pausedAt = 5000;
+  assert.equal(hasTemporaryPet(state, 'mage', 20000), true);
+  assert.equal(hasTemporaryPet(state, 'other', 20000), false);
+  state.paused = false;
+  state.raid.supportPet.until += 15000;
+  assert.equal(hasTemporaryPet(state, 'mage', 20999), true);
+  assert.equal(hasTemporaryPet(state, 'mage', 21000), false);
+});

@@ -42,10 +42,11 @@ async function verifyReplay() {
   const socket = new WebSocket(base.replace('http:', 'ws:') + '/state', { origin: base });
   try {
     const [data] = await once(socket, 'message');
-    const { mode, live, leaderboard, ...snapshot } = JSON.parse(String(data));
+    const { mode, live, leaderboard, pausedAt, ...snapshot } = JSON.parse(String(data));
     assert.equal(mode, 'mock');
     assert.equal(live, 'unconfigured');
     assert.ok(Array.isArray(leaderboard));
+    assert.equal(typeof pausedAt, snapshot.paused ? 'number' : 'undefined');
     assert.deepEqual(playReplay(trace), snapshot);
   } finally {
     socket.terminate();

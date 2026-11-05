@@ -51,7 +51,7 @@ export type Raid = {
 export type LiveStatus = 'unconfigured' | 'connecting' | 'connected' | 'retrying' | 'rejected';
 export type RankedPlayer = { id: string; name: string; score: number };
 export type EventContext = { restored?: Player; leader?: RankedPlayer };
-export type GameSnapshot = GameState & { mode: 'mock' | 'live'; live: LiveStatus; leaderboard?: RankedPlayer[] };
+export type GameSnapshot = GameState & { mode: 'mock' | 'live'; live: LiveStatus; leaderboard?: RankedPlayer[]; pausedAt?: number };
 export type EffectKind = 'strike' | 'skill' | 'ultimate' | 'boss' | 'gift';
 export type GameState = {
   raid: Raid; players: Player[]; logs: string[]; paused: boolean;

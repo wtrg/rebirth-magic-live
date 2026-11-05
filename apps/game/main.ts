@@ -1,5 +1,5 @@
 import './style.css';
-import { classes, pets, items, achievements, attackStats, defenseOf, maxHp, type GameState, type GameSnapshot } from '../../packages/shared/index.ts';
+import { classes, pets, items, achievements, attackStats, defenseOf, maxHp, type GameSnapshot } from '../../packages/shared/index.ts';
 
 import { createArena } from './scene.ts';
 import { loadRaidModels } from './asset-loader.ts';
@@ -24,7 +24,7 @@ if (overlay && params.get('audio') === '1') void audio.enable().then(enabled => 
 document.body.classList.toggle('overlay', overlay);
 const low = get<HTMLInputElement>('low');
 low.checked = params.get('quality') !== 'high';
-let render: ((state: GameState) => void) | undefined;
+let render: ((state: GameSnapshot) => void) | undefined;
 void loadRaidModels().catch(() => undefined).then(models => {
   try {
     render = createArena(get('viewport'), () => low.checked, overlay, models);

@@ -105,3 +105,24 @@ An empty process-local roster now starts alongside the persistent profile databa
 The HTTP regression seeds 64 saved viewers, admits a 65th after one leaves, clears the roster, and restores the first viewer with 77 XP, score 900, pet and equipment. A one-person raid then has 480 HP rather than scaling for the 65 archived profiles. Leave is blocked during combat. The test also checks global rank from a member while the leading viewer is absent. Independent Codex review found and verified the fix for joining with a tab and an argument, which otherwise could overwrite the archived profile. The 17-test suite passed. Windows browser smoke rejoined after restore and verified gear, pet, score and replay.
 
 A 60-second load rerun with the new persistent leaderboard completed 15,168 accepted events, eight connected WebSockets and stage 30. The measured HTTP p95 was 40.9 ms and maximum 47.8 ms. The queue remained within 128. This is a server-only sample with 64 active profiles, not a benchmark of an unbounded archive.
+
+
+## Ten-minute combined OBS, audio and raid soak
+
+On 2026-11-05, measured source `7b225ea08edf1ee788a3fd6903c60895323b2472` on the same Windows Intel UHD machine using isolated portable OBS 33.0.1, Quick Sync H.264 and one Browser Source with audio routed through OBS. Output and Browser Source were 1080×1920 at 30 FPS. Default low quality rendered up to eight actors while 32 synthetic players simulated all six classes. All 32 had an equipped pet by the end; the workload selected all three pet types after earning them. The separate MOCK server used its own file-backed SQLite database. The owner's OBS instance was not modified.
+
+The 600-second workload accepted 28,796 event requests and rate-limited 11,104. It completed 348 ranked raids; sampled queue depth peaked at 32. Commands mixed basic attacks, skill II, ultimates and periodic ranked cosmetic gift reactions. FFprobe measured 600.300 seconds of H.264 video at 30/1 and AAC stereo at 48 kHz. OBS logged 18,009 output frames. All 55 in-run OBS samples reported 30 FPS, with zero rendering and encoding skips; the final measured render time was 0.483 ms.
+
+OBS-reported memory ranged from 348.3 to 353.1 MiB in the in-run samples. Backend working set ranged from 76.0 to 91.3 MiB over 116 five-second samples within the recording; sampling started approximately 19 seconds after recording began. These measurements do not cover the browser subprocess or GPU allocation and do not establish leak-free operation. Each decoded one-minute mono audio window had a nonzero signal, RMS between -38.37 and -36.97 dBFS, peaks between -22.30 and -19.95 dBFS, and zero clipped samples. This measures captured cues, without assessing subjective mix quality or ruling out brief dropouts.
+
+[Measurements](evidence/obs-soak-600.json) · [Frame extracted at 300 seconds](evidence/obs-soak-600.png)
+
+This is a ten-minute local recording, not an upstream stream, unique Chromium frame-cadence measurement or an 8–12-hour stability claim. The source snapshot predates the animation correction below. Actual TikTok LIVE remains untested: the owner reconfirmed that no test LIVE session is available.
+
+## Repeated impacts and paused pet correction
+
+Read-only Codex review reproduced a boss Hit clip that remained clamped after repeated same-kind impacts, and an expired temporary pet becoming visible again when paused. The extracted real Three.js clip controller now restarts Hit and Attack on a new effect serial. Its actual-GLB regression also found that idle had been configured for only one repetition; idle now loops continuously, while defeat remains a clamped one-shot.
+
+Server snapshots expose the server pause timestamp as optional transport metadata. Pet visibility compares its expiry with that timestamp while paused. This handles an already-expired pet and a valid pet when a client opens during a long pause. The simulation state and replay versions remain unchanged. HTTP coverage checks both existing and newly connected clients receive the same pause boundary. The actual GLB mixer regression checks repeated impacts, zero-delta freeze, idle repetition and clamped defeat. Detailed visual review of all class/pet action sequences remains open.
+
+Windows typecheck, lint, the 19-test suite and build passed. Browser smoke passed with Intel UHD D3D11, including GLB/fallback rendering, pause, replay and recovery. The independent Codex reviewer reran the three targeted animation/roster tests and found no blocking issues. This review is not a Gemini art report or Leader approval. Antigravity and Gemini reports remain NOT_RECEIVED; Leader review remains pending.

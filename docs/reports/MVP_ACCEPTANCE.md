@@ -1,6 +1,6 @@
 # MVP acceptance audit
 
-Audit date 2026-11-05. Source snapshot 14b66c062251497d482a98c5e7f5cd0f8aa42aaa. Scope follows section 16 of the project brief. Overall status remains OPEN while the gates below need evidence.
+Audit date 2026-11-05. Evidence spans source snapshots listed in P7, including the ten-minute combined run at 7b225ea and subsequent animation regressions. Scope follows section 16 of the project brief. Overall status remains OPEN while the gates below need evidence.
 
 ## Demonstrated local requirements
 
@@ -21,7 +21,7 @@ Audit date 2026-11-05. Source snapshot 14b66c062251497d482a98c5e7f5cd0f8aa42aaa.
 15. TikTok adapter with truthful status — optional provider WebSocket transport and local fixture coverage. Actual LIVE remains unverified. See [P5](PHASE_REPORT_P5.md).
 16. OBS overlay — actual portable OBS recording at 1080×1920 with local raid load. See [P7](PHASE_REPORT_P7.md).
 17. Admin and emergency stop — local operator pause/resume and Origin checks in browser smoke. Controlled server shutdown regression preserves accepted pending joins.
-18. Tests, setup and build — 16 tests, required quality checks and Windows browser smoke passed for the source lineage in this audit. See [QA plan](../QA_PLAN.md).
+18. Tests, setup and build — 19 tests, required quality checks and Windows browser smoke passed for the source lineage in this audit. See [QA plan](../QA_PLAN.md).
 19. Public source — [repository](https://github.com/wtrg/rebirth-magic-live) and [RC2 release](https://github.com/wtrg/rebirth-magic-live/releases/tag/v0.2.0-rc.2). Reliability and result-panel changes from PRs 21–23 were integrated into main via PR 24. RC3 also integrates actor animation and local OBS audio verification.
 20. Codex acceptance report — P0–P7 reports and this audit identify measured evidence, gaps and external-agent status. [Leader handoff](../LEADER_REVIEW_REQUEST.md).
 
@@ -30,8 +30,8 @@ Audit date 2026-11-05. Source snapshot 14b66c062251497d482a98c5e7f5cd0f8aa42aaa.
 - The active roster limitation was corrected in the session-roster follow-up. Join restores the saved profile, leave and host clear free active slots, and global ranking retains archived players. The HTTP regression covers viewer 65 and archived profile restoration. See P7.
 
 - Actual TikTok account, room events, verified gift IDs and platform behavior. The owner confirmed no real test LIVE session is currently available.
-- OBS audio routing was subsequently verified in a 17.5-second recording with Browser Source as the only audio input. Sustained audio operation remains unmeasured. See P7.
-- Longer combined OBS and browser operation. The current combined recording lasts three minutes. The completed ten-minute server run is tracked in P7 and cannot establish combined stability.
+- OBS audio routing now has a ten-minute combined recording with one Browser Source and nonzero audio in each one-minute window. Subjective mix quality and longer operation remain open. See P7.
+- Longer combined OBS and browser operation. A ten-minute combined recording and separate ten-minute server soak are now documented in P7. Neither establishes 8–12-hour stability, browser/GPU memory behavior or upstream streaming readiness.
 - Full character animation review, including running and hit reactions across all six class models and all pets. The GLB carries actor shoulder and hip pivots. Runtime drives limb motion and HP recoil. The existing GLB clips cover boss weapon pivots.
 - Leader product and visual review. Antigravity and Gemini reports remain NOT_RECEIVED. The WT bridge connectivity check returned fetch failed.
 

@@ -1,7 +1,8 @@
 import * as T from 'three';
 import { createModelFactory } from './models.ts';
 import type { ModelTemplates } from './asset-loader.ts';
-import { classes, pets, type GameState } from '../../packages/shared/index.ts';
+import { classes, pets, type GameSnapshot } from '../../packages/shared/index.ts';
+import { createClipPlayer, hasTemporaryPet } from './animation.ts';
 
 export function createArena(view: HTMLElement, low: () => boolean, portrait: boolean, models?: ModelTemplates) {
   const renderer = new T.WebGLRenderer({ antialias: false, powerPreference: 'low-power' });
@@ -61,9 +62,7 @@ export function createArena(view: HTMLElement, low: () => boolean, portrait: boo
   const boss = character('boss');
   boss.root.scale.setScalar(2.05);
   boss.root.position.z = -1.45;
-  const mixer = models?.animations.length ? new T.AnimationMixer(boss.root) : null;
-  const actions = new Map(models?.animations.map(clip => [clip.name,mixer!.clipAction(clip)]) ?? []);
-  let bossAction: T.AnimationAction | undefined;
+  const clips = createClipPlayer(boss.root, models?.animations ?? []);
   const wraithModels = [-1,1].map(side => {
     const root = new T.Group();
     root.position.set(side*2.75,0,-1.25);
@@ -86,7 +85,7 @@ export function createArena(view: HTMLElement, low: () => boolean, portrait: boo
   const preview = character('fire');
   preview.root.position.set(0,0,3.3);
   preview.root.rotation.y = Math.PI;
-  let state: GameState | undefined;
+  let state: GameSnapshot | undefined;
   function animateLimbs(body: T.Object3D, stride: number, strike: number, recoil: number) {
     for (const joint of body.children) {
       if (joint.userData.limb === 'leg') joint.rotation.x = stride*joint.userData.side;
@@ -156,21 +155,7 @@ export function createArena(view: HTMLElement, low: () => boolean, portrait: boo
     const actionName = state?.raid.phase === 'DEAD' ? 'Defeat' :
       burst > 0 && kind === 'boss' ? 'Attack' :
       burst > 0 && kind && kind !== 'gift' ? 'Hit' : 'Idle';
-    const action = actions.get(actionName);
-    if (action) {
-      if (action !== bossAction) {
-        bossAction?.stop();
-        action.reset().setLoop(actionName === 'Idle' ? T.LoopRepeat : T.LoopOnce, 1);
-        action.clampWhenFinished = true;
-        action.play();
-        bossAction = action;
-      }
-      mixer?.update(delta);
-    } else {
-      bossAction?.stop();
-      bossAction = undefined;
-      boss.weapon.rotation.x = -burst;
-    }
+    if (!clips.update(actionName, delta, serial)) boss.weapon.rotation.x = -burst;
     preview.root.visible = !state?.players.length;
     preview.body.position.y = Math.sin(time*0.004)*0.06;
     animateLimbs(preview.body, Math.sin(time*0.004)*0.025,0,0);
@@ -201,8 +186,7 @@ export function createArena(view: HTMLElement, low: () => boolean, portrait: boo
       animateLimbs(actor.body,stride,strike,recoil);
       actor.body.position.y = Math.sin(time*0.005+index)*0.055 + strike*0.24;
       actor.weapon.rotation.x = -strike*2.1;
-      const support = state?.raid.supportPet;
-      const temporary = support?.player === player.id && (state?.paused || Date.now() < support.until);
+      const temporary = state && hasTemporaryPet(state, player.id);
       const petIndex = temporary ? player.pet ?? 0 : player.pet;
       if (petIndex !== null) {
         if (actor.companion.children[0]?.userData.index !== petIndex) {
@@ -227,5 +211,5 @@ export function createArena(view: HTMLElement, low: () => boolean, portrait: boo
     });
     renderer.render(scene,camera);
   });
-  return (next: GameState) => { state = next; };
+  return (next: GameSnapshot) => { state = next; };
 }

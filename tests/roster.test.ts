@@ -86,6 +86,21 @@ test('archived viewers rejoin without consuming permanent raid slots', { timeout
     await chat(0,'!leave');
     await until(() => !!state?.logs[0].includes('Chờ trận kết thúc'));
     assert.equal(state!.players.length,1);
+    const beforePause = Date.now();
+    await post('/admin','pause');
+    await until(() => state?.paused === true);
+    assert.ok(state!.pausedAt! >= beforePause && state!.pausedAt! <= Date.now());
+    const pausedAt = state!.pausedAt;
+    const lateClient = new WebSocket(base.replace('http:','ws:')+'/state',{origin:base});
+    try {
+      const [message] = await once(lateClient,'message');
+      const lateState = JSON.parse(String(message)) as GameSnapshot;
+      assert.equal(lateState.pausedAt,pausedAt);
+      assert.equal(lateState.paused,true);
+    } finally { lateClient.terminate(); }
+    await post('/admin','resume');
+    await until(() => state?.paused === false);
+    assert.equal(state!.pausedAt,undefined);
     await post('/admin','shutdown');
     assert.equal((await closed)[0],0,errors);
     const saved = openStore(database);

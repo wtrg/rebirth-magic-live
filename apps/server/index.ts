@@ -152,7 +152,8 @@ server.on('upgrade', (req, socket, head) => {
 });
 
 function snapshot() {
-  const data: GameSnapshot = { ...state, mode, live: live.status, leaderboard: store.leaderboard() };
+  const data: GameSnapshot = { ...state, mode, live: live.status, leaderboard: store.leaderboard(),
+    pausedAt: state.paused ? adminClock.pausedAt : undefined };
   return JSON.stringify(data);
 }
 
