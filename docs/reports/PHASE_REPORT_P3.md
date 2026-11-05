@@ -41,3 +41,11 @@ LEADER_STATUS: LEADER_REVIEW_PENDING
 ## Achievement follow-up
 
 Six badges derive from existing persistent player progress. A version-6 replay supports the achievement command. No database migration or stored duplicate badge state is needed. Practice results cannot unlock ranked milestones. The browser smoke checks the first boss badge after restoring a SQLite backup.
+
+## Detailed database design
+
+On 2026-11-05, completed a [relational design](../DATABASE_DESIGN.md) for the master prompt's 17 entities and seven supporting tables. It specifies columns, keys, relationships, indexes, constraints, private-data retention and source-v2 mapping/cutover/rollback. The executable [SQL prototype](../schema/normalized.sql) runs only in empty scratch databases; runtime schema v2 and its migration path are unchanged.
+
+Unknown old raid/gift/rebirth/acquisition timestamps remain unknown rather than fabricated. Imported score is an explicit cumulative baseline. Scratch SQLite tests enforce ownership, item slots, contributing ranked rewards, gift limits, immutable raid mode and byte limits. Independent Codex review reproduced a valid 65-character fallback name rejected by the initial draft and a practice-to-ranked relabeling hole. Both were corrected with focused regressions; the reviewer reran the tests and found no further blocker in this design scope.
+
+Typecheck, lint, the full 28-test suite and build passed on Windows. The two new tests use only in-memory SQLite and do not constitute an implemented or accepted production migration. Future adapter/importer and fault/recovery/load QA must precede adoption. Leader architecture review remains pending. External Antigravity/Qoder/Gemini reports for this design were NOT_RECEIVED.

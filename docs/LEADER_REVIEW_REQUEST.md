@@ -20,3 +20,5 @@ The owner confirmed that a real TikTok LIVE test session is unavailable. Actual 
 P7 now includes a ten-minute combined OBS/audio recording at source `7b225ea`, followed by separate animation regression fixes. This evidence supports local MOCK operation; product and visual approval remain pending.
 
 The baseline idle-battle requirement now has opt-in server basic attacks (`!auto on/off`) independent of a MOCK browser loop. See P2 for cooldown, persistence, replay and browserless test evidence. Skills remain manual and the host starts each raid. Review the resulting idle/manual gameplay balance alongside the existing class balance request.
+
+Master section 7.2 has a [detailed database design](DATABASE_DESIGN.md) and executable scratch SQL for all 17 entities plus seven supports. Review ownership, immutable raid mode, imported score baselines, unknown historical timestamps, retention and the proposed offline cutover. It is a reviewed prototype, not an activated migration. A future adapter/importer and its failure/recovery QA are separately required before adoption.

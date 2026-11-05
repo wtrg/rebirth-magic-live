@@ -23,3 +23,7 @@ The fixture controls its own animation clock and supplies six synthetic player s
 
 
 Set `QA_LOAD_AUTO=1` before `node scripts/load.mjs` to exercise 64 server-driven auto attackers and eight WebSocket consumers. The harness sends no attack commands during its measured interval; only the host starts the next raid. Its event-request latency is reported as null in this mode because no measured attack ingress occurs. This is a server-only check. `tests/auto.test.ts` additionally verifies a browserless raid, pause/resume, deterministic v10 replay and atomic stage/reward persistence.
+
+## Relational design prototype
+
+`node --test tests/schema-design.test.ts` loads `docs/schema/normalized.sql` into new in-memory databases. It checks all 17 required entities, actual legacy fallback-name preservation, foreign keys, owned pets, item slots, one active raid, contributing ranked reward eligibility, immutable raid mode, repeated rewards/gifts, append-only ledgers and multibyte JSON byte limits. The design/mapping is documented in [DATABASE_DESIGN](DATABASE_DESIGN.md). These checks do not implement or validate a production importer; deployed storage remains schema v2.
