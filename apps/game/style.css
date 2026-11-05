@@ -29,3 +29,11 @@
 @keyframes intro-in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 @media(prefers-reduced-motion:reduce){#boss-intro{animation:none}}
 #wraith-hp:not([hidden]){display:flex;justify-content:space-between;gap:8px;padding-top:6px;color:#e8b4ff;font-size:11px}.overlay #wraith-hp{font-size:clamp(10px,2cqw,22px)}
+
+#raid-result{position:absolute;z-index:2;left:8%;right:8%;top:24%;padding:clamp(12px,3cqw,32px);background:#191422ee;border:1px solid #ca95b4;text-align:center}
+#raid-result[hidden]{display:none}
+#raid-result small{color:#e3aac4;font-size:clamp(10px,1.8cqw,20px);letter-spacing:.12em}
+#raid-result h2{font:700 clamp(28px,6cqw,64px)/1.1 Georgia,serif;margin:8px 0 12px}
+#raid-result p,#raid-result ol{font-size:clamp(11px,2.4cqw,26px);color:#f5dcea}
+#raid-result ol{text-align:left;margin:12px 0 0;padding-left:24px}
+#skill-status{display:grid;gap:4px;color:#d4becf}
