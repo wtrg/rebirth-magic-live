@@ -20,7 +20,7 @@ $env:QA_OBS_PORT='4193'
 node scripts/obs-soak.mjs
 ```
 
-The backend port must be free. Duration defaults to 600 seconds and is bounded to 30–3600 seconds. The harness creates a fresh synthetic SQLite database and its own loopback MOCK server. It adds a temporary OBS scene/Browser Source with `overlay=1&audio=1`, routes source audio to track 1, and restores the previous QA scene/removes the new source on exit. It mutes previous QA browser inputs; their mute state is not restored because this is a disposable installation. Unexpected inputs, active recording/streaming, wrong video dimensions or missing authentication cause refusal. The harness requests graceful backend shutdown; it can terminate only its own spawned backend if shutdown times out. It leaves the portable OBS process open for inspection.
+The backend port must be free. Duration defaults to 600 seconds and is bounded to 30–43200 seconds. The harness creates a fresh synthetic SQLite database and its own loopback MOCK server. It adds a temporary OBS scene/Browser Source with `overlay=1&audio=1`, routes source audio to track 1, and restores the previous QA scene/removes the new source on exit. It mutes previous QA browser inputs; their mute state is not restored because this is a disposable installation. Unexpected inputs, active recording/streaming, wrong video dimensions or missing authentication cause refusal. The harness requests graceful backend shutdown; it can terminate only its own spawned backend if shutdown times out. It leaves the portable OBS process open for inspection.
 
 Set `QA_OBS_P9_PREVIEW=1` to request both P9 preview assets when testing a build that includes them. The harness waits for an active recording with output bytes and at least five seconds of OBS recording time before starting the measured workload. The encoded duration check still applies.
 
@@ -34,7 +34,7 @@ With free FFmpeg/FFprobe available on PATH, analyze a completed run:
 node scripts/analyze-obs.mjs test-results/obs-current-TIMESTAMP/results.json
 ```
 
-Replace `TIMESTAMP` with the actual run directory printed by the harness. The analyzer only accepts results beneath this repository's `test-results` and recordings within the isolated portable recording directory. It checks encoded dimensions/rate/duration and the AAC track, decodes mono PCM16 at 48 kHz, measures RMS/peak/clipping in one-minute windows (including a final partial window), and writes `analysis.json` plus local `audio-mono.wav`. Zero clipped decoded mono samples do not rule out all stereo/encoding artifacts. Inspect the frames and listen to the recording separately. Publish only selected synthetic/redacted evidence, never the OBS configuration or database.
+Replace `TIMESTAMP` with the actual run directory printed by the harness. The analyzer only accepts results beneath this repository's `test-results` and recordings within the isolated portable recording directory. It checks encoded dimensions/rate/duration and the AAC track, decodes mono PCM16 at 48 kHz, measures RMS/peak/clipping in one-minute windows (including a final partial window), and writes `analysis.json` without storing the decoded PCM. Zero clipped decoded mono samples do not rule out all stereo/encoding artifacts. Inspect the frames and listen to the recording separately. Publish only selected synthetic/redacted evidence, never the OBS configuration or database.
 
 Counter scope matters:
 
