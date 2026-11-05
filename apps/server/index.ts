@@ -109,6 +109,19 @@ const server = createServer(async (req, res) => {
       return;
     }
     if (!isAdminAction(body)) { res.writeHead(400).end(); return; }
+    if (body === 'start' || body === 'practice') {
+      try {
+        processQueue(now, queue.length);
+      } catch {
+        applyAdmin(state, 'pause', now, adminClock);
+        replay?.record({ kind: 'admin', action: 'pause', at: now });
+        queue.length = 0;
+        console.error('Local persistence failed. Game paused.');
+        broadcast();
+        res.writeHead(503).end();
+        return;
+      }
+    }
     if (!applyAdmin(state, body, now, adminClock)) { res.writeHead(409).end(); return; }
     if (body === 'pause') queue.length = 0;
     replay?.record({ kind: 'admin', action: body, at: now });

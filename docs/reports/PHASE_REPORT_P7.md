@@ -89,3 +89,10 @@ Local HTTP latency was 20.1 ms p50, 45.6 ms p95, 56.1 ms p99 and 122.3 ms maximu
 Recorded a 17.5-second H.264/AAC file using isolated portable OBS 33.0.1 with exactly one Browser Source and no other audio inputs. The source used audio=1 and Control audio via OBS. The overlay initialized Web Audio successfully at load. Three synthetic players then generated raid cues.
 
 FFprobe confirmed AAC stereo at 48 kHz. After decoding to mono PCM for measurement, the pre-raid interval had zero samples above silence, while combat measured -46.19 dBFS RMS and -22.58 dBFS peak. This establishes captured synthesized game audio in the local OBS file. No upstream LIVE or long audio soak was performed. [Measurement data](evidence/obs-audio-levels.json)
+
+
+## Independent RC3 review
+
+A read-only Codex sub-agent reviewed server, persistence and adapter behavior. It reproduced an ordering bug: an accepted join followed immediately by admin start returned 409 until the queue tick ran. Class selection could similarly be applied after combat had already started. Admin start/practice now drains preceding accepted events before opening the raid. The HTTP regression submits class selection immediately before start and verifies the saved class. The 16-test suite and Windows browser smoke passed; the strengthened HTTP regression also passed after respecting the per-user rate limit.
+
+The reviewer also identified a P1 roster limitation: historical profiles share the 64-player active array and are revived by every new raid. A 65th distinct viewer cannot join once that array is full, including after restart. This remains open pending a persistent roster change.

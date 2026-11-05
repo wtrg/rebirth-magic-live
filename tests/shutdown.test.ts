@@ -57,6 +57,12 @@ test('local shutdown drains accepted events and closes the database', { timeout:
     }));
     const split = unicode.indexOf(Buffer.from('ỏ')) + 1;
     assert.equal(await rawPost([unicode.subarray(0,split), unicode.subarray(split)]),202);
+    await setTimeout(210);
+    assert.equal((await post('/event', {
+      id:'class-before-start', user:'shutdown:0', name:'Hỏa Pháp Sư', kind:'chat', command:'!class ice',
+    })).status,202);
+    // Join and class selection must apply before the immediately following admin action.
+    assert.equal((await post('/admin','start')).status,204);
     const tooLarge = JSON.stringify({ padding:'火'.repeat(800) });
     assert.equal((await fetch(base+'/event', {
       method:'POST', headers:{Origin:base,'Content-Type':'application/json'},body:tooLarge,
@@ -77,7 +83,8 @@ test('local shutdown drains accepted events and closes the database', { timeout:
       assert.equal(saved.prepare('SELECT COUNT(*) AS n FROM players').get()?.n,64);
       const profile = saved.prepare('SELECT profile FROM players WHERE id = ?').get('shutdown:0');
       assert.equal(JSON.parse(String(profile?.profile)).name,'Hỏa Pháp Sư');
-      assert.equal(saved.prepare('SELECT COUNT(*) AS n FROM event_receipts').get()?.n,64);
+      assert.equal(JSON.parse(String(profile?.profile)).classId,'ice');
+      assert.equal(saved.prepare('SELECT COUNT(*) AS n FROM event_receipts').get()?.n,65);
     } finally {
       saved.close();
     }
