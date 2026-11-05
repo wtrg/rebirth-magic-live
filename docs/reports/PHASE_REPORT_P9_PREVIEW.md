@@ -17,3 +17,17 @@ The preview combines Fire Mage source and integration (#44, #45) with Varkhazar 
 Each observation lasted roughly three seconds with eight synthetic Fire Mages at low quality. These figures do not measure presentation FPS, long-duration stability or GPU memory.
 
 Typecheck, lint, 36 tests, build, Fire Mage animation QA and boss timing QA passed. Leader art review is pending. Review the pair's scale, silhouette, attack readability and fit with the arena before extending this treatment to the other classes and pets. LIVE remains unverified.
+
+## Telegraph evidence at phone scale
+
+The built 540 × 960 Windows MOCK overlay used both preview assets and eight synthetic players. The capture script read the server WebSocket deadline and verified the boss impact timestamp after the deadline. These stills span successive attack cycles in the same raid. Times are the browser screenshot call windows relative to the corresponding server deadline.
+
+| Pose | Capture window | Evidence |
+| --- | ---: | --- |
+| Idle | −1295 to −813 ms | [Idle](evidence/p9-motion-idle.png) |
+| Windup | −484 to −241 ms | [Windup](evidence/p9-motion-windup.png) |
+| Charged | −189 to −49 ms | [Charged](evidence/p9-motion-charged.png) |
+| Impact | +188 to +342 ms | [Impact](evidence/p9-motion-impact.png) |
+| Recovery | +657 to +790 ms | [Recovery](evidence/p9-motion-recovery.png) |
+
+The pre-impact cue is visible as a change in weapon and torso pose. The impact adds the CHẤN ĐỘNG label, ground ring and visible player recoil. These stills document the phases and relative server timing. They do not show continuous motion or measure how reliably viewers recognize the cue.
