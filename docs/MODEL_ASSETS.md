@@ -24,3 +24,5 @@ The variants share the body and weapon pivot contract. These assets change the s
 
 
 All seven actor models carry two leg pivots at the hips and two arm pivots at the shoulders. Runtime movement swings the limbs during the attack approach, gives a short torso recoil when HP falls, and eases into the defeated pose. The animation clock freezes when the server reports a pause. GLB and procedural actors use the same pivot tags.
+
+The [P6 action review](reports/PHASE_REPORT_P6.md#six-class-and-three-pet-action-verification) includes ten scene captures and measured transforms for all six classes and three pets, using both GLB and forced-404 fallback. Reproduce with `node scripts/animation-qa.mjs`; this isolated fixture is not a combat or FPS benchmark.

@@ -32,7 +32,7 @@ Audit date 2026-11-05. Evidence spans source snapshots listed in P7, including t
 - Actual TikTok account, room events, verified gift IDs and platform behavior. The owner confirmed no real test LIVE session is currently available.
 - OBS audio routing now has a ten-minute combined recording with one Browser Source and nonzero audio in each one-minute window. Subjective mix quality and longer operation remain open. See P7.
 - Longer combined OBS and browser operation. A ten-minute combined recording and separate ten-minute server soak are now documented in P7. Neither establishes 8–12-hour stability, browser/GPU memory behavior or upstream streaming readiness.
-- Full character animation review, including running and hit reactions across all six class models and all pets. The GLB carries actor shoulder and hip pivots. Runtime drives limb motion and HP recoil. The existing GLB clips cover boss weapon pivots.
+- The six-class/three-pet technical action review now covers GLB and procedural fallback, idle, attack approach, changing leg angles, HP recoil, defeat, revival, pause and temporary-pet expiry. See P6 for captures and limits. Art quality, motion direction and Leader visual approval remain open.
 - Leader product and visual review. Antigravity and Gemini reports remain NOT_RECEIVED. The WT bridge connectivity check returned fetch failed.
 
 Each local test proves only its stated scope. The present evidence supports an operational Windows MOCK candidate while the remaining gates stay open.
