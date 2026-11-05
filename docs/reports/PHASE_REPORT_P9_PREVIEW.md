@@ -31,3 +31,11 @@ The built 540 × 960 Windows MOCK overlay used both preview assets and eight syn
 | Recovery | +657 to +790 ms | [Recovery](evidence/p9-motion-recovery.png) |
 
 The pre-impact cue is visible as a change in weapon and torso pose. The impact adds the CHẤN ĐỘNG label, ground ring and visible player recoil. These stills document the phases and relative server timing. They do not show continuous motion or measure how reliably viewers recognize the cue.
+
+### Revised pre-impact cue
+
+The skinned preview now shows an amber ring and the text VARKHAZAR SẮP TẤN CÔNG while the boss winds up. The cue uses the same server deadline as the rig, freezes on pause and is replaced by the impact presentation when the server reports the attack.
+
+[Warning, −190 to −89 ms](evidence/p9-warning-charged.png) · [Impact, +185 to +331 ms](evidence/p9-warning-impact.png)
+
+Both captures came from the built 540 × 960 MOCK client. Browser QA asserts that the warning is hidden during idle, visible during windup and pause, and hidden during impact. Typecheck, lint, 36 tests and build passed. Viewer recognition and Leader approval remain pending.

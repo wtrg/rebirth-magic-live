@@ -85,6 +85,16 @@ export function createArena(view: HTMLElement, low: () => boolean, portrait: boo
   const bossClips = bossRig && varkhazar && createClipPlayer(bossRig, varkhazar.animations);
   const telegraphMs = (varkhazar?.animations.find(clip => clip.name === 'Telegraph')?.duration ?? 0) * 1000;
   const attackMs = (varkhazar?.animations.find(clip => clip.name === 'Attack')?.duration ?? 0) * 1000;
+  const warning = bossClips && document.createElement('div');
+  const warningRing = bossClips && mesh(scene, new T.TorusGeometry(2.05, 0.055, 4, 48), '#ffcb74', [0,0.07,-1.45], [1,1,1], true);
+  if (warning && warningRing) {
+    warning.id = 'boss-warning';
+    warning.textContent = 'VARKHAZAR SẮP TẤN CÔNG';
+    warning.hidden = true;
+    view.append(warning);
+    warningRing.rotation.x = -Math.PI / 2;
+    warningRing.visible = false;
+  }
   const wraithModels = [-1,1].map(side => {
     const root = new T.Group();
     root.position.set(side*2.75,0,-1.25);
@@ -171,17 +181,23 @@ export function createArena(view: HTMLElement, low: () => boolean, portrait: boo
     }
     portal.rotation.z = time * 0.00015;
     const bossDown = state?.raid.phase === 'DEAD';
-    if (bossClips) {
+    if (bossClips && warning && warningRing) {
       const now = state?.paused ? state.pausedAt ?? Date.now() : Date.now();
       const raid = state?.raid;
       const untilStrike = (raid?.next ?? 0) - now;
       const sinceStrike = now - (state?.bossImpactAt ?? -Infinity);
       const active = raid?.phase === 'PHASE_1' || raid?.phase === 'PHASE_2' || raid?.phase === 'ENRAGED';
+      const attacking = (active || raid?.phase === 'RESET') && sinceStrike >= 0 && sinceStrike < attackMs;
+      const warningActive = active && !attacking && untilStrike <= telegraphMs;
+      warning.hidden = !warningActive;
+      warningRing.visible = warningActive;
       if (bossDown) bossClips.update('Defeat', delta);
-      else if ((active || raid?.phase === 'RESET') && sinceStrike >= 0 && sinceStrike < attackMs) {
+      else if (attacking) {
         bossClips.update('Attack', 0, state?.bossImpactAt, sinceStrike / 1000);
-      } else if (active && untilStrike <= telegraphMs) {
-        bossClips.update('Telegraph', 0, undefined, (telegraphMs - untilStrike) / 1000);
+      } else if (warningActive) {
+        const windup = T.MathUtils.clamp(1 - untilStrike / telegraphMs, 0, 1);
+        warningRing.scale.setScalar(0.82 + 0.18 * windup);
+        bossClips.update('Telegraph', 0, undefined, windup * telegraphMs / 1000);
       } else if (burst > 0 && kind && kind !== 'gift' && kind !== 'boss') bossClips.update('Hit', delta, serial);
       else bossClips.update('Idle', delta);
     } else {
