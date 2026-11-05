@@ -1,5 +1,9 @@
 # Phase report P1
 
+## Measured prototype asset specification — 2026-11-05
+
+The [asset manifest](../../assets/manifest.json) now measures the actual 50,364-byte GLB: ten actor/pet roots, five weapon clips, 148 mesh occurrences and 2,434 triangles across the templates, with no embedded images/textures or skinned meshes. The [art specification](../ART_SPECIFICATION.md) records bounds, proportions, material accents, rigid articulation, arena geometry, lighting, camera and VFX requirements. `node scripts/inspect-models.ts` reproduced identical output on consecutive runs. This is Codex-authored prototype documentation, not a Gemini report or approval. Existing runtime art and animation are unchanged. Final task integration and QA evidence are indexed in [the ledger](../TASK_LEDGER.md).
+
 PROJECT: RE:BIRTH
 PHASE: P1 3D visual prototype
 STATUS: Prototype rendered and browser smoke passed. Production art and Leader review pending.

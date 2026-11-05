@@ -21,11 +21,13 @@ Audit date 2026-11-05. Evidence spans source snapshots listed in P7, including t
 15. TikTok adapter with truthful status — optional provider WebSocket transport and local fixture coverage. Actual LIVE remains unverified. See [P5](PHASE_REPORT_P5.md).
 16. OBS overlay — actual portable OBS recording at 1080×1920 with local raid load. See [P7](PHASE_REPORT_P7.md).
 17. Admin and emergency stop — local operator pause/resume and Origin checks in browser smoke. Controlled server shutdown regression preserves accepted pending joins.
-18. Tests, setup and build — 28 tests, required quality checks and Windows browser smoke passed for the source lineage in this audit. Smoke also verifies unavailable-WebGL HUD and server controls. See [QA plan](../QA_PLAN.md).
+18. Tests, setup and build — 31 tests and required quality checks pass after adding full-cap rebirth regressions. Windows browser smoke previously passed for the runtime source lineage, including unavailable-WebGL HUD and server controls. The latest additions change tools/docs/tests, not production gameplay. See [QA plan](../QA_PLAN.md).
 19. Public source — [repository](https://github.com/wtrg/rebirth-magic-live). The RC4 scope consolidates session-roster, repeated-impact/pause fixes, action rendering checks and opt-in server auto battle. Release history and exact local QA scope are tracked in P7 and the release document.
 20. Codex acceptance report — P0–P7 reports and this audit identify measured evidence, gaps and external-agent status. [Leader handoff](../LEADER_REVIEW_REQUEST.md).
 
 ## Remaining gates
+
+Master-wide traceability is indexed in the [task ledger](../TASK_LEDGER.md). The [measured art specification](../ART_SPECIFICATION.md) closes the prototype dimension/manifest documentation gap. The [rebirth worksheet](REBIRTH_BALANCE.md) verifies all five cycles and quantifies current gains/reset losses; gameplay approval remains pending. The current combined auto/HUD/audio evidence refresh is READY: the older ten-minute combined run predates auto and the latest animation/layout fixes, while the newer server and scene benchmarks measure separate scopes.
 
 - The active roster limitation was corrected in the session-roster follow-up. Join restores the saved profile, leave and host clear free active slots, and global ranking retains archived players. The HTTP regression covers viewer 65 and archived profile restoration. See P7.
 
