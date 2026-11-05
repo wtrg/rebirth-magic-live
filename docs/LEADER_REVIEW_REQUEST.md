@@ -19,7 +19,7 @@ Status LEADER_REVIEW_PENDING. Share the repository and phase evidence with the C
 
 The owner confirmed that a real TikTok LIVE test session is unavailable. Actual room events and gift pricing are unverified. The Windows MOCK candidate is documented in [release scope](RELEASE_CANDIDATE.md). Leader approval remains pending.
 
-P7 now includes a current-source ten-minute combined OBS/server-auto/HUD/audio recording at `46cf80d`, in addition to the older `7b225ea` evidence. It supports combined local operation within its documented limits. The [auto-order finding](reports/AUTO_ORDER_FINDING.md) establishes repeated join-order contribution bias among otherwise identical auto attackers; a separate compatibility-preserving fix is READY. Full gameplay acceptance, product and visual approval remain pending.
+P7 includes a ten-minute combined OBS/server-auto/HUD/audio recording at `46cf80d`, in addition to the older `7b225ea` evidence. It supports combined local operation within its documented limits and predates the v11 correction. The [auto-order finding/correction](reports/AUTO_ORDER_FINDING.md) now includes stage-based opportunity rotation, historical v10 replay protection and eight 322-raid comparison cohorts at `3fa4190`. This closes repeated fixed-roster exclusion for the tested workloads while leaving broader manual/co-op balance, product and visual approval pending.
 
 The baseline idle-battle requirement now has opt-in server basic attacks (`!auto on/off`) independent of a MOCK browser loop. See P2 for cooldown, persistence, replay and browserless test evidence. Skills remain manual and the host starts each raid. Review the resulting idle/manual gameplay balance alongside the existing class balance request.
 

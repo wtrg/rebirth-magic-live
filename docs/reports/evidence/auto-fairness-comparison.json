@@ -1,0 +1,1967 @@
+{
+  "sourceCommit": "3fa4190349b39f36587921fd556074e676908e23",
+  "sourceDirty": false,
+  "scope": "322 synthetic sequential ranked raids; fixed roster; initial level30; pure basic auto; no gear/pet selection; no timing-performance claim",
+  "cohorts": [
+    {
+      "rulesVersion": 10,
+      "reversed": false,
+      "classes": "identical-fire",
+      "raids": 322,
+      "stage": 322,
+      "wins": {
+        "min": 0,
+        "max": 322
+      },
+      "levels": {
+        "min": 30,
+        "max": 149
+      },
+      "scores": {
+        "min": 0,
+        "max": 5312640
+      },
+      "profiles": [
+        {
+          "id": "mock:fairness0",
+          "classId": "fire",
+          "wins": 322,
+          "level": 149,
+          "score": 5312640
+        },
+        {
+          "id": "mock:fairness1",
+          "classId": "fire",
+          "wins": 322,
+          "level": 149,
+          "score": 5312640
+        },
+        {
+          "id": "mock:fairness2",
+          "classId": "fire",
+          "wins": 322,
+          "level": 149,
+          "score": 5312640
+        },
+        {
+          "id": "mock:fairness3",
+          "classId": "fire",
+          "wins": 322,
+          "level": 149,
+          "score": 5312640
+        },
+        {
+          "id": "mock:fairness4",
+          "classId": "fire",
+          "wins": 322,
+          "level": 149,
+          "score": 5312640
+        },
+        {
+          "id": "mock:fairness5",
+          "classId": "fire",
+          "wins": 322,
+          "level": 149,
+          "score": 5312640
+        },
+        {
+          "id": "mock:fairness6",
+          "classId": "fire",
+          "wins": 322,
+          "level": 149,
+          "score": 5312640
+        },
+        {
+          "id": "mock:fairness7",
+          "classId": "fire",
+          "wins": 322,
+          "level": 149,
+          "score": 5312640
+        },
+        {
+          "id": "mock:fairness8",
+          "classId": "fire",
+          "wins": 322,
+          "level": 149,
+          "score": 5312640
+        },
+        {
+          "id": "mock:fairness9",
+          "classId": "fire",
+          "wins": 322,
+          "level": 149,
+          "score": 5312640
+        },
+        {
+          "id": "mock:fairness10",
+          "classId": "fire",
+          "wins": 322,
+          "level": 149,
+          "score": 5312640
+        },
+        {
+          "id": "mock:fairness11",
+          "classId": "fire",
+          "wins": 322,
+          "level": 149,
+          "score": 5312640
+        },
+        {
+          "id": "mock:fairness12",
+          "classId": "fire",
+          "wins": 322,
+          "level": 149,
+          "score": 5312640
+        },
+        {
+          "id": "mock:fairness13",
+          "classId": "fire",
+          "wins": 322,
+          "level": 149,
+          "score": 5312640
+        },
+        {
+          "id": "mock:fairness14",
+          "classId": "fire",
+          "wins": 322,
+          "level": 149,
+          "score": 5312640
+        },
+        {
+          "id": "mock:fairness15",
+          "classId": "fire",
+          "wins": 322,
+          "level": 149,
+          "score": 5312640
+        },
+        {
+          "id": "mock:fairness16",
+          "classId": "fire",
+          "wins": 322,
+          "level": 149,
+          "score": 5312640
+        },
+        {
+          "id": "mock:fairness17",
+          "classId": "fire",
+          "wins": 322,
+          "level": 149,
+          "score": 5312640
+        },
+        {
+          "id": "mock:fairness18",
+          "classId": "fire",
+          "wins": 322,
+          "level": 149,
+          "score": 5312640
+        },
+        {
+          "id": "mock:fairness19",
+          "classId": "fire",
+          "wins": 322,
+          "level": 149,
+          "score": 5312640
+        },
+        {
+          "id": "mock:fairness20",
+          "classId": "fire",
+          "wins": 322,
+          "level": 149,
+          "score": 5312340
+        },
+        {
+          "id": "mock:fairness21",
+          "classId": "fire",
+          "wins": 318,
+          "level": 149,
+          "score": 5310731
+        },
+        {
+          "id": "mock:fairness22",
+          "classId": "fire",
+          "wins": 315,
+          "level": 149,
+          "score": 5308320
+        },
+        {
+          "id": "mock:fairness23",
+          "classId": "fire",
+          "wins": 311,
+          "level": 149,
+          "score": 5303626
+        },
+        {
+          "id": "mock:fairness24",
+          "classId": "fire",
+          "wins": 305,
+          "level": 149,
+          "score": 5293773
+        },
+        {
+          "id": "mock:fairness25",
+          "classId": "fire",
+          "wins": 300,
+          "level": 149,
+          "score": 5270231
+        },
+        {
+          "id": "mock:fairness26",
+          "classId": "fire",
+          "wins": 225,
+          "level": 119,
+          "score": 3245652
+        },
+        {
+          "id": "mock:fairness27",
+          "classId": "fire",
+          "wins": 137,
+          "level": 84,
+          "score": 1502801
+        },
+        {
+          "id": "mock:fairness28",
+          "classId": "fire",
+          "wins": 64,
+          "level": 56,
+          "score": 550776
+        },
+        {
+          "id": "mock:fairness29",
+          "classId": "fire",
+          "wins": 0,
+          "level": 30,
+          "score": 0
+        },
+        {
+          "id": "mock:fairness30",
+          "classId": "fire",
+          "wins": 0,
+          "level": 30,
+          "score": 0
+        },
+        {
+          "id": "mock:fairness31",
+          "classId": "fire",
+          "wins": 0,
+          "level": 30,
+          "score": 0
+        }
+      ]
+    },
+    {
+      "rulesVersion": 10,
+      "reversed": false,
+      "classes": "six-class",
+      "raids": 322,
+      "stage": 322,
+      "wins": {
+        "min": 0,
+        "max": 322
+      },
+      "levels": {
+        "min": 30,
+        "max": 149
+      },
+      "scores": {
+        "min": 0,
+        "max": 5313606
+      },
+      "profiles": [
+        {
+          "id": "mock:fairness0",
+          "classId": "fire",
+          "wins": 322,
+          "level": 149,
+          "score": 5312640
+        },
+        {
+          "id": "mock:fairness1",
+          "classId": "ice",
+          "wins": 322,
+          "level": 149,
+          "score": 5311352
+        },
+        {
+          "id": "mock:fairness2",
+          "classId": "thunder",
+          "wins": 322,
+          "level": 149,
+          "score": 5313606
+        },
+        {
+          "id": "mock:fairness3",
+          "classId": "knight",
+          "wins": 322,
+          "level": 149,
+          "score": 5311996
+        },
+        {
+          "id": "mock:fairness4",
+          "classId": "healer",
+          "wins": 322,
+          "level": 149,
+          "score": 5310386
+        },
+        {
+          "id": "mock:fairness5",
+          "classId": "summon",
+          "wins": 322,
+          "level": 149,
+          "score": 5311030
+        },
+        {
+          "id": "mock:fairness6",
+          "classId": "fire",
+          "wins": 322,
+          "level": 149,
+          "score": 5312640
+        },
+        {
+          "id": "mock:fairness7",
+          "classId": "ice",
+          "wins": 322,
+          "level": 149,
+          "score": 5311352
+        },
+        {
+          "id": "mock:fairness8",
+          "classId": "thunder",
+          "wins": 322,
+          "level": 149,
+          "score": 5313606
+        },
+        {
+          "id": "mock:fairness9",
+          "classId": "knight",
+          "wins": 322,
+          "level": 149,
+          "score": 5311996
+        },
+        {
+          "id": "mock:fairness10",
+          "classId": "healer",
+          "wins": 322,
+          "level": 149,
+          "score": 5310386
+        },
+        {
+          "id": "mock:fairness11",
+          "classId": "summon",
+          "wins": 322,
+          "level": 149,
+          "score": 5311030
+        },
+        {
+          "id": "mock:fairness12",
+          "classId": "fire",
+          "wins": 322,
+          "level": 149,
+          "score": 5312640
+        },
+        {
+          "id": "mock:fairness13",
+          "classId": "ice",
+          "wins": 322,
+          "level": 149,
+          "score": 5311352
+        },
+        {
+          "id": "mock:fairness14",
+          "classId": "thunder",
+          "wins": 322,
+          "level": 149,
+          "score": 5313606
+        },
+        {
+          "id": "mock:fairness15",
+          "classId": "knight",
+          "wins": 322,
+          "level": 149,
+          "score": 5311996
+        },
+        {
+          "id": "mock:fairness16",
+          "classId": "healer",
+          "wins": 322,
+          "level": 149,
+          "score": 5310386
+        },
+        {
+          "id": "mock:fairness17",
+          "classId": "summon",
+          "wins": 322,
+          "level": 149,
+          "score": 5311030
+        },
+        {
+          "id": "mock:fairness18",
+          "classId": "fire",
+          "wins": 322,
+          "level": 149,
+          "score": 5312640
+        },
+        {
+          "id": "mock:fairness19",
+          "classId": "ice",
+          "wins": 322,
+          "level": 149,
+          "score": 5311352
+        },
+        {
+          "id": "mock:fairness20",
+          "classId": "thunder",
+          "wins": 322,
+          "level": 149,
+          "score": 5313459
+        },
+        {
+          "id": "mock:fairness21",
+          "classId": "knight",
+          "wins": 319,
+          "level": 149,
+          "score": 5310705
+        },
+        {
+          "id": "mock:fairness22",
+          "classId": "healer",
+          "wins": 316,
+          "level": 149,
+          "score": 5307064
+        },
+        {
+          "id": "mock:fairness23",
+          "classId": "summon",
+          "wins": 312,
+          "level": 149,
+          "score": 5303541
+        },
+        {
+          "id": "mock:fairness24",
+          "classId": "fire",
+          "wins": 307,
+          "level": 149,
+          "score": 5297557
+        },
+        {
+          "id": "mock:fairness25",
+          "classId": "ice",
+          "wins": 302,
+          "level": 149,
+          "score": 5277657
+        },
+        {
+          "id": "mock:fairness26",
+          "classId": "thunder",
+          "wins": 241,
+          "level": 125,
+          "score": 3598961
+        },
+        {
+          "id": "mock:fairness27",
+          "classId": "knight",
+          "wins": 152,
+          "level": 89,
+          "score": 1706412
+        },
+        {
+          "id": "mock:fairness28",
+          "classId": "healer",
+          "wins": 81,
+          "level": 62,
+          "score": 712962
+        },
+        {
+          "id": "mock:fairness29",
+          "classId": "summon",
+          "wins": 2,
+          "level": 31,
+          "score": 14910
+        },
+        {
+          "id": "mock:fairness30",
+          "classId": "fire",
+          "wins": 0,
+          "level": 30,
+          "score": 0
+        },
+        {
+          "id": "mock:fairness31",
+          "classId": "ice",
+          "wins": 0,
+          "level": 30,
+          "score": 0
+        }
+      ]
+    },
+    {
+      "rulesVersion": 10,
+      "reversed": true,
+      "classes": "identical-fire",
+      "raids": 322,
+      "stage": 322,
+      "wins": {
+        "min": 0,
+        "max": 322
+      },
+      "levels": {
+        "min": 30,
+        "max": 149
+      },
+      "scores": {
+        "min": 0,
+        "max": 5312640
+      },
+      "profiles": [
+        {
+          "id": "mock:fairness31",
+          "classId": "fire",
+          "wins": 322,
+          "level": 149,
+          "score": 5312640
+        },
+        {
+          "id": "mock:fairness30",
+          "classId": "fire",
+          "wins": 322,
+          "level": 149,
+          "score": 5312640
+        },
+        {
+          "id": "mock:fairness29",
+          "classId": "fire",
+          "wins": 322,
+          "level": 149,
+          "score": 5312640
+        },
+        {
+          "id": "mock:fairness28",
+          "classId": "fire",
+          "wins": 322,
+          "level": 149,
+          "score": 5312640
+        },
+        {
+          "id": "mock:fairness27",
+          "classId": "fire",
+          "wins": 322,
+          "level": 149,
+          "score": 5312640
+        },
+        {
+          "id": "mock:fairness26",
+          "classId": "fire",
+          "wins": 322,
+          "level": 149,
+          "score": 5312640
+        },
+        {
+          "id": "mock:fairness25",
+          "classId": "fire",
+          "wins": 322,
+          "level": 149,
+          "score": 5312640
+        },
+        {
+          "id": "mock:fairness24",
+          "classId": "fire",
+          "wins": 322,
+          "level": 149,
+          "score": 5312640
+        },
+        {
+          "id": "mock:fairness23",
+          "classId": "fire",
+          "wins": 322,
+          "level": 149,
+          "score": 5312640
+        },
+        {
+          "id": "mock:fairness22",
+          "classId": "fire",
+          "wins": 322,
+          "level": 149,
+          "score": 5312640
+        },
+        {
+          "id": "mock:fairness21",
+          "classId": "fire",
+          "wins": 322,
+          "level": 149,
+          "score": 5312640
+        },
+        {
+          "id": "mock:fairness20",
+          "classId": "fire",
+          "wins": 322,
+          "level": 149,
+          "score": 5312640
+        },
+        {
+          "id": "mock:fairness19",
+          "classId": "fire",
+          "wins": 322,
+          "level": 149,
+          "score": 5312640
+        },
+        {
+          "id": "mock:fairness18",
+          "classId": "fire",
+          "wins": 322,
+          "level": 149,
+          "score": 5312640
+        },
+        {
+          "id": "mock:fairness17",
+          "classId": "fire",
+          "wins": 322,
+          "level": 149,
+          "score": 5312640
+        },
+        {
+          "id": "mock:fairness16",
+          "classId": "fire",
+          "wins": 322,
+          "level": 149,
+          "score": 5312640
+        },
+        {
+          "id": "mock:fairness15",
+          "classId": "fire",
+          "wins": 322,
+          "level": 149,
+          "score": 5312640
+        },
+        {
+          "id": "mock:fairness14",
+          "classId": "fire",
+          "wins": 322,
+          "level": 149,
+          "score": 5312640
+        },
+        {
+          "id": "mock:fairness13",
+          "classId": "fire",
+          "wins": 322,
+          "level": 149,
+          "score": 5312640
+        },
+        {
+          "id": "mock:fairness12",
+          "classId": "fire",
+          "wins": 322,
+          "level": 149,
+          "score": 5312640
+        },
+        {
+          "id": "mock:fairness11",
+          "classId": "fire",
+          "wins": 322,
+          "level": 149,
+          "score": 5312340
+        },
+        {
+          "id": "mock:fairness10",
+          "classId": "fire",
+          "wins": 318,
+          "level": 149,
+          "score": 5310731
+        },
+        {
+          "id": "mock:fairness9",
+          "classId": "fire",
+          "wins": 315,
+          "level": 149,
+          "score": 5308320
+        },
+        {
+          "id": "mock:fairness8",
+          "classId": "fire",
+          "wins": 311,
+          "level": 149,
+          "score": 5303626
+        },
+        {
+          "id": "mock:fairness7",
+          "classId": "fire",
+          "wins": 305,
+          "level": 149,
+          "score": 5293773
+        },
+        {
+          "id": "mock:fairness6",
+          "classId": "fire",
+          "wins": 300,
+          "level": 149,
+          "score": 5270231
+        },
+        {
+          "id": "mock:fairness5",
+          "classId": "fire",
+          "wins": 225,
+          "level": 119,
+          "score": 3245652
+        },
+        {
+          "id": "mock:fairness4",
+          "classId": "fire",
+          "wins": 137,
+          "level": 84,
+          "score": 1502801
+        },
+        {
+          "id": "mock:fairness3",
+          "classId": "fire",
+          "wins": 64,
+          "level": 56,
+          "score": 550776
+        },
+        {
+          "id": "mock:fairness2",
+          "classId": "fire",
+          "wins": 0,
+          "level": 30,
+          "score": 0
+        },
+        {
+          "id": "mock:fairness1",
+          "classId": "fire",
+          "wins": 0,
+          "level": 30,
+          "score": 0
+        },
+        {
+          "id": "mock:fairness0",
+          "classId": "fire",
+          "wins": 0,
+          "level": 30,
+          "score": 0
+        }
+      ]
+    },
+    {
+      "rulesVersion": 10,
+      "reversed": true,
+      "classes": "six-class",
+      "raids": 322,
+      "stage": 322,
+      "wins": {
+        "min": 0,
+        "max": 322
+      },
+      "levels": {
+        "min": 30,
+        "max": 149
+      },
+      "scores": {
+        "min": 0,
+        "max": 5313606
+      },
+      "profiles": [
+        {
+          "id": "mock:fairness31",
+          "classId": "ice",
+          "wins": 322,
+          "level": 149,
+          "score": 5311352
+        },
+        {
+          "id": "mock:fairness30",
+          "classId": "fire",
+          "wins": 322,
+          "level": 149,
+          "score": 5312640
+        },
+        {
+          "id": "mock:fairness29",
+          "classId": "summon",
+          "wins": 322,
+          "level": 149,
+          "score": 5311030
+        },
+        {
+          "id": "mock:fairness28",
+          "classId": "healer",
+          "wins": 322,
+          "level": 149,
+          "score": 5310386
+        },
+        {
+          "id": "mock:fairness27",
+          "classId": "knight",
+          "wins": 322,
+          "level": 149,
+          "score": 5311996
+        },
+        {
+          "id": "mock:fairness26",
+          "classId": "thunder",
+          "wins": 322,
+          "level": 149,
+          "score": 5313606
+        },
+        {
+          "id": "mock:fairness25",
+          "classId": "ice",
+          "wins": 322,
+          "level": 149,
+          "score": 5311352
+        },
+        {
+          "id": "mock:fairness24",
+          "classId": "fire",
+          "wins": 322,
+          "level": 149,
+          "score": 5312640
+        },
+        {
+          "id": "mock:fairness23",
+          "classId": "summon",
+          "wins": 322,
+          "level": 149,
+          "score": 5311030
+        },
+        {
+          "id": "mock:fairness22",
+          "classId": "healer",
+          "wins": 322,
+          "level": 149,
+          "score": 5310386
+        },
+        {
+          "id": "mock:fairness21",
+          "classId": "knight",
+          "wins": 322,
+          "level": 149,
+          "score": 5311996
+        },
+        {
+          "id": "mock:fairness20",
+          "classId": "thunder",
+          "wins": 322,
+          "level": 149,
+          "score": 5313606
+        },
+        {
+          "id": "mock:fairness19",
+          "classId": "ice",
+          "wins": 322,
+          "level": 149,
+          "score": 5311352
+        },
+        {
+          "id": "mock:fairness18",
+          "classId": "fire",
+          "wins": 322,
+          "level": 149,
+          "score": 5312640
+        },
+        {
+          "id": "mock:fairness17",
+          "classId": "summon",
+          "wins": 322,
+          "level": 149,
+          "score": 5311030
+        },
+        {
+          "id": "mock:fairness16",
+          "classId": "healer",
+          "wins": 322,
+          "level": 149,
+          "score": 5310386
+        },
+        {
+          "id": "mock:fairness15",
+          "classId": "knight",
+          "wins": 322,
+          "level": 149,
+          "score": 5311996
+        },
+        {
+          "id": "mock:fairness14",
+          "classId": "thunder",
+          "wins": 322,
+          "level": 149,
+          "score": 5313606
+        },
+        {
+          "id": "mock:fairness13",
+          "classId": "ice",
+          "wins": 322,
+          "level": 149,
+          "score": 5311352
+        },
+        {
+          "id": "mock:fairness12",
+          "classId": "fire",
+          "wins": 322,
+          "level": 149,
+          "score": 5312640
+        },
+        {
+          "id": "mock:fairness11",
+          "classId": "summon",
+          "wins": 322,
+          "level": 149,
+          "score": 5310907
+        },
+        {
+          "id": "mock:fairness10",
+          "classId": "healer",
+          "wins": 319,
+          "level": 149,
+          "score": 5309149
+        },
+        {
+          "id": "mock:fairness9",
+          "classId": "knight",
+          "wins": 316,
+          "level": 149,
+          "score": 5308668
+        },
+        {
+          "id": "mock:fairness8",
+          "classId": "thunder",
+          "wins": 313,
+          "level": 149,
+          "score": 5307101
+        },
+        {
+          "id": "mock:fairness7",
+          "classId": "ice",
+          "wins": 307,
+          "level": 149,
+          "score": 5296349
+        },
+        {
+          "id": "mock:fairness6",
+          "classId": "fire",
+          "wins": 302,
+          "level": 149,
+          "score": 5278857
+        },
+        {
+          "id": "mock:fairness5",
+          "classId": "summon",
+          "wins": 241,
+          "level": 125,
+          "score": 3597735
+        },
+        {
+          "id": "mock:fairness4",
+          "classId": "healer",
+          "wins": 153,
+          "level": 89,
+          "score": 1725643
+        },
+        {
+          "id": "mock:fairness3",
+          "classId": "knight",
+          "wins": 87,
+          "level": 64,
+          "score": 783287
+        },
+        {
+          "id": "mock:fairness2",
+          "classId": "thunder",
+          "wins": 4,
+          "level": 32,
+          "score": 28632
+        },
+        {
+          "id": "mock:fairness1",
+          "classId": "ice",
+          "wins": 0,
+          "level": 30,
+          "score": 0
+        },
+        {
+          "id": "mock:fairness0",
+          "classId": "fire",
+          "wins": 0,
+          "level": 30,
+          "score": 0
+        }
+      ]
+    },
+    {
+      "rulesVersion": 11,
+      "reversed": false,
+      "classes": "identical-fire",
+      "raids": 322,
+      "stage": 322,
+      "wins": {
+        "min": 279,
+        "max": 285
+      },
+      "levels": {
+        "min": 140,
+        "max": 142
+      },
+      "scores": {
+        "min": 4609484,
+        "max": 4757031
+      },
+      "profiles": [
+        {
+          "id": "mock:fairness0",
+          "classId": "fire",
+          "wins": 282,
+          "level": 141,
+          "score": 4730943
+        },
+        {
+          "id": "mock:fairness1",
+          "classId": "fire",
+          "wins": 282,
+          "level": 142,
+          "score": 4749500
+        },
+        {
+          "id": "mock:fairness2",
+          "classId": "fire",
+          "wins": 284,
+          "level": 142,
+          "score": 4757031
+        },
+        {
+          "id": "mock:fairness3",
+          "classId": "fire",
+          "wins": 283,
+          "level": 142,
+          "score": 4742722
+        },
+        {
+          "id": "mock:fairness4",
+          "classId": "fire",
+          "wins": 283,
+          "level": 141,
+          "score": 4738761
+        },
+        {
+          "id": "mock:fairness5",
+          "classId": "fire",
+          "wins": 284,
+          "level": 142,
+          "score": 4745494
+        },
+        {
+          "id": "mock:fairness6",
+          "classId": "fire",
+          "wins": 284,
+          "level": 141,
+          "score": 4735311
+        },
+        {
+          "id": "mock:fairness7",
+          "classId": "fire",
+          "wins": 283,
+          "level": 141,
+          "score": 4726876
+        },
+        {
+          "id": "mock:fairness8",
+          "classId": "fire",
+          "wins": 285,
+          "level": 141,
+          "score": 4729326
+        },
+        {
+          "id": "mock:fairness9",
+          "classId": "fire",
+          "wins": 285,
+          "level": 141,
+          "score": 4725646
+        },
+        {
+          "id": "mock:fairness10",
+          "classId": "fire",
+          "wins": 285,
+          "level": 141,
+          "score": 4721843
+        },
+        {
+          "id": "mock:fairness11",
+          "classId": "fire",
+          "wins": 284,
+          "level": 141,
+          "score": 4687553
+        },
+        {
+          "id": "mock:fairness12",
+          "classId": "fire",
+          "wins": 285,
+          "level": 141,
+          "score": 4714354
+        },
+        {
+          "id": "mock:fairness13",
+          "classId": "fire",
+          "wins": 285,
+          "level": 141,
+          "score": 4682014
+        },
+        {
+          "id": "mock:fairness14",
+          "classId": "fire",
+          "wins": 285,
+          "level": 141,
+          "score": 4678286
+        },
+        {
+          "id": "mock:fairness15",
+          "classId": "fire",
+          "wins": 285,
+          "level": 141,
+          "score": 4674515
+        },
+        {
+          "id": "mock:fairness16",
+          "classId": "fire",
+          "wins": 284,
+          "level": 140,
+          "score": 4652553
+        },
+        {
+          "id": "mock:fairness17",
+          "classId": "fire",
+          "wins": 285,
+          "level": 140,
+          "score": 4667051
+        },
+        {
+          "id": "mock:fairness18",
+          "classId": "fire",
+          "wins": 284,
+          "level": 140,
+          "score": 4644841
+        },
+        {
+          "id": "mock:fairness19",
+          "classId": "fire",
+          "wins": 285,
+          "level": 140,
+          "score": 4659535
+        },
+        {
+          "id": "mock:fairness20",
+          "classId": "fire",
+          "wins": 284,
+          "level": 140,
+          "score": 4636930
+        },
+        {
+          "id": "mock:fairness21",
+          "classId": "fire",
+          "wins": 284,
+          "level": 140,
+          "score": 4635851
+        },
+        {
+          "id": "mock:fairness22",
+          "classId": "fire",
+          "wins": 283,
+          "level": 140,
+          "score": 4631715
+        },
+        {
+          "id": "mock:fairness23",
+          "classId": "fire",
+          "wins": 282,
+          "level": 140,
+          "score": 4627551
+        },
+        {
+          "id": "mock:fairness24",
+          "classId": "fire",
+          "wins": 281,
+          "level": 140,
+          "score": 4623262
+        },
+        {
+          "id": "mock:fairness25",
+          "classId": "fire",
+          "wins": 281,
+          "level": 140,
+          "score": 4619379
+        },
+        {
+          "id": "mock:fairness26",
+          "classId": "fire",
+          "wins": 280,
+          "level": 140,
+          "score": 4615015
+        },
+        {
+          "id": "mock:fairness27",
+          "classId": "fire",
+          "wins": 279,
+          "level": 140,
+          "score": 4610510
+        },
+        {
+          "id": "mock:fairness28",
+          "classId": "fire",
+          "wins": 279,
+          "level": 140,
+          "score": 4609484
+        },
+        {
+          "id": "mock:fairness29",
+          "classId": "fire",
+          "wins": 281,
+          "level": 140,
+          "score": 4645275
+        },
+        {
+          "id": "mock:fairness30",
+          "classId": "fire",
+          "wins": 280,
+          "level": 140,
+          "score": 4666913
+        },
+        {
+          "id": "mock:fairness31",
+          "classId": "fire",
+          "wins": 281,
+          "level": 141,
+          "score": 4702210
+        }
+      ]
+    },
+    {
+      "rulesVersion": 11,
+      "reversed": false,
+      "classes": "six-class",
+      "raids": 322,
+      "stage": 322,
+      "wins": {
+        "min": 281,
+        "max": 289
+      },
+      "levels": {
+        "min": 140,
+        "max": 142
+      },
+      "scores": {
+        "min": 4615244,
+        "max": 4762385
+      },
+      "profiles": [
+        {
+          "id": "mock:fairness0",
+          "classId": "fire",
+          "wins": 283,
+          "level": 141,
+          "score": 4732450
+        },
+        {
+          "id": "mock:fairness1",
+          "classId": "ice",
+          "wins": 284,
+          "level": 142,
+          "score": 4760216
+        },
+        {
+          "id": "mock:fairness2",
+          "classId": "thunder",
+          "wins": 285,
+          "level": 142,
+          "score": 4762385
+        },
+        {
+          "id": "mock:fairness3",
+          "classId": "knight",
+          "wins": 284,
+          "level": 142,
+          "score": 4753037
+        },
+        {
+          "id": "mock:fairness4",
+          "classId": "healer",
+          "wins": 285,
+          "level": 142,
+          "score": 4752052
+        },
+        {
+          "id": "mock:fairness5",
+          "classId": "summon",
+          "wins": 285,
+          "level": 142,
+          "score": 4748896
+        },
+        {
+          "id": "mock:fairness6",
+          "classId": "fire",
+          "wins": 286,
+          "level": 142,
+          "score": 4748122
+        },
+        {
+          "id": "mock:fairness7",
+          "classId": "ice",
+          "wins": 286,
+          "level": 142,
+          "score": 4743300
+        },
+        {
+          "id": "mock:fairness8",
+          "classId": "thunder",
+          "wins": 286,
+          "level": 142,
+          "score": 4741637
+        },
+        {
+          "id": "mock:fairness9",
+          "classId": "knight",
+          "wins": 286,
+          "level": 141,
+          "score": 4736546
+        },
+        {
+          "id": "mock:fairness10",
+          "classId": "healer",
+          "wins": 286,
+          "level": 141,
+          "score": 4731509
+        },
+        {
+          "id": "mock:fairness11",
+          "classId": "summon",
+          "wins": 287,
+          "level": 141,
+          "score": 4730459
+        },
+        {
+          "id": "mock:fairness12",
+          "classId": "fire",
+          "wins": 287,
+          "level": 141,
+          "score": 4728254
+        },
+        {
+          "id": "mock:fairness13",
+          "classId": "ice",
+          "wins": 287,
+          "level": 141,
+          "score": 4723577
+        },
+        {
+          "id": "mock:fairness14",
+          "classId": "thunder",
+          "wins": 287,
+          "level": 141,
+          "score": 4721968
+        },
+        {
+          "id": "mock:fairness15",
+          "classId": "knight",
+          "wins": 286,
+          "level": 141,
+          "score": 4705333
+        },
+        {
+          "id": "mock:fairness16",
+          "classId": "healer",
+          "wins": 287,
+          "level": 141,
+          "score": 4712061
+        },
+        {
+          "id": "mock:fairness17",
+          "classId": "summon",
+          "wins": 287,
+          "level": 141,
+          "score": 4699733
+        },
+        {
+          "id": "mock:fairness18",
+          "classId": "fire",
+          "wins": 289,
+          "level": 141,
+          "score": 4715133
+        },
+        {
+          "id": "mock:fairness19",
+          "classId": "ice",
+          "wins": 288,
+          "level": 141,
+          "score": 4698511
+        },
+        {
+          "id": "mock:fairness20",
+          "classId": "thunder",
+          "wins": 287,
+          "level": 141,
+          "score": 4691167
+        },
+        {
+          "id": "mock:fairness21",
+          "classId": "knight",
+          "wins": 287,
+          "level": 141,
+          "score": 4691813
+        },
+        {
+          "id": "mock:fairness22",
+          "classId": "healer",
+          "wins": 285,
+          "level": 140,
+          "score": 4655086
+        },
+        {
+          "id": "mock:fairness23",
+          "classId": "summon",
+          "wins": 284,
+          "level": 140,
+          "score": 4651682
+        },
+        {
+          "id": "mock:fairness24",
+          "classId": "fire",
+          "wins": 285,
+          "level": 140,
+          "score": 4652471
+        },
+        {
+          "id": "mock:fairness25",
+          "classId": "ice",
+          "wins": 283,
+          "level": 140,
+          "score": 4644175
+        },
+        {
+          "id": "mock:fairness26",
+          "classId": "thunder",
+          "wins": 282,
+          "level": 140,
+          "score": 4625962
+        },
+        {
+          "id": "mock:fairness27",
+          "classId": "knight",
+          "wins": 282,
+          "level": 140,
+          "score": 4639532
+        },
+        {
+          "id": "mock:fairness28",
+          "classId": "healer",
+          "wins": 281,
+          "level": 140,
+          "score": 4615244
+        },
+        {
+          "id": "mock:fairness29",
+          "classId": "summon",
+          "wins": 281,
+          "level": 140,
+          "score": 4644340
+        },
+        {
+          "id": "mock:fairness30",
+          "classId": "fire",
+          "wins": 281,
+          "level": 141,
+          "score": 4674120
+        },
+        {
+          "id": "mock:fairness31",
+          "classId": "ice",
+          "wins": 281,
+          "level": 141,
+          "score": 4701579
+        }
+      ]
+    },
+    {
+      "rulesVersion": 11,
+      "reversed": true,
+      "classes": "identical-fire",
+      "raids": 322,
+      "stage": 322,
+      "wins": {
+        "min": 279,
+        "max": 285
+      },
+      "levels": {
+        "min": 140,
+        "max": 142
+      },
+      "scores": {
+        "min": 4609484,
+        "max": 4757031
+      },
+      "profiles": [
+        {
+          "id": "mock:fairness31",
+          "classId": "fire",
+          "wins": 282,
+          "level": 141,
+          "score": 4730943
+        },
+        {
+          "id": "mock:fairness30",
+          "classId": "fire",
+          "wins": 282,
+          "level": 142,
+          "score": 4749500
+        },
+        {
+          "id": "mock:fairness29",
+          "classId": "fire",
+          "wins": 284,
+          "level": 142,
+          "score": 4757031
+        },
+        {
+          "id": "mock:fairness28",
+          "classId": "fire",
+          "wins": 283,
+          "level": 142,
+          "score": 4742722
+        },
+        {
+          "id": "mock:fairness27",
+          "classId": "fire",
+          "wins": 283,
+          "level": 141,
+          "score": 4738761
+        },
+        {
+          "id": "mock:fairness26",
+          "classId": "fire",
+          "wins": 284,
+          "level": 142,
+          "score": 4745494
+        },
+        {
+          "id": "mock:fairness25",
+          "classId": "fire",
+          "wins": 284,
+          "level": 141,
+          "score": 4735311
+        },
+        {
+          "id": "mock:fairness24",
+          "classId": "fire",
+          "wins": 283,
+          "level": 141,
+          "score": 4726876
+        },
+        {
+          "id": "mock:fairness23",
+          "classId": "fire",
+          "wins": 285,
+          "level": 141,
+          "score": 4729326
+        },
+        {
+          "id": "mock:fairness22",
+          "classId": "fire",
+          "wins": 285,
+          "level": 141,
+          "score": 4725646
+        },
+        {
+          "id": "mock:fairness21",
+          "classId": "fire",
+          "wins": 285,
+          "level": 141,
+          "score": 4721843
+        },
+        {
+          "id": "mock:fairness20",
+          "classId": "fire",
+          "wins": 284,
+          "level": 141,
+          "score": 4687553
+        },
+        {
+          "id": "mock:fairness19",
+          "classId": "fire",
+          "wins": 285,
+          "level": 141,
+          "score": 4714354
+        },
+        {
+          "id": "mock:fairness18",
+          "classId": "fire",
+          "wins": 285,
+          "level": 141,
+          "score": 4682014
+        },
+        {
+          "id": "mock:fairness17",
+          "classId": "fire",
+          "wins": 285,
+          "level": 141,
+          "score": 4678286
+        },
+        {
+          "id": "mock:fairness16",
+          "classId": "fire",
+          "wins": 285,
+          "level": 141,
+          "score": 4674515
+        },
+        {
+          "id": "mock:fairness15",
+          "classId": "fire",
+          "wins": 284,
+          "level": 140,
+          "score": 4652553
+        },
+        {
+          "id": "mock:fairness14",
+          "classId": "fire",
+          "wins": 285,
+          "level": 140,
+          "score": 4667051
+        },
+        {
+          "id": "mock:fairness13",
+          "classId": "fire",
+          "wins": 284,
+          "level": 140,
+          "score": 4644841
+        },
+        {
+          "id": "mock:fairness12",
+          "classId": "fire",
+          "wins": 285,
+          "level": 140,
+          "score": 4659535
+        },
+        {
+          "id": "mock:fairness11",
+          "classId": "fire",
+          "wins": 284,
+          "level": 140,
+          "score": 4636930
+        },
+        {
+          "id": "mock:fairness10",
+          "classId": "fire",
+          "wins": 284,
+          "level": 140,
+          "score": 4635851
+        },
+        {
+          "id": "mock:fairness9",
+          "classId": "fire",
+          "wins": 283,
+          "level": 140,
+          "score": 4631715
+        },
+        {
+          "id": "mock:fairness8",
+          "classId": "fire",
+          "wins": 282,
+          "level": 140,
+          "score": 4627551
+        },
+        {
+          "id": "mock:fairness7",
+          "classId": "fire",
+          "wins": 281,
+          "level": 140,
+          "score": 4623262
+        },
+        {
+          "id": "mock:fairness6",
+          "classId": "fire",
+          "wins": 281,
+          "level": 140,
+          "score": 4619379
+        },
+        {
+          "id": "mock:fairness5",
+          "classId": "fire",
+          "wins": 280,
+          "level": 140,
+          "score": 4615015
+        },
+        {
+          "id": "mock:fairness4",
+          "classId": "fire",
+          "wins": 279,
+          "level": 140,
+          "score": 4610510
+        },
+        {
+          "id": "mock:fairness3",
+          "classId": "fire",
+          "wins": 279,
+          "level": 140,
+          "score": 4609484
+        },
+        {
+          "id": "mock:fairness2",
+          "classId": "fire",
+          "wins": 281,
+          "level": 140,
+          "score": 4645275
+        },
+        {
+          "id": "mock:fairness1",
+          "classId": "fire",
+          "wins": 280,
+          "level": 140,
+          "score": 4666913
+        },
+        {
+          "id": "mock:fairness0",
+          "classId": "fire",
+          "wins": 281,
+          "level": 141,
+          "score": 4702210
+        }
+      ]
+    },
+    {
+      "rulesVersion": 11,
+      "reversed": true,
+      "classes": "six-class",
+      "raids": 322,
+      "stage": 322,
+      "wins": {
+        "min": 281,
+        "max": 288
+      },
+      "levels": {
+        "min": 140,
+        "max": 142
+      },
+      "scores": {
+        "min": 4616697,
+        "max": 4761301
+      },
+      "profiles": [
+        {
+          "id": "mock:fairness31",
+          "classId": "ice",
+          "wins": 282,
+          "level": 141,
+          "score": 4730236
+        },
+        {
+          "id": "mock:fairness30",
+          "classId": "fire",
+          "wins": 284,
+          "level": 142,
+          "score": 4761301
+        },
+        {
+          "id": "mock:fairness29",
+          "classId": "summon",
+          "wins": 285,
+          "level": 142,
+          "score": 4760145
+        },
+        {
+          "id": "mock:fairness28",
+          "classId": "healer",
+          "wins": 284,
+          "level": 142,
+          "score": 4751730
+        },
+        {
+          "id": "mock:fairness27",
+          "classId": "knight",
+          "wins": 285,
+          "level": 142,
+          "score": 4753513
+        },
+        {
+          "id": "mock:fairness26",
+          "classId": "thunder",
+          "wins": 285,
+          "level": 142,
+          "score": 4751092
+        },
+        {
+          "id": "mock:fairness25",
+          "classId": "ice",
+          "wins": 286,
+          "level": 142,
+          "score": 4746939
+        },
+        {
+          "id": "mock:fairness24",
+          "classId": "fire",
+          "wins": 286,
+          "level": 142,
+          "score": 4744390
+        },
+        {
+          "id": "mock:fairness23",
+          "classId": "summon",
+          "wins": 286,
+          "level": 142,
+          "score": 4739388
+        },
+        {
+          "id": "mock:fairness22",
+          "classId": "healer",
+          "wins": 286,
+          "level": 141,
+          "score": 4735230
+        },
+        {
+          "id": "mock:fairness21",
+          "classId": "knight",
+          "wins": 286,
+          "level": 141,
+          "score": 4732979
+        },
+        {
+          "id": "mock:fairness20",
+          "classId": "thunder",
+          "wins": 287,
+          "level": 141,
+          "score": 4732679
+        },
+        {
+          "id": "mock:fairness19",
+          "classId": "ice",
+          "wins": 287,
+          "level": 141,
+          "score": 4727063
+        },
+        {
+          "id": "mock:fairness18",
+          "classId": "fire",
+          "wins": 287,
+          "level": 141,
+          "score": 4724683
+        },
+        {
+          "id": "mock:fairness17",
+          "classId": "summon",
+          "wins": 287,
+          "level": 141,
+          "score": 4719730
+        },
+        {
+          "id": "mock:fairness16",
+          "classId": "healer",
+          "wins": 287,
+          "level": 141,
+          "score": 4715701
+        },
+        {
+          "id": "mock:fairness15",
+          "classId": "knight",
+          "wins": 287,
+          "level": 141,
+          "score": 4713540
+        },
+        {
+          "id": "mock:fairness14",
+          "classId": "thunder",
+          "wins": 287,
+          "level": 141,
+          "score": 4701956
+        },
+        {
+          "id": "mock:fairness13",
+          "classId": "ice",
+          "wins": 288,
+          "level": 141,
+          "score": 4701951
+        },
+        {
+          "id": "mock:fairness12",
+          "classId": "fire",
+          "wins": 288,
+          "level": 141,
+          "score": 4699601
+        },
+        {
+          "id": "mock:fairness11",
+          "classId": "summon",
+          "wins": 287,
+          "level": 141,
+          "score": 4688923
+        },
+        {
+          "id": "mock:fairness10",
+          "classId": "healer",
+          "wins": 287,
+          "level": 141,
+          "score": 4690510
+        },
+        {
+          "id": "mock:fairness9",
+          "classId": "knight",
+          "wins": 285,
+          "level": 140,
+          "score": 4656537
+        },
+        {
+          "id": "mock:fairness8",
+          "classId": "thunder",
+          "wins": 285,
+          "level": 140,
+          "score": 4654213
+        },
+        {
+          "id": "mock:fairness7",
+          "classId": "ice",
+          "wins": 284,
+          "level": 140,
+          "score": 4648190
+        },
+        {
+          "id": "mock:fairness6",
+          "classId": "fire",
+          "wins": 283,
+          "level": 140,
+          "score": 4645244
+        },
+        {
+          "id": "mock:fairness5",
+          "classId": "summon",
+          "wins": 282,
+          "level": 140,
+          "score": 4623746
+        },
+        {
+          "id": "mock:fairness4",
+          "classId": "healer",
+          "wins": 282,
+          "level": 140,
+          "score": 4638257
+        },
+        {
+          "id": "mock:fairness3",
+          "classId": "knight",
+          "wins": 281,
+          "level": 140,
+          "score": 4616697
+        },
+        {
+          "id": "mock:fairness2",
+          "classId": "thunder",
+          "wins": 281,
+          "level": 140,
+          "score": 4646568
+        },
+        {
+          "id": "mock:fairness1",
+          "classId": "ice",
+          "wins": 281,
+          "level": 141,
+          "score": 4672992
+        },
+        {
+          "id": "mock:fairness0",
+          "classId": "fire",
+          "wins": 281,
+          "level": 141,
+          "score": 4702626
+        }
+      ]
+    }
+  ]
+}

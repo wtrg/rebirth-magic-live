@@ -8,7 +8,7 @@ Reproduction through production entrypoints only: create 32 identical Fire profi
 
 The separate ten-minute combined run saved 32 profiles with wins ranging 110–322. Its driver also sends manual skill waves in ascending order, so that distribution cannot isolate auto's effect. The reproduction above establishes auto ordering as an independent cause. Do not change contribution eligibility or grant idle participants rewards to hide the defect.
 
-The narrow proposed correction is deterministic rotation of the starting auto attacker across raids, giving eligible participants repeated opportunities while retaining cooldowns, bounded basic attacks, contribution requirements and once-only rewards. A recorded round-robin cursor is another option with a broader state change. Root must choose and verify the implementation. Any changed combat ordering must preserve old v10 replay results via a new rules-version gate; changing historical replay outcomes is unacceptable.
+The original proposed correction was deterministic rotation of the starting auto attacker across raids, giving eligible participants repeated opportunities while retaining cooldowns, bounded basic attacks, contribution requirements and once-only rewards. A recorded round-robin cursor was the broader-state alternative. The selected implementation and verification follow below. Changed ordering must preserve old v10 replay results via a new rules-version gate; changing historical replay outcomes is unacceptable.
 
 ## Correction and evidence
 
@@ -26,4 +26,4 @@ Five added regressions cover the historical digest, v10/v11 ordering, all 32 fir
 | v11, six-class mix, forward | 281–289 | 140–142 |
 | v11, six-class mix, reversed | 281–288 | 140–142 |
 
-These cohorts isolate pure auto from the earlier combined run's manual FIFO waves. They demonstrate removal of permanent roster-tail exclusion under this fixed-roster workload, not full class balance, optimal strategy, arbitrary late joins, manual-input fairness or performance. Reproduce with `node scripts/auto-fairness-qa.ts`; reviewed output and tested source SHA are indexed in the task ledger. Task RB-AUTO-ORDER retains the required code quality, browser and replay integration gates before merge.
+These cohorts isolate pure auto from the earlier combined run's manual FIFO waves. They demonstrate removal of permanent roster-tail exclusion under this fixed-roster workload, not full class balance, optimal strategy, arbitrary late joins, manual-input fairness or performance. Reproduce with `node scripts/auto-fairness-qa.ts`; [reviewed output](evidence/auto-fairness-comparison.json) was captured at clean source `3fa4190`. Typecheck, lint, all 36 tests, build and production browser smoke passed. Task RB-AUTO-ORDER's final integration/load evidence is indexed in the task ledger.
