@@ -28,6 +28,7 @@ const store = openStore(process.env.DB_PATH ?? (mode === 'live' ? 'data/rebirth-
 let state = newGame(store.load(), store.loadStage());
 const replay = mode === 'mock' && process.env.REBIRTH_RECORD_REPLAY === '1' ? createReplay(state) : null;
 const queue: GameEvent[] = [];
+let stopping = false;
 const lastEvent = new Map<string, number>();
 const adminClock = { pausedAt: 0 };
 const hosts = new Set(['127.0.0.1:' + port, 'localhost:' + port]);
@@ -49,7 +50,7 @@ async function readJson(req: IncomingMessage): Promise<unknown> {
 function enqueue(event: GameEvent, now: number) {
   if (event.kind === 'gift' && !event.complete) return true;
   const limiterKey = event.kind + ':' + event.user;
-  if (state.paused || queue.length >= 128 || lastEvent.size >= 4096 && !lastEvent.has(limiterKey)) return false;
+  if (stopping || state.paused || queue.length >= 128 || lastEvent.size >= 4096 && !lastEvent.has(limiterKey)) return false;
   if (now - (lastEvent.get(limiterKey) ?? 0) < 200) return false;
   lastEvent.set(limiterKey, now);
   queue.push(event);
@@ -60,6 +61,7 @@ const server = createServer(async (req, res) => {
   res.setHeader('X-Content-Type-Options', 'nosniff');
   res.setHeader('Cache-Control', 'no-store');
   res.setHeader('Content-Security-Policy', "default-src 'self'; connect-src 'self' ws://127.0.0.1:" + port + " ws://localhost:" + port + "; style-src 'self' 'unsafe-inline'; frame-ancestors 'none'");
+  if (stopping) { res.writeHead(503).end(); return; }
   if (!hosts.has(req.headers.host ?? '')) { res.writeHead(403).end(); return; }
   const path = req.url?.split('?')[0];
   if (path === '/health' && req.method === 'GET') {
@@ -79,6 +81,7 @@ const server = createServer(async (req, res) => {
     }
     let body: unknown;
     try { body = await readJson(req); } catch { res.writeHead(400).end(); return; }
+    if (stopping) { res.writeHead(503).end(); return; }
     const now = Date.now();
     if (path === '/event') {
       if (mode !== 'mock') { res.writeHead(409).end(); return; }
@@ -86,6 +89,11 @@ const server = createServer(async (req, res) => {
       if (!event || event.user.startsWith('live:')) { res.writeHead(400).end(); return; }
       if (!enqueue(event, now)) { res.writeHead(429).end(); return; }
       res.writeHead(202).end();
+      return;
+    }
+    if (body === 'shutdown') {
+      res.writeHead(204).end();
+      shutdown();
       return;
     }
     if (!isAdminAction(body)) { res.writeHead(400).end(); return; }
@@ -109,7 +117,7 @@ const server = createServer(async (req, res) => {
 
 const ws = new WebSocketServer({ noServer: true, maxPayload: 256 });
 server.on('upgrade', (req, socket, head) => {
-  if (req.url !== '/state' || !hosts.has(req.headers.host ?? '') || !sameOrigin(req) || ws.clients.size >= 32) {
+  if (stopping || req.url !== '/state' || !hosts.has(req.headers.host ?? '') || !sameOrigin(req) || ws.clients.size >= 32) {
     socket.destroy(); return;
   }
   ws.handleUpgrade(req, socket, head, client => {
@@ -131,6 +139,21 @@ function broadcast() {
   }
 }
 
+function processQueue(now: number, limit: number) {
+  for (let i = 0; i < limit && queue.length; i++) {
+    const event = queue[0];
+    const next = structuredClone(state);
+    applyEvent(next, event, now);
+    const nextStage = nextRaidStage(next);
+    const unlock = nextStage > nextRaidStage(state) ? nextStage : undefined;
+    if (store.commit(next.players, event, now, unlock)) {
+      state = next;
+      replay?.record({ kind: 'event', event, at: now });
+    }
+    queue.shift();
+  }
+}
+
 const clock = setInterval(() => {
   if (state.paused || (!queue.length && (!activeRaid(state) && state.raid.phase !== 'SPAWN' || Date.now() < state.raid.next))) return;
   const now = Date.now();
@@ -141,16 +164,7 @@ const clock = setInterval(() => {
       state = draft;
       replay?.record({ kind: 'tick', at: now });
     }
-    for (const event of queue.splice(0, 16)) {
-      const next = structuredClone(state);
-      applyEvent(next, event, now);
-      const nextStage = nextRaidStage(next);
-      const unlock = nextStage > nextRaidStage(state) ? nextStage : undefined;
-      if (store.commit(next.players, event, now, unlock)) {
-        state = next;
-        replay?.record({ kind: 'event', event, at: now });
-      }
-    }
+    processQueue(now, 16);
     broadcast();
   } catch {
     applyAdmin(state, 'pause', now, adminClock);
@@ -173,14 +187,26 @@ server.listen(port, '127.0.0.1', () => {
 });
 server.on('error', () => { console.error('Could not bind the local server.'); shutdown(1); });
 function shutdown(code = 0) {
+  if (stopping) return;
+  stopping = true;
   abortLive.abort();
   clearInterval(clock);
   clearInterval(cleanup);
+  try {
+    processQueue(Date.now(), queue.length);
+  } catch {
+    code = 1;
+    console.error('Could not commit pending events during shutdown.');
+  }
   for (const client of ws.clients) client.terminate();
   ws.close();
-  server.close();
-  store.close();
-  process.exitCode = code;
+  const deadline = setTimeout(() => server.closeAllConnections(), 5000);
+  deadline.unref();
+  server.close(() => {
+    clearTimeout(deadline);
+    store.close();
+    process.exitCode = code;
+  });
 }
 process.once('SIGINT', () => shutdown());
 process.once('SIGTERM', () => shutdown());
