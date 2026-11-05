@@ -4,13 +4,17 @@ import { loadRaidModels } from '../../apps/game/asset-loader.ts';
 import { applyEvent, newGame } from '../../packages/combat/index.ts';
 import { classes, maxHp, type GameSnapshot } from '../../packages/shared/index.ts';
 
-// A manual clock controls only this fixture. Production rendering is imported unchanged.
+// Production rendering is imported unchanged. Action QA uses a manual clock;
+// the render benchmark explicitly selects native browser time instead.
+const realClock = new URLSearchParams(location.search).get('clock') === 'real';
 let time = 1000, serial = 0;
 const epoch = Date.UTC(2026, 10, 5);
-Date.now = () => epoch + time;
 const frames = new Map<number, FrameRequestCallback>();
-window.requestAnimationFrame = callback => { frames.set(++serial, callback); return serial; };
-window.cancelAnimationFrame = id => { frames.delete(id); };
+if (!realClock) {
+  Date.now = () => epoch + time;
+  window.requestAnimationFrame = callback => { frames.set(++serial, callback); return serial; };
+  window.cancelAnimationFrame = id => { frames.delete(id); };
+}
 const captured: { scene?: T.Scene; camera?: T.Camera } = {};
 const original = T.Scene.prototype.add;
 T.Scene.prototype.add = function (...objects) {
@@ -18,11 +22,28 @@ T.Scene.prototype.add = function (...objects) {
   return original.apply(this, objects);
 };
 T.Scene.prototype.onBeforeRender = function (_renderer, _scene, camera) { captured.camera = camera; };
+let measuring = false, overflow = false, began = 0, sampledAt = 0;
+const frameTimes: number[] = [];
+const resources: { at:number; geometries:number; textures:number; programs:number; calls:number; triangles:number; width:number; height:number }[] = [];
+T.Scene.prototype.onAfterRender = function (renderer) {
+  if (!realClock || !measuring) return;
+  const at = performance.now();
+  if (frameTimes.length >= 40000) { overflow = true; return; }
+  frameTimes.push(at);
+  if (at - sampledAt >= 1000) {
+    sampledAt = at;
+    const size = renderer.getDrawingBufferSize(new T.Vector2());
+    resources.push({ at, ...renderer.info.memory, programs:renderer.info.programs?.length ?? 0,
+      calls:renderer.info.render.calls, triangles:renderer.info.render.triangles, width:size.x, height:size.y });
+  }
+};
 const models = await loadRaidModels().catch(() => undefined);
 const view = document.getElementById('viewport')!;
 const update = createArena(view, () => true, true, models);
 const state: GameSnapshot = { ...newGame(), mode: 'mock', live: 'unconfigured' };
-for (const [i, id] of Object.keys(classes).entries()) {
+const classIds = Object.keys(classes);
+for (let i = 0; i < (realClock ? 64 : classIds.length); i++) {
+  const id = classIds[i%classIds.length];
   const event = { id:'fixture:'+i, user:'mock:qa'+i, name:'QA '+id, kind:'chat' as const };
   applyEvent(state, { ...event, command:'!join' }, Date.now());
   applyEvent(state, { ...event, command:'!class '+id }, Date.now());
@@ -33,6 +54,7 @@ state.raid.phase = 'PHASE_1';
 update(state);
 
 function advance(ms: number) {
+  if (realClock) throw new Error('Manual time is disabled in the native-clock benchmark');
   for (let elapsed = 0; elapsed < ms;) {
     const step = Math.min(50, ms - elapsed);
     time += step;
@@ -47,6 +69,7 @@ function actors() {
     root.children.some(child => child.userData.part === 'body'));
 }
 function poses() {
+  if (!captured.camera) return [];
   return actors().map((root, i) => {
     const body = root.children.find(child => child.userData.part === 'body')!;
     const companion = root.children.find(child => child !== body);
@@ -86,6 +109,19 @@ function stage(name: string) {
   if (name === 'resume') { state.paused = false; delete state.pausedAt; }
   update(state);
 }
-Object.assign(window, { animationQA: { advance, poses, stage, state, models:models ? 'glb' : 'procedural' } });
+function beginMetrics() {
+  if (!realClock) throw new Error('Metrics require the native browser clock');
+  frameTimes.length = 0;
+  resources.length = 0;
+  sampledAt = 0;
+  overflow = false;
+  began = performance.now();
+  measuring = true;
+}
+function endMetrics() {
+  measuring = false;
+  return {began,ended:performance.now(),frameTimes,resources,overflow,visibleActors:actors().length,players:state.players.length};
+}
+Object.assign(window, { animationQA: { advance, poses, stage, state, beginMetrics, endMetrics, realClock, models:models ? 'glb' : 'procedural' } });
 stage('idle');
-advance(200);
+if (!realClock) advance(200);
