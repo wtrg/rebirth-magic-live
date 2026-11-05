@@ -27,3 +27,11 @@ Set `QA_LOAD_AUTO=1` before `node scripts/load.mjs` to exercise 64 server-driven
 ## Relational design prototype
 
 `node --test tests/schema-design.test.ts` loads `docs/schema/normalized.sql` into new in-memory databases. It checks all 17 required entities, actual legacy fallback-name preservation, foreign keys, owned pets, item slots, one active raid, contributing ranked reward eligibility, immutable raid mode, repeated rewards/gifts, append-only ledgers and multibyte JSON byte limits. The design/mapping is documented in [DATABASE_DESIGN](DATABASE_DESIGN.md). These checks do not implement or validate a production importer; deployed storage remains schema v2.
+
+## Native client render measurement
+
+Run `node scripts/render-benchmark.mjs` with Chrome (or `QA_BROWSER=chromium`) and free loopback port 4196. Set `QA_RENDER_SECONDS` to 15–600 seconds per mode; default is 60. It imports the production arena into the isolated scene fixture using native Date/RAF, supplies 64 synthetic snapshot entries, renders the low-quality cap of eight actors, and replaces roster IDs every third 650 ms update while driving attack/phase/effect poses. Both GLB and forced-404 fallback run separately. Keep fixture/source files unchanged during measurement: Vite reload invalidates the sample.
+
+Scene onAfterRender timestamps measure CPU render submissions, not GPU completion or presented/display FPS. The report includes approximately one renderer resource-count sample per second and one CDP heap sample per five seconds, with separate forced-GC retained-heap endpoints outside the measured interval. Geometry/texture/program counts are not GPU-memory bytes. Frame history is capped at 40,000 entries. No HUD, server, database, OBS or LIVE is included. Output stays in `test-results/render-benchmark/` until reviewed. Use combined OBS and server tests for their separate scopes.
+
+The production smoke now also returns null from every WebGL context request in an isolated page. It verifies the fallback notice, absent canvas, live party state and working emergency pause/resume, and captures `webgl-unavailable.png`. This covers unavailable context creation, not context-loss recovery after a successful render.

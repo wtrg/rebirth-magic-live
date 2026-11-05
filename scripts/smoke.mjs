@@ -120,6 +120,27 @@ try {
   await fallback.goto(base+'/?overlay=1');
   await fallback.locator('canvas[data-models="procedural"]').waitFor();
   await fallback.close();
+  const withoutWebGL = await browser.newPage({viewport:{width:1280,height:900}});
+  withoutWebGL.on('pageerror',error => errors.push(error.message));
+  await withoutWebGL.addInitScript(() => {
+    const original = HTMLCanvasElement.prototype.getContext;
+    HTMLCanvasElement.prototype.getContext = function (type,...args) {
+      if (['webgl','webgl2','experimental-webgl'].includes(type)) return null;
+      return original.call(this,type,...args);
+    };
+  });
+  await withoutWebGL.goto(base);
+  await waitForText(withoutWebGL,'#notice','WebGL 2 không khả dụng');
+  await waitForText(withoutWebGL,'#party','Astra');
+  assert.equal(await withoutWebGL.locator('canvas').count(),0);
+  await withoutWebGL.getByRole('button',{name:'Dừng khẩn cấp'}).click();
+  await waitForText(page,'#phase','TẠM DỪNG');
+  await withoutWebGL.getByRole('button',{name:'Tiếp tục'}).click();
+  await waitForText(page,'#phase','GIAI ĐOẠN I');
+  const unavailableEvidence = process.env.QA_EVIDENCE_DIR ?? 'test-results';
+  await mkdir(unavailableEvidence,{recursive:true});
+  await withoutWebGL.screenshot({path:join(unavailableEvidence,'webgl-unavailable.png')});
+  await withoutWebGL.close();
   const dimensions = await overlay.locator('#broadcast').boundingBox();
   assert.ok(Math.abs(dimensions.width/dimensions.height-9/16) < 0.005);
   const renderer = await canvas.evaluate(element => {
@@ -240,7 +261,7 @@ try {
   await waitForText(overlay,'#wraith-hp','Ảnh Linh phải · 49/70');
   await overlay.screenshot({path:join(evidence,'portrait-wraiths.png')});
   assert.deepEqual(errors,[]);
-  console.log('PASS: 3D portrait, boss victory, pause/resume, security, gift deduplication, online backup, restore, stage progression, reconnect, deterministic event replay.');
+  console.log('PASS: 3D portrait, GLB/procedural/no-WebGL fallback, boss victory, pause/resume, security, gift deduplication, online backup, restore, stage progression, reconnect, deterministic event replay.');
   console.log('WebGL renderer:',renderer);
 } finally {
   await browser?.close();
