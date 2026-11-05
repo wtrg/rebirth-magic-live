@@ -74,7 +74,7 @@ export function createArena(view: HTMLElement, low: () => boolean, portrait: boo
     scene.add(root);
     return root;
   });
-  const squad = new Map<string, ReturnType<typeof character> & { classId: string; companion: T.Group; lastHit: number; strike: number }>();
+  const squad = new Map<string, ReturnType<typeof character> & { classId: string; companion: T.Group; lastHit: number; strike: number; hp: number; recoil: number }>();
   const flash = mesh(scene, new T.TorusGeometry(1.8,0.09,4,36), '#ffd3a4', [0,0.08,-1.45], [1,1,1], true);
   flash.rotation.x = -Math.PI/2;
   flash.material = flash.material.clone();
@@ -87,11 +87,21 @@ export function createArena(view: HTMLElement, low: () => boolean, portrait: boo
   preview.root.position.set(0,0,3.3);
   preview.root.rotation.y = Math.PI;
   let state: GameState | undefined;
-  let serial = 0, impact = -1000, previous = 0;
-  renderer.setAnimationLoop(time => {
-    if (time - previous < (low() ? 33 : 16)) return;
-    const delta = Math.min(0.1, (time - previous) / 1000);
-    previous = time;
+  function animateLimbs(body: T.Object3D, stride: number, strike: number, recoil: number) {
+    for (const joint of body.children) {
+      if (joint.userData.limb === 'leg') joint.rotation.x = stride*joint.userData.side;
+      if (joint.userData.limb === 'arm') {
+        joint.rotation.x = -stride*joint.userData.side*0.65 - strike*1.1 + recoil*0.4;
+      }
+    }
+  }
+  let serial = 0, impact = -1000, previous = 0, motionTime = 0;
+  renderer.setAnimationLoop(frameTime => {
+    if (frameTime - previous < (low() ? 33 : 16)) return;
+    const delta = state?.paused ? 0 : Math.min(0.1, (frameTime - previous) / 1000);
+    previous = frameTime;
+    motionTime += delta*1000;
+    const time = motionTime;
     const scale = low() ? 0.66 : 1;
     const width = Math.max(1, Math.floor(view.clientWidth * scale));
     const height = Math.max(1, Math.floor(view.clientHeight * scale));
@@ -140,7 +150,9 @@ export function createArena(view: HTMLElement, low: () => boolean, portrait: boo
     }
     portal.rotation.z = time * 0.00015;
     boss.body.position.y = Math.sin(time*0.003)*0.09 + burst*0.17;
-    boss.root.rotation.z = state?.raid.phase === 'DEAD' ? 1.42 : Math.sin(time*0.002)*0.04;
+    const bossDown = state?.raid.phase === 'DEAD';
+    boss.root.rotation.z = T.MathUtils.lerp(boss.root.rotation.z, bossDown ? 1.42 : Math.sin(time*0.002)*0.04, Math.min(1,delta*8));
+    animateLimbs(boss.body, Math.sin(time*0.002)*0.035, kind === 'boss' ? burst : 0, kind !== 'boss' ? burst : 0);
     const actionName = state?.raid.phase === 'DEAD' ? 'Defeat' :
       burst > 0 && kind === 'boss' ? 'Attack' :
       burst > 0 && kind && kind !== 'gift' ? 'Hit' : 'Idle';
@@ -161,6 +173,7 @@ export function createArena(view: HTMLElement, low: () => boolean, portrait: boo
     }
     preview.root.visible = !state?.players.length;
     preview.body.position.y = Math.sin(time*0.004)*0.06;
+    animateLimbs(preview.body, Math.sin(time*0.004)*0.025,0,0);
     const players = state?.players.slice(0,low() ? 8 : 12) ?? [];
     const ids = new Set(players.map(player => player.id));
     for (const [id, actor] of squad) if (!ids.has(id)) { actor.root.removeFromParent(); squad.delete(id); }
@@ -171,14 +184,21 @@ export function createArena(view: HTMLElement, low: () => boolean, portrait: boo
         const model = character(player.classId);
         const companion = new T.Group();
         model.root.add(companion);
-        actor = { ...model, classId: player.classId, companion, lastHit: player.lastHit, strike: -1000 };
+        actor = { ...model, classId: player.classId, companion, lastHit: player.lastHit, strike: -1000, hp: player.hp, recoil: -1000 };
         squad.set(player.id, actor);
       }
       if (player.lastHit !== actor.lastHit) { actor.lastHit = player.lastHit; actor.strike = time; }
+      if (player.hp < actor.hp) actor.recoil = time;
+      actor.hp = player.hp;
+      const recoil = Math.max(0,1-(time-actor.recoil)/450);
       const strike = player.hp > 0 ? Math.max(0,1-(time-actor.strike)/520) : 0;
       const arc = (index-(players.length-1)/2)*Math.min(0.55,2.1/players.length);
       actor.root.position.set(Math.sin(arc)*5,0,Math.cos(arc)*4.7-strike*1.15);
-      actor.root.rotation.set(0,Math.PI+arc,player.hp <= 0 ? 1.4 : strike*0.14);
+      const lean = player.hp <= 0 ? 1.4 : strike*0.14;
+      actor.root.rotation.set(0,Math.PI+arc,T.MathUtils.lerp(actor.root.rotation.z,lean,Math.min(1,delta*10)));
+      actor.body.rotation.x = -recoil*0.23;
+      const stride = Math.sin(time*(strike > 0 ? 0.03 : 0.004)+index)*(strike > 0 ? 0.5*strike : 0.025);
+      animateLimbs(actor.body,stride,strike,recoil);
       actor.body.position.y = Math.sin(time*0.005+index)*0.055 + strike*0.24;
       actor.weapon.rotation.x = -strike*2.1;
       const support = state?.raid.supportPet;

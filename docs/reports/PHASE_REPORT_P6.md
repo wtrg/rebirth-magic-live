@@ -40,3 +40,10 @@ Windows typecheck, lint, build, 11 tests and Chrome smoke passed. The smoke conf
 ## Raid results and skill readiness
 
 The portrait and operator view now display a result panel for victory or defeat, the raid mode, contributor damage and the EXP/shard reward rule. The panel clears on the next raid. The MOCK console shows named skills with cooldown seconds, mana availability and pause status. Windows smoke verified ranked victory rewards, the contributor name, panel dismissal and readiness in the next practice raid. Typecheck, lint, build and 15 tests passed.
+
+
+## Actor articulation
+
+The shared GLB/procedural factory now creates separate shoulder and hip pivots. Characters swing arms and legs on the attack approach, recoil when the server HP falls, and ease into collapse when defeated. Boss limbs use the same pivot structure. Pausing freezes the local animation clock, including portal, pets, particles and GLB mixer.
+
+The exported bundle was inspected for two arm and two leg pivots in each of the seven actor roots. Windows browser smoke rendered the GLB and fallback and compared canvas screenshots 400 ms apart during pause; the bytes matched. Typecheck, lint, build and 16 tests passed. Detailed visual review of every action for every class remains open.

@@ -15,10 +15,15 @@ const base = 'http://127.0.0.1:4178';
 let server, browser;
 const sleep = ms => new Promise(resolve => setTimeout(resolve,ms));
 async function start(dbPath = join(root,'test.sqlite')) {
-  server = spawn(process.execPath,['apps/server/index.ts'], { stdio: 'inherit', env: { ...process.env, PORT:'4178', REBIRTH_MODE:'mock', REBIRTH_RECORD_REPLAY:'1', DB_PATH:dbPath } });
+  server = spawn(process.execPath,['apps/server/index.ts'], { stdio: ['ignore','pipe','inherit'], env: { ...process.env, PORT:'4178', REBIRTH_MODE:'mock', REBIRTH_RECORD_REPLAY:'1', DB_PATH:dbPath } });
+  let ready = false, output = '';
+  server.stdout.on('data', bytes => {
+    output += String(bytes);
+    if (output.includes('RE:BIRTH MOCK · ' + base)) ready = true;
+  });
   for (let attempt = 0; attempt < 80; attempt++) {
     if (server.exitCode !== null) throw new Error('QA server exited early');
-    if (await fetch(base + '/health').then(res => res.ok).catch(() => false)) return;
+    if (ready && await fetch(base + '/health').then(res => res.ok).catch(() => false)) return;
     await sleep(100);
   }
   throw new Error('QA server did not respond');
@@ -106,6 +111,10 @@ try {
   });
   await page.getByRole('button',{ name:'Dừng khẩn cấp' }).click();
   await waitForText(page,'#phase','TẠM DỪNG');
+  await sleep(250);
+  const pausedCanvas = await canvas.screenshot();
+  await sleep(400);
+  assert.deepEqual(await canvas.screenshot(),pausedCanvas,'3D motion must freeze while paused');
   const pausedHp = await page.locator('#boss-value').textContent();
   await page.getByRole('button',{ name:'Tấn công',exact:true }).click();
   await waitForText(page,'#feedback','Đang dừng');

@@ -21,3 +21,6 @@ The Windows browser smoke verified that the GLB loaded and that the procedural f
 The variants share the body and weapon pivot contract. These assets change the silhouette and preserve the class combat rules.
 
 [Six classes rendered together in the portrait arena](reports/evidence/portrait-six-classes.png).
+
+
+All seven actor models carry two leg pivots at the hips and two arm pivots at the shoulders. Runtime movement swings the limbs during the attack approach, gives a short torso recoil when HP falls, and eases into the defeated pose. The animation clock freezes when the server reports a pause. GLB and procedural actors use the same pivot tags.
