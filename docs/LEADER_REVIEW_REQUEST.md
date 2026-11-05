@@ -1,6 +1,6 @@
 # Leader Review Request
 
-Status LEADER_REVIEW_PENDING. Share the repository and phase evidence with the ChatGPT Web Leader when a verified delivery route is available.
+The designated ChatGPT Web Leader reviewed RC5 on 2026-11-05 and approved Windows MOCK, technical core gameplay and the 3D prototype at `2a5173bd9276aeb98f66f6da511a6bc5c648e564`. The decision and follow-up gates are recorded in [RC5 Leader verdict](reports/RC5_LEADER_VERDICT.md).
 
 1. Review the deterministic pet reward and level-3 rebirth gate.
 2. Review assisted raid isolation. Proposed implementation treats assisted raids as practice and excludes durable rewards.
