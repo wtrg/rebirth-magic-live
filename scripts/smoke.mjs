@@ -137,6 +137,9 @@ try {
   await waitForText(page,'#phase','TẠM DỪNG');
   await withoutWebGL.getByRole('button',{name:'Tiếp tục'}).click();
   await waitForText(page,'#phase','GIAI ĐOẠN I');
+  const unavailableEvidence = process.env.QA_EVIDENCE_DIR ?? 'test-results';
+  await mkdir(unavailableEvidence,{recursive:true});
+  await withoutWebGL.screenshot({path:join(unavailableEvidence,'webgl-unavailable.png')});
   await withoutWebGL.close();
   const dimensions = await overlay.locator('#broadcast').boundingBox();
   assert.ok(Math.abs(dimensions.width/dimensions.height-9/16) < 0.005);

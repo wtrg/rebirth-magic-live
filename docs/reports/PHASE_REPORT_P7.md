@@ -139,3 +139,24 @@ Twelve five-second backend samples ranged from 73.7 to 79.4 MiB RSS and 13.0 to 
 On 2026-11-05, cloned the public `release/rc4` branch into a new directory and tested commit `80fe1b9d711a21bfe112d00bb949f33ac24a9e1f`, package version `0.2.0-rc.4`. The directory had no previous node_modules, dist or game database. `npm ci`, typecheck, lint, all 26 tests and build passed. Installing the Playwright Chromium runtime and selecting `QA_BROWSER=chromium` exercised the README QA path. Both production browser smoke and the six-class/three-pet rendering harness passed on Intel UHD D3D11. Production dependency audit reported zero vulnerabilities. Git status stayed clean after these checks.
 
 The install used Windows and Node 24. The browser smoke covered manual combat, auto checkbox rejection recovery/on/off, GLB and fallback, pause, replay, SQLite backup/restore and reconnect. The separate rendering harness covered both model paths and their action poses. No real viewer names, credentials or databases were copied into the clone or published. A read-only Codex reviewer found no scoped release blocker and noted the still-open master section 7.2 database-design deliverable. Leader approval and actual LIVE remain unverified. See [RC4 scope](../RELEASE_CANDIDATE.md).
+
+## Native browser render submissions and resource counts
+
+On 2026-11-05, ran `node scripts/render-benchmark.mjs` at source `146bb6086f7a533ded93d1343c0e73962f268cf7` using Chrome on Intel UHD D3D11. Each mode used native browser time for approximately 60 seconds, a 1080×1500 scene viewport and a 712×990 low-quality drawing buffer. The fixture imported the production arena and supplied 64 synthetic snapshot entries; eight actors and pets were rendered. It replaced roster IDs 31 times per mode and drove attacks, boss/ultimate feedback and wraith/phase poses. No authoritative combat server, production HUD or OBS ran in this fixture.
+
+| Mode | Measured seconds | Render submissions | Submissions/s | Interval p50 / p95 / p99 / max (ms) |
+| --- | --- | --- | --- | --- |
+| GLB | 60.454 | 1,813 | 29.990 | 33.3 / 34.2 / 35.0 / 49.0 |
+| Procedural fallback | 60.573 | 1,815 | 29.964 | 33.3 / 34.1 / 34.7 / 101.1 |
+
+Across all in-run resource samples, GLB retained 15 renderer geometry allocations, one texture and two shader programs; fallback retained 13, one and two respectively. Those counts stayed constant through roster churn. Draw calls varied with effects (the endpoint samples were 280–281 calls and 6,152–6,200 triangles). Counts do not measure driver/GPU allocation bytes.
+
+Eleven normal heap samples per mode ranged from 11.25–17.38 MiB for GLB and 12.01–16.42 MiB for fallback. Separate forced-GC endpoints increased by 400.97 KiB and 449.66 KiB respectively. Those endpoints include fixture/measurement arrays and caches; they do not isolate a leak or prove leak-free operation. No forced GC or screenshot ran inside either measured interval. One initial trial was discarded after a fixture edit caused Vite to reload; only the frozen-source rerun is reported here.
+
+These are completed Three.js CPU render submissions, not GPU completion or presentation FPS. They support the approximate 30-submission/s low-quality target in this isolated scene. They do not establish end-to-end combined OBS performance, long-session memory stability or LIVE readiness. [Raw measurements](evidence/render-benchmark/results.json) · [GLB frame](evidence/render-benchmark/glb.png) · [Fallback frame](evidence/render-benchmark/procedural.png)
+
+## WebGL-unavailable operation
+
+Production browser smoke intercepted WebGL/webgl2/experimental-webgl context requests and returned null before arena creation. The page displayed the unavailable notice, created no canvas, continued receiving the party and controlled real server pause/resume. The same run passed the existing GLB/procedural, combat, replay, backup/recovery and reconnect checks on Intel UHD. [Fallback HUD capture](evidence/webgl-unavailable.png)
+
+Typecheck, lint, all 28 tests, build, production smoke and the manual-clock action harness passed. Independent read-only Codex review found no blocker in measurement scope, bounded sampling, cleanup or unavailable-WebGL assertions. This is technical QA rather than a Gemini art report or Leader approval.

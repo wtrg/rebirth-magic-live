@@ -21,7 +21,7 @@ Audit date 2026-11-05. Evidence spans source snapshots listed in P7, including t
 15. TikTok adapter with truthful status — optional provider WebSocket transport and local fixture coverage. Actual LIVE remains unverified. See [P5](PHASE_REPORT_P5.md).
 16. OBS overlay — actual portable OBS recording at 1080×1920 with local raid load. See [P7](PHASE_REPORT_P7.md).
 17. Admin and emergency stop — local operator pause/resume and Origin checks in browser smoke. Controlled server shutdown regression preserves accepted pending joins.
-18. Tests, setup and build — 26 tests, required quality checks and Windows browser smoke passed for the source lineage in this audit. See [QA plan](../QA_PLAN.md).
+18. Tests, setup and build — 28 tests, required quality checks and Windows browser smoke passed for the source lineage in this audit. Smoke also verifies unavailable-WebGL HUD and server controls. See [QA plan](../QA_PLAN.md).
 19. Public source — [repository](https://github.com/wtrg/rebirth-magic-live). The RC4 scope consolidates session-roster, repeated-impact/pause fixes, action rendering checks and opt-in server auto battle. Release history and exact local QA scope are tracked in P7 and the release document.
 20. Codex acceptance report — P0–P7 reports and this audit identify measured evidence, gaps and external-agent status. [Leader handoff](../LEADER_REVIEW_REQUEST.md).
 
@@ -32,6 +32,7 @@ Audit date 2026-11-05. Evidence spans source snapshots listed in P7, including t
 - Actual TikTok account, room events, verified gift IDs and platform behavior. The owner confirmed no real test LIVE session is currently available.
 - OBS audio routing now has a ten-minute combined recording with one Browser Source and nonzero audio in each one-minute window. Subjective mix quality and longer operation remain open. See P7.
 - Longer combined OBS and browser operation. A ten-minute combined recording and separate ten-minute server soak are now documented in P7. Neither establishes 8–12-hour stability, browser/GPU memory behavior or upstream streaming readiness.
+- Native-clock client scene samples now measure approximately 30 CPU render submissions/s, stable renderer resource counts during roster churn and bounded short-run heap samples for GLB/fallback. P7 records the retained-heap increase and scope. GPU-memory bytes, presentation FPS and long-run combined memory stability remain unverified.
 - The six-class/three-pet technical action review now covers GLB and procedural fallback, idle, attack approach, changing leg angles, HP recoil, defeat, revival, pause and temporary-pet expiry. See P6 for captures and limits. Art quality, motion direction and Leader visual approval remain open.
 - Leader product and visual review. Antigravity and Gemini reports remain NOT_RECEIVED. The WT bridge connectivity check returned fetch failed.
 - Master section 7.2 now has a [detailed 17-entity database design](../DATABASE_DESIGN.md), seven supporting tables, migration/rollback mapping and scratch SQL constraint verification. Runtime adoption needs a future adapter/importer and separate migration QA; no normalized schema has been applied to game saves. Leader architecture review remains pending.
