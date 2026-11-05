@@ -4,6 +4,17 @@ import { classes, pets } from '../../packages/shared/index.ts';
 
 export type ModelTemplates = { nodes: ReadonlyMap<string, Object3D>; animations: AnimationClip[] };
 
+export async function loadVarkhazarPreview() {
+  const url = new URL('../../assets/bosses/varkhazar-preview/varkhazar.glb', import.meta.url);
+  const { scene, animations } = await new GLTFLoader().loadAsync(url.href);
+  const expected = ['idle', 'move', 'telegraph', 'attack', 'hit', 'defeat'];
+  if (animations.length !== expected.length || !expected.every(name => animations.some(clip => clip.name === name))) {
+    throw new Error('Missing Varkhazar preview clips');
+  }
+  for (const clip of animations) clip.name = clip.name[0].toUpperCase() + clip.name.slice(1);
+  return { scene, animations };
+}
+
 export async function loadRaidModels(): Promise<ModelTemplates> {
   const { scene, animations } = await new GLTFLoader().loadAsync('/models/raid.glb');
   const templates = new Map<string, Object3D>();
