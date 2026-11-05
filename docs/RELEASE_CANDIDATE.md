@@ -1,13 +1,13 @@
-# RE:BIRTH 0.2.0-rc.4 · Windows MOCK candidate
+# RE:BIRTH 0.2.0-rc.5 · Windows MOCK candidate
 
-This page describes the immutable RC4 tag. Later source includes layout fixes, combined OBS/server-auto evidence and a [v11 auto-order correction](reports/AUTO_ORDER_FINDING.md). See [P7](reports/PHASE_REPORT_P7.md) for each measured source. RC4 retains v10 fixed-order auto; the correction requires the newer source and a subsequent release candidate. Do not interpret later evidence as code included in RC4 or as full gameplay acceptance.
+RC5 packages the post-RC4 desktop fixes and v11 auto-order correction. A fresh public Windows clone at `3d74b32` passed installation, all 36 tests, quality/build, manifest, smoke, action and layout QA; its working tree stayed clean. The tag is published after integration CI. Exact execution results and limits are recorded in [P7](reports/PHASE_REPORT_P7.md). Older tags retain their original behavior; RC4 uses fixed-order v10 auto.
 
 This prerelease packages the local Windows Boss Raid. It includes an optional TikTok transport; actual room events and gifts remain unverified because no authorized test LIVE session is available.
 
 ## Install this candidate
 
 ```powershell
-git clone --branch v0.2.0-rc.4 https://github.com/wtrg/rebirth-magic-live.git
+git clone --branch v0.2.0-rc.5 https://github.com/wtrg/rebirth-magic-live.git
 cd rebirth-magic-live
 npm ci
 npm run build
@@ -18,19 +18,19 @@ Use Node 24 and a browser with WebGL 2. Open `http://127.0.0.1:4173`, join, choo
 
 MOCK works without an upstream account. LIVE configuration and keys remain local. [LIVE setup and open gates](LIVE_SETUP.md)
 
-## Included since RC3
+## Included since RC4
 
-- Session membership is separate from saved profiles. Restart starts an empty roster; join restores progression. Leave/host clear free slots while global ranking retains archived players.
-- Boss Hit/Attack clips restart on new impacts, Idle loops continuously, and temporary-pet expiry stays correct while paused, including newly connected clients.
-- Six classes and three pets have a repeatable rendering regression through both GLB and forced-404 fallback, with ten captured action frames. [P6 evidence](reports/PHASE_REPORT_P6.md#six-class-and-three-pet-action-verification)
-- Opt-in `!auto on/off` basic battle executes in the server, shares the manual attack cooldown and persists the preference. Skills remain manual. Replay v10 captures automatic batches while retaining versions 1–9. [P2 evidence](reports/PHASE_REPORT_P2.md#server-side-idle-battle)
+- Rules v11 rotate the first auto attacker by ranked stage without reordering the displayed roster or changing positive-contribution rewards. New replays use v11; v1–v10 retain their original rules. A historical v10 full-state digest and eight 322-raid synthetic comparisons protect this change. [Ordering correction and limits](reports/AUTO_ORDER_FINDING.md).
+- The desktop operator workspace fits its viewport with independently scrolling controls and reachable emergency actions. Layout QA covers seven sizes plus portrait, real wraith/victory states and long logs/names. [P6 evidence](reports/PHASE_REPORT_P6.md).
+- The actual GLB has a reproducible measured manifest and detailed prototype proportions, material, articulation, arena and camera specification. Rebirth tests cover every class and all five cycles. [Art specification](ART_SPECIFICATION.md) · [Rebirth worksheet](reports/REBIRTH_BALANCE.md).
+- A detailed 17-entity database design plus seven supporting tables and scratch SQL constraint tests is included. Runtime storage remains schema v2; no proposed normalized migration is activated. [Database design](DATABASE_DESIGN.md).
 
 Existing character progress, pets, equipment, stage unlock and older replay files remain supported. Before upgrading, make a [SQLite online backup](RECOVERY.md). Rejoin after restart. `!auto off` disables a restored auto preference.
 
 ## Verification scope
 
-The 26-test suite covers combat, gifts, adapter fixtures, persistence, recovery, roster turnover, shutdown, actual GLB clips and browserless auto progression. Browser smoke separately covers the production portrait HUD, manual combat, checkbox rejection recovery, replay, backup/restore and reconnect. The animation harness tests scene responses using a manual clock rather than measuring FPS.
+The 36-test suite covers combat, gifts, adapter fixtures, persistence, recovery, roster turnover, shutdown, actual GLB clips, all-cycle rebirth, schema-design constraints, auto opportunity rotation and old/new replay. Production browser smoke separately covers portrait HUD, GLB/procedural/no-WebGL paths, checkbox recovery, replay, backup/restore and reconnect. The action harness checks all six classes/three pets with a manual clock; it is not an FPS test. The asset inspector and CI reject a stale manifest.
 
-Earlier evidence includes a ten-minute combined OBS H.264/AAC recording at source `7b225ea`, before the animation fixes and server auto feature, plus a separate ten-minute server soak. A 60-second server-only auto test used 64 players and eight consumers. [P7 measurements and exact limitations](reports/PHASE_REPORT_P7.md)
+Earlier evidence includes a 600.166-second combined OBS/server-auto/HUD/audio recording at `46cf80d`, before the v11 ordering correction. Its 57 OBS samples reported approximately 30 FPS with zero render/encode skips; this does not measure unique Three.js presentations. At v11 source `3fa4190`, a separate 60-second server test exercised 64 auto players and eight consumers. Native-clock scene/resource measurements use another isolated fixture. [P7 measurements and exact limitations](reports/PHASE_REPORT_P7.md).
 
-This candidate does not establish 8–12-hour stability, browser/GPU memory behavior, combined OBS auto-battle endurance, upstream TikTok streaming or Leader art/gameplay approval. Review [the full MVP audit](reports/MVP_ACCEPTANCE.md) and [Leader handoff](LEADER_REVIEW_REQUEST.md) for the remaining requirements. Antigravity and Gemini reports remain NOT_RECEIVED; Leader review remains pending.
+This candidate does not establish 8–12-hour stability, browser/GPU allocation bytes, long combined endurance, full manual/co-op balance, upstream TikTok streaming or Leader art/gameplay approval. The art remains an original Codex prototype pending Gemini review. Review [the full MVP audit](reports/MVP_ACCEPTANCE.md) and [Leader handoff](LEADER_REVIEW_REQUEST.md). Antigravity and Gemini reports remain NOT_RECEIVED; Leader review remains pending. MOCK needs no account or paid connector.

@@ -1,5 +1,17 @@
 # P7 · OBS portrait QA
 
+## RC5 clean public Windows installation — 2026-11-05
+
+Cloned the public `release/rc5` branch into a new directory at `3d74b3270f277956180843ae72b1c470dd870b74`, package version `0.2.0-rc.5`, with no prior dependencies, build or database. On Windows / Node 24.17.0 / npm 11.13.0, `npm ci`, typecheck, lint, all 36 tests and build passed. `node scripts/inspect-models.ts` reproduced the committed manifest; `git diff --exit-code -- assets/manifest.json` passed. Installed/selected Playwright Chromium through the README QA path, then passed production smoke, the six-class/three-pet action harness, and the seven-size plus portrait layout harness on Intel UHD D3D11. Production dependency audit reported zero vulnerabilities; installation audit also reported zero. The final explicit Git clean-status assertion passed.
+
+The first fresh-clone trial at `e738347` passed functional checks but exposed a Windows metadata problem: `core.autocrlf=true` and the inspector's LF output left Git reporting the manifest modified despite identical normalized blob hashes and no content diff. RC5 adds the narrow `.gitattributes` rule `assets/manifest.json text eol=lf`. The complete installation/quality/browser/action/layout pipeline above was rerun in a second new public clone at `3d74b32`; it checked out LF and remained clean. No asset content, runtime rule or dependency was changed by this correction.
+
+An independent read-only Codex review found no release blocker in package/lock/README version consistency, evidence scope, or the line-ending rule. This is technical release QA, not Antigravity/Gemini delivery or Leader approval. WT connection revalidation still returned `fetch failed`; publication of this report does not establish Leader receipt. No credentials, existing game database or real viewer data were copied into the clone or published. Vite retains its advisory about a minified client chunk above 500 kB; build succeeds and rendering evidence keeps its measured-source scope.
+
+RC5 includes the v11 auto-opportunity correction and post-RC4 desktop layout fixes. It preserves historical replay rules and existing schema-v2 saves. The database design remains a scratch prototype. The tag is published only after integration CI passes; later edits in this release task record QA/handoff metadata rather than changing the tested runtime. [Candidate scope and install](../RELEASE_CANDIDATE.md) · [Curated CLI evidence](evidence/rc5-install.json).
+
+Actual TikTok LIVE, confirmed gift IDs/provider permission, full manual/co-op balance, subjective audio/art review and long-session browser/GPU memory stability remain unverified. Antigravity/Gemini reports remain NOT_RECEIVED; Leader review remains pending. P8 expansion is deferred.
+
 ## Current-source combined auto, HUD and audio — 2026-11-05
 
 Tested source `46cf80db62fa6ec7d27e5e7fb994eb4823ccdfc1` on Windows / Node 24.17.0, Core i7-13620H and Intel UHD Graphics (OBS D3D11). This includes server auto and the post-RC4 layout/animation changes; it is not the RC4 release tag. Git was clean at harness startup. Production sources and built files stayed unchanged during recording; documentation and post-run analysis were added separately.

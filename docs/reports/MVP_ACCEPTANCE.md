@@ -4,7 +4,7 @@ Audit date 2026-11-05. Evidence spans source snapshots listed in P7, including t
 
 ## Demonstrated local requirements
 
-1. Windows execution — fresh public clone of RC4 preparation commit `80fe1b9` installed and passed all required checks, production browser smoke and the animation harness using Playwright Chromium. See [RC scope](../RELEASE_CANDIDATE.md).
+1. Windows execution — fresh public RC5 clone at `3d74b32` installed and passed all required checks, manifest inspection, production smoke, action and layout harnesses using Playwright Chromium on Intel UHD. The working tree stayed clean after the Windows manifest line-ending correction. See [RC scope](../RELEASE_CANDIDATE.md).
 2. Real 3D environment — Three.js arena rendered on Intel UHD Graphics. See [OBS capture](evidence/obs-combined-raid.png).
 3. 3D player — local GLB bundle, validated load and procedural fallback. See [model contract](../MODEL_ASSETS.md).
 4. 3D boss — Varkhazar renders in the arena with named animation clips and server-driven phase state.
@@ -22,7 +22,7 @@ Audit date 2026-11-05. Evidence spans source snapshots listed in P7, including t
 16. OBS overlay — actual portable OBS recording at 1080×1920 with local raid load. See [P7](PHASE_REPORT_P7.md).
 17. Admin and emergency stop — local operator pause/resume and Origin checks in browser smoke. Controlled server shutdown regression preserves accepted pending joins.
 18. Tests, setup and build — 36 tests and required quality checks pass after the v11 auto-order correction. Production Windows browser smoke passes on Intel UHD, including GLB/procedural/no-WebGL paths, replay, backup/recovery and server controls. A historical v10 complete-state digest protects compatibility. See [QA plan](../QA_PLAN.md).
-19. Public source — [repository](https://github.com/wtrg/rebirth-magic-live). The RC4 scope consolidates session-roster, repeated-impact/pause fixes, action rendering checks and opt-in server auto battle. Release history and exact local QA scope are tracked in P7 and the release document.
+19. Public source — [repository](https://github.com/wtrg/rebirth-magic-live). RC5 adds stage-rotated auto with versioned replay, viewport-bounded desktop controls, measured asset specifications and broader rebirth/schema QA. Earlier runtime features remain included. Release history and exact local QA scope are tracked in P7 and the release document.
 20. Codex acceptance report — P0–P7 reports and this audit identify measured evidence, gaps and external-agent status. [Leader handoff](../LEADER_REVIEW_REQUEST.md).
 
 ## Remaining gates

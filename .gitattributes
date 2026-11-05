@@ -1,0 +1,2 @@
+# The deterministic inspector emits LF, including on Windows.
+assets/manifest.json text eol=lf
