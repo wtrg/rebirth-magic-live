@@ -7,7 +7,7 @@ export function createClipPlayer(root: Object3D, clips: AnimationClip[]) {
   let current: AnimationAction | undefined;
   let lastTrigger: number | undefined;
   return {
-    update(name: string, delta: number, trigger?: number) {
+    update(name: string, delta: number, trigger?: number, seek?: number) {
       const action = actions.get(name);
       if (!action) {
         current?.stop();
@@ -23,7 +23,10 @@ export function createClipPlayer(root: Object3D, clips: AnimationClip[]) {
         current = action;
       }
       lastTrigger = trigger;
-      mixer.update(delta);
+      if (seek !== undefined) {
+        action.time = Math.min(action.getClip().duration, Math.max(0, seek));
+        mixer.update(0);
+      } else mixer.update(delta);
       return action;
     },
   };

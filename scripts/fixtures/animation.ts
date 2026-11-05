@@ -1,6 +1,6 @@
 import * as T from 'three';
 import { createArena } from '../../apps/game/scene.ts';
-import { loadRaidModels } from '../../apps/game/asset-loader.ts';
+import { loadRaidModels, loadVarkhazarPreview } from '../../apps/game/asset-loader.ts';
 import { applyEvent, newGame } from '../../packages/combat/index.ts';
 import { classes, maxHp, type GameSnapshot } from '../../packages/shared/index.ts';
 
@@ -38,8 +38,9 @@ T.Scene.prototype.onAfterRender = function (renderer) {
   }
 };
 const models = await loadRaidModels().catch(() => undefined);
+const varkhazar = new URLSearchParams(location.search).has('boss-preview') ? await loadVarkhazarPreview() : undefined;
 const view = document.getElementById('viewport')!;
-const update = createArena(view, () => true, true, models);
+const update = createArena(view, () => true, true, models, varkhazar);
 const state: GameSnapshot = { ...newGame(), mode: 'mock', live: 'unconfigured' };
 const classIds = Object.keys(classes);
 for (let i = 0; i < (realClock ? 64 : classIds.length); i++) {
@@ -122,6 +123,10 @@ function endMetrics() {
   measuring = false;
   return {began,ended:performance.now(),frameTimes,resources,overflow,visibleActors:actors().length,players:state.players.length};
 }
-Object.assign(window, { animationQA: { advance, poses, stage, state, beginMetrics, endMetrics, realClock, models:models ? 'glb' : 'procedural' } });
+function bossPose() {
+  const rig = captured.scene?.getObjectByName('Varkhazar_Rig');
+  return rig?.getObjectByName('ArmR')?.quaternion.toArray();
+}
+Object.assign(window, { animationQA: { advance, poses, stage, state, beginMetrics, endMetrics, bossPose, realClock, models:models ? 'glb' : 'procedural' } });
 stage('idle');
 if (!realClock) advance(200);

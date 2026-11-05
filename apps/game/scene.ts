@@ -1,13 +1,16 @@
 import * as T from 'three';
+import { clone as cloneSkinned } from 'three/addons/utils/SkeletonUtils.js';
 import { createModelFactory } from './models.ts';
-import type { ModelTemplates } from './asset-loader.ts';
+import type { ModelTemplates, loadVarkhazarPreview } from './asset-loader.ts';
 import { classes, pets, type GameSnapshot } from '../../packages/shared/index.ts';
 import { createClipPlayer, hasTemporaryPet } from './animation.ts';
 
-export function createArena(view: HTMLElement, low: () => boolean, portrait: boolean, models?: ModelTemplates) {
+export function createArena(view: HTMLElement, low: () => boolean, portrait: boolean, models?: ModelTemplates,
+  varkhazar?: Awaited<ReturnType<typeof loadVarkhazarPreview>>) {
   const renderer = new T.WebGLRenderer({ antialias: false, powerPreference: 'low-power' });
   renderer.domElement.setAttribute('aria-label', 'Đấu trường 3D Cổng Hư Vô');
   renderer.domElement.dataset.models = models ? 'glb' : 'procedural';
+  if (varkhazar) renderer.domElement.dataset.bossPreview = 'skinned';
   view.prepend(renderer.domElement);
   const scene = new T.Scene();
   scene.background = new T.Color(0x141123);
@@ -60,9 +63,17 @@ export function createArena(view: HTMLElement, low: () => boolean, portrait: boo
   }
 
   const boss = character('boss');
+  const bossRig = varkhazar && cloneSkinned(varkhazar.scene);
+  if (bossRig) {
+    boss.body.visible = false;
+    boss.root.add(bossRig);
+  }
   boss.root.scale.setScalar(2.05);
   boss.root.position.z = -1.45;
   const clips = createClipPlayer(boss.root, models?.animations ?? []);
+  const bossClips = bossRig && varkhazar && createClipPlayer(bossRig, varkhazar.animations);
+  const telegraphMs = (varkhazar?.animations.find(clip => clip.name === 'Telegraph')?.duration ?? 0) * 1000;
+  const attackMs = (varkhazar?.animations.find(clip => clip.name === 'Attack')?.duration ?? 0) * 1000;
   const wraithModels = [-1,1].map(side => {
     const root = new T.Group();
     root.position.set(side*2.75,0,-1.25);
@@ -148,14 +159,28 @@ export function createArena(view: HTMLElement, low: () => boolean, portrait: boo
       }
     }
     portal.rotation.z = time * 0.00015;
-    boss.body.position.y = Math.sin(time*0.003)*0.09 + burst*0.17;
     const bossDown = state?.raid.phase === 'DEAD';
-    boss.root.rotation.z = T.MathUtils.lerp(boss.root.rotation.z, bossDown ? 1.42 : Math.sin(time*0.002)*0.04, Math.min(1,delta*8));
-    animateLimbs(boss.body, Math.sin(time*0.002)*0.035, kind === 'boss' ? burst : 0, kind !== 'boss' ? burst : 0);
-    const actionName = state?.raid.phase === 'DEAD' ? 'Defeat' :
-      burst > 0 && kind === 'boss' ? 'Attack' :
-      burst > 0 && kind && kind !== 'gift' ? 'Hit' : 'Idle';
-    if (!clips.update(actionName, delta, serial)) boss.weapon.rotation.x = -burst;
+    if (bossClips) {
+      const now = state?.paused ? state.pausedAt ?? Date.now() : Date.now();
+      const raid = state?.raid;
+      const untilStrike = (raid?.next ?? 0) - now;
+      const sinceStrike = now - (state?.bossImpactAt ?? -Infinity);
+      const active = raid?.phase === 'PHASE_1' || raid?.phase === 'PHASE_2' || raid?.phase === 'ENRAGED';
+      if (bossDown) bossClips.update('Defeat', delta);
+      else if ((active || raid?.phase === 'RESET') && sinceStrike >= 0 && sinceStrike < attackMs) {
+        bossClips.update('Attack', 0, state?.bossImpactAt, sinceStrike / 1000);
+      } else if (active && untilStrike <= telegraphMs) {
+        bossClips.update('Telegraph', 0, undefined, (telegraphMs - untilStrike) / 1000);
+      } else if (burst > 0 && kind && kind !== 'gift' && kind !== 'boss') bossClips.update('Hit', delta, serial);
+      else bossClips.update('Idle', delta);
+    } else {
+      boss.body.position.y = Math.sin(time*0.003)*0.09 + burst*0.17;
+      boss.root.rotation.z = T.MathUtils.lerp(boss.root.rotation.z, bossDown ? 1.42 : Math.sin(time*0.002)*0.04, Math.min(1,delta*8));
+      animateLimbs(boss.body, Math.sin(time*0.002)*0.035, kind === 'boss' ? burst : 0, kind !== 'boss' ? burst : 0);
+      const actionName = bossDown ? 'Defeat' : burst > 0 && kind === 'boss' ? 'Attack' :
+        burst > 0 && kind && kind !== 'gift' ? 'Hit' : 'Idle';
+      if (!clips.update(actionName, delta, serial)) boss.weapon.rotation.x = -burst;
+    }
     preview.root.visible = !state?.players.length;
     preview.body.position.y = Math.sin(time*0.004)*0.06;
     animateLimbs(preview.body, Math.sin(time*0.004)*0.025,0,0);
