@@ -1,5 +1,9 @@
 # Phase report P3
 
+## Full rebirth-cap analysis — 2026-11-05
+
+The [rebirth worksheet](REBIRTH_BALANCE.md) quantifies all six classes at cycles 0–5 and runs 72 deterministic bare-auto combat comparisons through production logic at stages 1 and 3. Three new regressions cover all five rebirths, possession/progression preservation, the sixth-cycle cap, rejected conditions and repeatability. The worksheet documents the immediate level-3 reset tradeoff (−5 ATK / −18 maximum HP) and equal-level permanent gains (+3 ATK / +6 HP per cycle). It does not establish co-op/manual/high-stage balance or replace Leader approval. Runtime formulas are unchanged. Final test results and integration SHA are indexed in [the task ledger](../TASK_LEDGER.md).
+
 ```text
 PROJECT: RE:BIRTH
 PHASE: P3

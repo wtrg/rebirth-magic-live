@@ -11,6 +11,8 @@ Status LEADER_REVIEW_PENDING. Share the repository and phase evidence with the C
 
 ## Evidence index
 
+- [Measured art specification](ART_SPECIFICATION.md), [actual GLB manifest](../assets/manifest.json), [six-class/five-cycle rebirth analysis](reports/REBIRTH_BALANCE.md) and [task traceability ledger](TASK_LEDGER.md). These are Codex deliverables; Gemini's report remains NOT_RECEIVED. No runtime balance change is proposed in the worksheet.
+
 - [P0 foundation](reports/PHASE_REPORT_P0.md) and [P1 3D prototype](reports/PHASE_REPORT_P1.md).
 - [P2 combat](reports/PHASE_REPORT_P2.md), [P3 progression and recovery](reports/PHASE_REPORT_P3.md) and [P4 pets](reports/PHASE_REPORT_P4.md).
 - [P5 interaction](reports/PHASE_REPORT_P5.md), [P6 visual and audio polish](reports/PHASE_REPORT_P6.md) and [P7 release and performance](reports/PHASE_REPORT_P7.md).

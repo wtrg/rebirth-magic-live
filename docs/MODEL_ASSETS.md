@@ -1,5 +1,7 @@
 # Raid model bundle
 
+See the measured [asset manifest](../assets/manifest.json) and [art specification](ART_SPECIFICATION.md) for dimensions, proportions, triangle counts, material colors, articulation and arena/camera/VFX contracts. They describe the Codex prototype; Gemini review and Leader approval remain pending.
+
 [raid.glb](../public/models/raid.glb) is a glTF 2.0 binary containing Varkhazar, six class silhouettes, and Hỏa Hồ, Băng Vũ and Lôi Miêu. Models use meters and Y-up. Actors face +Z with feet near Y=0. The game places and scales the boss.
 
 Actor nodes carry body and weapon pivot tags. Pet nodes carry paw or wing motion tags. Idle, Run, Attack, Hit and Defeat are prototype boss weapon tracks. The game plays Idle, Attack, Hit and Defeat from the GLB and retains procedural full-body motion. The mage and pet animations remain procedural. All geometry and materials are original and MIT-licensed. The file has no textures or remote URLs.

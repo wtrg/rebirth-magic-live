@@ -2,6 +2,8 @@
 
 Task states BACKLOG → READY → IN_PROGRESS → REVIEW → TEST → ACCEPTED. Exceptions BLOCKED, FAILED, NEEDS_FIX, CANCELLED. Use a task branch and declare file ownership before edits. Return artifact paths, test commands, output, SHA, and limitations. Codex verifies evidence before accepting. Source may be published after security checks.
 
+The [task ledger](TASK_LEDGER.md) records the ten required fields for integrated work and open tasks, with actual merge SHAs, changed-file ownership, QA evidence and current external dependencies. The original requests below map to that ledger: RB-001/RB-005 → RB-PR-1 and later scoped QA; RB-002 → RB-GEMINI (pending) and Codex's separate RB-ART-SPEC; RB-003 → RB-PR-1 fallback implementation (Antigravity report NOT_RECEIVED); RB-004 → the received read-only Qoder proposal in P0 and Codex integration in RB-PR-1. Requested ownership is not a claim of delivery.
+
 | Task | Requested owner | Ownership | Acceptance |
 | --- | --- | --- | --- |
 | RB-001 | Codex | docs, QA and repo | Setup and gates executable |

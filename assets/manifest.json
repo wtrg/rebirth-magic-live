@@ -1,0 +1,810 @@
+{
+  "format": "glTF 2.0 binary",
+  "file": "public/models/raid.glb",
+  "sha256": "ec07d46d802bc6faf10eb3a53c1ef4855ba71dc64ac9441629658eabaa7342ad",
+  "bytes": 50364,
+  "authoringSource": "apps/game/models.ts",
+  "generator": "node scripts/export-models.ts",
+  "inspector": "node scripts/inspect-models.ts",
+  "provenance": "Original Codex-authored procedural geometry; Gemini report NOT_RECEIVED; Leader review pending.",
+  "license": "MIT",
+  "units": "meters",
+  "upAxis": "+Y",
+  "actorForward": "+Z",
+  "measurement": "Rest-pose local-template bounds, before scene placement/boss scale. Triangle/vertex counts count mesh occurrences, not unique GPU allocations or culled draws.",
+  "embeddedImages": 0,
+  "textureDefinitions": 0,
+  "roots": [
+    {
+      "id": "boss",
+      "bounds": {
+        "min": [
+          -1.246726,
+          0.005,
+          -0.46
+        ],
+        "max": [
+          1.246726,
+          2.575046,
+          0.44
+        ],
+        "size": [
+          2.493452,
+          2.570046,
+          0.9
+        ]
+      },
+      "meshes": 20,
+      "uniqueGeometryObjects": 3,
+      "uniqueMaterialObjects": 9,
+      "triangles": 268,
+      "vertexOccurrences": 696,
+      "skinnedMeshes": 0,
+      "materialColors": [
+        "#1e1e36",
+        "#212038",
+        "#272537",
+        "#3d3248",
+        "#554264",
+        "#e8c095",
+        "#ff526d",
+        "#ff6887"
+      ],
+      "partPivots": [
+        {
+          "part": "body",
+          "position": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "part": "weapon",
+          "position": [
+            0.68,
+            0.98,
+            0.12
+          ]
+        }
+      ],
+      "limbPivots": [
+        {
+          "limb": "leg",
+          "side": -1,
+          "position": [
+            -0.22,
+            0.77,
+            0
+          ]
+        },
+        {
+          "limb": "arm",
+          "side": -1,
+          "position": [
+            -0.55,
+            1.3,
+            0
+          ]
+        },
+        {
+          "limb": "leg",
+          "side": 1,
+          "position": [
+            0.22,
+            0.77,
+            0
+          ]
+        },
+        {
+          "limb": "arm",
+          "side": 1,
+          "position": [
+            0.55,
+            1.3,
+            0
+          ]
+        }
+      ],
+      "motionTags": []
+    },
+    {
+      "id": "fire",
+      "bounds": {
+        "min": [
+          -0.814734,
+          0.005,
+          -0.47
+        ],
+        "max": [
+          0.898743,
+          2.37,
+          0.44
+        ],
+        "size": [
+          1.713477,
+          2.365,
+          0.91
+        ]
+      },
+      "meshes": 17,
+      "uniqueGeometryObjects": 4,
+      "uniqueMaterialObjects": 7,
+      "triangles": 246,
+      "vertexOccurrences": 623,
+      "skinnedMeshes": 0,
+      "materialColors": [
+        "#212038",
+        "#303150",
+        "#312541",
+        "#e8c095",
+        "#ff7953",
+        "#ffd2bc"
+      ],
+      "partPivots": [
+        {
+          "part": "body",
+          "position": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "part": "weapon",
+          "position": [
+            0.68,
+            0.98,
+            0.12
+          ]
+        }
+      ],
+      "limbPivots": [
+        {
+          "limb": "leg",
+          "side": -1,
+          "position": [
+            -0.22,
+            0.77,
+            0
+          ]
+        },
+        {
+          "limb": "arm",
+          "side": -1,
+          "position": [
+            -0.55,
+            1.3,
+            0
+          ]
+        },
+        {
+          "limb": "leg",
+          "side": 1,
+          "position": [
+            0.22,
+            0.77,
+            0
+          ]
+        },
+        {
+          "limb": "arm",
+          "side": 1,
+          "position": [
+            0.55,
+            1.3,
+            0
+          ]
+        }
+      ],
+      "motionTags": []
+    },
+    {
+      "id": "ice",
+      "bounds": {
+        "min": [
+          -0.814734,
+          0.005,
+          -0.44
+        ],
+        "max": [
+          0.82,
+          2.38,
+          0.44
+        ],
+        "size": [
+          1.634734,
+          2.375,
+          0.88
+        ]
+      },
+      "meshes": 18,
+      "uniqueGeometryObjects": 3,
+      "uniqueMaterialObjects": 7,
+      "triangles": 252,
+      "vertexOccurrences": 648,
+      "skinnedMeshes": 0,
+      "materialColors": [
+        "#212038",
+        "#303150",
+        "#312541",
+        "#7ce2ff",
+        "#e8c095",
+        "#ffd2bc"
+      ],
+      "partPivots": [
+        {
+          "part": "body",
+          "position": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "part": "weapon",
+          "position": [
+            0.68,
+            0.98,
+            0.12
+          ]
+        }
+      ],
+      "limbPivots": [
+        {
+          "limb": "leg",
+          "side": -1,
+          "position": [
+            -0.22,
+            0.77,
+            0
+          ]
+        },
+        {
+          "limb": "arm",
+          "side": -1,
+          "position": [
+            -0.55,
+            1.3,
+            0
+          ]
+        },
+        {
+          "limb": "leg",
+          "side": 1,
+          "position": [
+            0.22,
+            0.77,
+            0
+          ]
+        },
+        {
+          "limb": "arm",
+          "side": 1,
+          "position": [
+            0.55,
+            1.3,
+            0
+          ]
+        }
+      ],
+      "motionTags": []
+    },
+    {
+      "id": "thunder",
+      "bounds": {
+        "min": [
+          -0.85733,
+          0.005,
+          -0.44
+        ],
+        "max": [
+          0.96049,
+          2.37,
+          0.44
+        ],
+        "size": [
+          1.81782,
+          2.365,
+          0.88
+        ]
+      },
+      "meshes": 19,
+      "uniqueGeometryObjects": 4,
+      "uniqueMaterialObjects": 8,
+      "triangles": 264,
+      "vertexOccurrences": 670,
+      "skinnedMeshes": 0,
+      "materialColors": [
+        "#212038",
+        "#303150",
+        "#312541",
+        "#9c6ddc",
+        "#d6a6ff",
+        "#e8c095",
+        "#ffd2bc"
+      ],
+      "partPivots": [
+        {
+          "part": "body",
+          "position": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "part": "weapon",
+          "position": [
+            0.68,
+            0.98,
+            0.12
+          ]
+        }
+      ],
+      "limbPivots": [
+        {
+          "limb": "leg",
+          "side": -1,
+          "position": [
+            -0.22,
+            0.77,
+            0
+          ]
+        },
+        {
+          "limb": "arm",
+          "side": -1,
+          "position": [
+            -0.55,
+            1.3,
+            0
+          ]
+        },
+        {
+          "limb": "leg",
+          "side": 1,
+          "position": [
+            0.22,
+            0.77,
+            0
+          ]
+        },
+        {
+          "limb": "arm",
+          "side": 1,
+          "position": [
+            0.55,
+            1.3,
+            0
+          ]
+        }
+      ],
+      "motionTags": []
+    },
+    {
+      "id": "knight",
+      "bounds": {
+        "min": [
+          -0.972391,
+          0.005,
+          -0.44
+        ],
+        "max": [
+          0.895,
+          2.41,
+          0.44
+        ],
+        "size": [
+          1.867391,
+          2.405,
+          0.88
+        ]
+      },
+      "meshes": 17,
+      "uniqueGeometryObjects": 4,
+      "uniqueMaterialObjects": 7,
+      "triangles": 260,
+      "vertexOccurrences": 640,
+      "skinnedMeshes": 0,
+      "materialColors": [
+        "#212038",
+        "#303150",
+        "#312541",
+        "#fb9cb8",
+        "#ffd2bc",
+        "#ffd6e2"
+      ],
+      "partPivots": [
+        {
+          "part": "body",
+          "position": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "part": "weapon",
+          "position": [
+            0.68,
+            0.86,
+            0.12
+          ]
+        }
+      ],
+      "limbPivots": [
+        {
+          "limb": "leg",
+          "side": -1,
+          "position": [
+            -0.22,
+            0.77,
+            0
+          ]
+        },
+        {
+          "limb": "arm",
+          "side": -1,
+          "position": [
+            -0.55,
+            1.3,
+            0
+          ]
+        },
+        {
+          "limb": "leg",
+          "side": 1,
+          "position": [
+            0.22,
+            0.77,
+            0
+          ]
+        },
+        {
+          "limb": "arm",
+          "side": 1,
+          "position": [
+            0.55,
+            1.3,
+            0
+          ]
+        }
+      ],
+      "motionTags": []
+    },
+    {
+      "id": "healer",
+      "bounds": {
+        "min": [
+          -0.814734,
+          0.005,
+          -0.44
+        ],
+        "max": [
+          0.9816,
+          2.7756,
+          0.44
+        ],
+        "size": [
+          1.796334,
+          2.7706,
+          0.88
+        ]
+      },
+      "meshes": 17,
+      "uniqueGeometryObjects": 4,
+      "uniqueMaterialObjects": 8,
+      "triangles": 468,
+      "vertexOccurrences": 732,
+      "skinnedMeshes": 0,
+      "materialColors": [
+        "#212038",
+        "#303150",
+        "#312541",
+        "#e8c095",
+        "#ffd2bc",
+        "#ffe289",
+        "#fff2ba"
+      ],
+      "partPivots": [
+        {
+          "part": "body",
+          "position": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "part": "weapon",
+          "position": [
+            0.68,
+            0.98,
+            0.12
+          ]
+        }
+      ],
+      "limbPivots": [
+        {
+          "limb": "leg",
+          "side": -1,
+          "position": [
+            -0.22,
+            0.77,
+            0
+          ]
+        },
+        {
+          "limb": "arm",
+          "side": -1,
+          "position": [
+            -0.55,
+            1.3,
+            0
+          ]
+        },
+        {
+          "limb": "leg",
+          "side": 1,
+          "position": [
+            0.22,
+            0.77,
+            0
+          ]
+        },
+        {
+          "limb": "arm",
+          "side": 1,
+          "position": [
+            0.55,
+            1.3,
+            0
+          ]
+        }
+      ],
+      "motionTags": []
+    },
+    {
+      "id": "summon",
+      "bounds": {
+        "min": [
+          -0.814734,
+          0.005,
+          -0.52
+        ],
+        "max": [
+          0.91,
+          2.37,
+          0.547062
+        ],
+        "size": [
+          1.724734,
+          2.365,
+          1.067062
+        ]
+      },
+      "meshes": 17,
+      "uniqueGeometryObjects": 3,
+      "uniqueMaterialObjects": 8,
+      "triangles": 244,
+      "vertexOccurrences": 624,
+      "skinnedMeshes": 0,
+      "materialColors": [
+        "#212038",
+        "#303150",
+        "#312541",
+        "#5b917a",
+        "#5c7359",
+        "#87f0be",
+        "#ffd2bc"
+      ],
+      "partPivots": [
+        {
+          "part": "body",
+          "position": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "part": "weapon",
+          "position": [
+            0.68,
+            0.98,
+            0.12
+          ]
+        }
+      ],
+      "limbPivots": [
+        {
+          "limb": "leg",
+          "side": -1,
+          "position": [
+            -0.22,
+            0.77,
+            0
+          ]
+        },
+        {
+          "limb": "arm",
+          "side": -1,
+          "position": [
+            -0.55,
+            1.3,
+            0
+          ]
+        },
+        {
+          "limb": "leg",
+          "side": 1,
+          "position": [
+            0.22,
+            0.77,
+            0
+          ]
+        },
+        {
+          "limb": "arm",
+          "side": 1,
+          "position": [
+            0.55,
+            1.3,
+            0
+          ]
+        }
+      ],
+      "motionTags": []
+    },
+    {
+      "id": "pet-0",
+      "bounds": {
+        "min": [
+          -0.23,
+          0.07,
+          -0.681206
+        ],
+        "max": [
+          0.23,
+          0.77,
+          0.45
+        ],
+        "size": [
+          0.46,
+          0.7,
+          1.131206
+        ]
+      },
+      "meshes": 9,
+      "uniqueGeometryObjects": 3,
+      "uniqueMaterialObjects": 2,
+      "triangles": 160,
+      "vertexOccurrences": 432,
+      "skinnedMeshes": 0,
+      "materialColors": [
+        "#ff985c"
+      ],
+      "partPivots": [],
+      "limbPivots": [],
+      "motionTags": [
+        "paw-forward",
+        "paw-back",
+        "paw-back",
+        "paw-forward"
+      ]
+    },
+    {
+      "id": "pet-1",
+      "bounds": {
+        "min": [
+          -0.65,
+          0.16,
+          -0.681206
+        ],
+        "max": [
+          0.65,
+          0.73,
+          0.45
+        ],
+        "size": [
+          1.3,
+          0.57,
+          1.131206
+        ]
+      },
+      "meshes": 5,
+      "uniqueGeometryObjects": 2,
+      "uniqueMaterialObjects": 2,
+      "triangles": 112,
+      "vertexOccurrences": 336,
+      "skinnedMeshes": 0,
+      "materialColors": [
+        "#83dcff",
+        "#b6eeff"
+      ],
+      "partPivots": [],
+      "limbPivots": [],
+      "motionTags": [
+        "wing-left",
+        "wing-right"
+      ]
+    },
+    {
+      "id": "pet-2",
+      "bounds": {
+        "min": [
+          -0.23,
+          0.07,
+          -0.62306
+        ],
+        "max": [
+          0.23,
+          0.77,
+          0.45
+        ],
+        "size": [
+          0.46,
+          0.7,
+          1.07306
+        ]
+      },
+      "meshes": 9,
+      "uniqueGeometryObjects": 3,
+      "uniqueMaterialObjects": 2,
+      "triangles": 160,
+      "vertexOccurrences": 432,
+      "skinnedMeshes": 0,
+      "materialColors": [
+        "#d49bff"
+      ],
+      "partPivots": [],
+      "limbPivots": [],
+      "motionTags": [
+        "paw-forward",
+        "paw-back",
+        "paw-back",
+        "paw-forward"
+      ]
+    }
+  ],
+  "clips": [
+    {
+      "name": "Idle",
+      "durationSeconds": 1.8,
+      "tracks": [
+        "bossWeapon.quaternion"
+      ]
+    },
+    {
+      "name": "Run",
+      "durationSeconds": 0.65,
+      "tracks": [
+        "bossWeapon.quaternion"
+      ]
+    },
+    {
+      "name": "Attack",
+      "durationSeconds": 0.48,
+      "tracks": [
+        "bossWeapon.quaternion"
+      ]
+    },
+    {
+      "name": "Hit",
+      "durationSeconds": 0.32,
+      "tracks": [
+        "bossWeapon.quaternion"
+      ]
+    },
+    {
+      "name": "Defeat",
+      "durationSeconds": 0.58,
+      "tracks": [
+        "bossWeapon.quaternion"
+      ]
+    }
+  ],
+  "proceduralWorldSource": "apps/game/scene.ts",
+  "runtimeBossScale": 2.05
+}

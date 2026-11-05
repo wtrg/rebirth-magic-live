@@ -14,5 +14,7 @@ jobs:
       - run: npm ci
       - run: npm run typecheck
       - run: npm run lint
+      - run: node scripts/inspect-models.ts
+      - run: git diff --exit-code -- assets/manifest.json
       - run: npm test
       - run: npm run build
