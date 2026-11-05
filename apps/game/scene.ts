@@ -192,7 +192,8 @@ export function createArena(view: HTMLElement, low: () => boolean, portrait: boo
       const recoil = Math.max(0,1-(time-actor.recoil)/450);
       const strike = player.hp > 0 ? Math.max(0,1-(time-actor.strike)/520) : 0;
       const arc = (index-(players.length-1)/2)*Math.min(0.55,2.1/players.length);
-      actor.root.position.set(Math.sin(arc)*5,0,Math.cos(arc)*4.7-strike*1.15);
+      const approach = actor.clips ? Math.min((1-strike)/0.27, strike/0.40) : strike;
+      actor.root.position.set(Math.sin(arc)*5,0,Math.cos(arc)*4.7-approach*1.15);
       const lean = actor.clips ? 0 : player.hp <= 0 ? 1.4 : strike*0.14;
       actor.root.rotation.set(0,Math.PI+arc,T.MathUtils.lerp(actor.root.rotation.z,lean,Math.min(1,delta*10)));
       if (actor.clips) {
