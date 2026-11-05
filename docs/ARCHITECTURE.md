@@ -17,3 +17,6 @@ References
 
 
 Persistent profiles are distinct from the process-local active raid roster. A new server process starts with an empty roster. An accepted join retrieves the saved profile by stable ID and resets transient combat fields. Leave and clear-roster remove active members without deleting profiles. The leaderboard queries persistent scores. MOCK replay v9 records the restore/leader context needed to replay those database-dependent commands offline.
+
+
+Opt-in auto battle executes in the server scheduler after the boss turn and the current FIFO command batch. It emits basic attacks through the same combat function and cooldowns as viewer commands. Each auto batch commits profiles and any stage unlock atomically before publishing the new state. It does not create external event receipts. MOCK replay v10 records the auto batch timestamp; older replay versions never run auto batches. Closing an operator/overlay client does not stop simulation. Host pause and roster membership govern eligibility.

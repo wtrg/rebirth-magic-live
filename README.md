@@ -8,9 +8,11 @@ npm run build
 npm start
 ```
 
-Mở http://127.0.0.1:4173. Nhấn **Tham gia**, chọn class, bật **Tự đánh (MOCK)** hoặc dùng các nút tấn công, rồi nhấn **Bắt đầu Raid**. Đổi tên thử nghiệm để mô phỏng người chơi khác. Gõ `!pet 1`, `!stats`, `!rank` hoặc `!rebirth` trong ô bình luận. Nút **Dừng khẩn cấp** đóng hàng đợi hiện tại và tạm dừng trận.
+Mở http://127.0.0.1:4173. Nhấn **Tham gia**, chọn class, bật **Tự đánh thường** hoặc dùng các nút tấn công, rồi nhấn **Bắt đầu Raid**. Đổi tên thử nghiệm để mô phỏng người chơi khác. Gõ `!pet 1`, `!stats`, `!rank` hoặc `!rebirth` trong ô bình luận. Nút **Dừng khẩn cấp** đóng hàng đợi hiện tại và tạm dừng trận.
 
 Từ phụ bản 3, boss gọi hai Ảnh Linh ở giai đoạn II. Dùng `!attack left` hoặc `!attack right` để nhắm từng mục tiêu. Kỹ năng II và đại chiêu Hỏa đánh lan cả hai.
+
+Gửi `!auto on` để server tự đánh thường cho nhân vật, hoặc `!auto off` để dừng. Lựa chọn mặc định tắt và được lưu trong hồ sơ. Tự đánh dùng chung cooldown 600 ms với `!attack`; kỹ năng vẫn do bình luận điều khiển. Nó tiếp tục khi đóng trang điều khiển, trong cả MOCK và LIVE khi có kết nối phù hợp.
 
 Mỗi lần server khởi động, dùng `!join` để lấy lại hồ sơ. Dùng `!leave` giữa các trận để nhường chỗ trong đội hình.
 

@@ -8,6 +8,7 @@ import { setTimeout as sleep } from 'node:timers/promises';
 import { WebSocket } from 'ws';
 
 const seconds = Number(process.env.QA_LOAD_SECONDS ?? 60);
+const automatic = process.env.QA_LOAD_AUTO === '1';
 assert.ok(Number.isInteger(seconds) && seconds >= 15 && seconds <= 43200);
 const port = Number(process.env.QA_LOAD_PORT ?? 4183);
 assert.ok(Number.isInteger(port) && port >= 1024 && port <= 65535);
@@ -87,6 +88,11 @@ try {
   }
   assert.ok((await wave(64, index => chat('mage:' + index,'!join'))).every(status => status === 202));
   await waitFor(() => snapshot?.players.length === 64);
+  if (automatic) {
+    await sleep(210);
+    assert.ok((await wave(64, index => chat('mage:' + index,'!auto on'))).every(status => status === 202));
+    await waitFor(() => snapshot.players.every(player => player.auto === true));
+  }
   assert.equal(await post('/admin','start'),204);
   await waitFor(() => snapshot?.raid.phase === 'PHASE_1');
   const spam = await wave(24, () => chat('spam','!attack'));
@@ -101,7 +107,7 @@ try {
   while (performance.now() - started < seconds * 1000) {
     const at = performance.now();
     if (snapshot?.raid.result) assert.equal(await post('/admin','start'),204);
-    const results = await wave(64, index => chat('mage:' + index,'!attack'));
+    const results = automatic ? [] : await wave(64, index => chat('mage:' + index,'!attack'));
     for (const status of results) {
       if (status === 202) accepted++;
       else if (status === 429) throttled++;
@@ -111,7 +117,7 @@ try {
     await sleep(Math.max(0, 250 - (performance.now() - at)));
   }
   await waitFor(async () => (await health()).queue === 0);
-  assert.ok(accepted > 0 && updates.every(count => count > 10));
+  assert.ok((automatic || accepted > 0) && updates.every(count => count > 10));
   assert.ok(clients.every(socket => socket.readyState === WebSocket.OPEN));
   assert.equal(snapshot.players.length,64);
   assert.ok(snapshot.raid.stage > 1, 'Expected ranked raid progression under load');
@@ -121,10 +127,10 @@ try {
   const percentile = p => Math.round(sorted[Math.floor((sorted.length - 1) * p)] * 10) / 10;
   console.log(JSON.stringify({
     seconds: Math.round((performance.now() - started) / 1000),
-    players:64, clients:8, accepted, throttled,
+    players:64, clients:8, driver:automatic ? 'server-auto' : 'manual-events', accepted, throttled,
     overloadRejected:burst.filter(status => status === 429).length, peakQueue,
     updatesPerClient:Math.min(...updates), stage:snapshot.raid.stage,
-    requestMs:{ p50:percentile(0.5), p95:percentile(0.95), p99:percentile(0.99), max:percentile(1) },
+    requestMs:automatic ? null : { p50:percentile(0.5), p95:percentile(0.95), p99:percentile(0.99), max:percentile(1) },
     rssMiB:samples.map(sample => mib(sample.rss)), heapMiB:samples.map(sample => mib(sample.heapUsed)),
   }));
 } finally {

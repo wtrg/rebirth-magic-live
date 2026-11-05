@@ -39,3 +39,10 @@ Máy chủ ngừng nhận sự kiện mới, xử lý phần hàng đợi đã n
 Mỗi lần máy chủ khởi động, đội hình bắt đầu trống. Người xem gửi `!join` để khôi phục hồ sơ đã lưu và tham gia phiên này. Tối đa 64 người cùng ở trong đội. Hồ sơ lưu trong SQLite vẫn có thể nhiều hơn 64.
 
 Dùng `!leave` giữa các trận để rời đội, hoặc nút **Giải tán đội hình** để host cho đội hình về trống. Người rời đội vẫn giữ tiến trình và điểm xếp hạng. Lệnh rời đội hoặc giải tán bị từ chối trong trận. Boss chỉ tính độ khó theo những người đang ở trong đội.
+
+
+## Tự đánh thường
+
+Người xem gửi `!auto on` sau khi tham gia; dùng `!auto off` để dừng hoặc `!auto` để xem trạng thái qua log. Trong bảng MOCK, checkbox **Tự đánh thường** gửi cùng lệnh đó cho nhân vật đang chọn. Đây là lựa chọn được lưu theo hồ sơ, mặc định tắt với người mới.
+
+Server tự ra đòn thường khi nhân vật còn sống và raid đang chiến đấu. Không cần giữ trang điều khiển mở. Đòn tự động và `!attack` dùng chung cooldown 600 ms; `!skill1`, `!skill2`, `!ult` vẫn do người xem dùng. Hàng đợi bình luận của nhịp xử lý được áp dụng trước đòn tự động. **Dừng khẩn cấp** dừng cả tự đánh. Khi adapter mất kết nối, game cục bộ vẫn chạy; host có thể pause. Host vẫn phải mở từng raid mới.

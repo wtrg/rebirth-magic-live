@@ -118,7 +118,7 @@ export function tick(state: GameState, now: number, rulesVersion = 8) {
   return true;
 }
 
-export function applyEvent(state: GameState, event: GameEvent, now: number, rulesVersion = 9, context?: EventContext) {
+export function applyEvent(state: GameState, event: GameEvent, now: number, rulesVersion = 10, context?: EventContext) {
   if (state.paused) return;
   const player = state.players.find(player => player.id === event.user);
   const username = rulesVersion >= 7 && event.user.startsWith('live:') ? event.username : undefined;
@@ -186,6 +186,11 @@ export function applyEvent(state: GameState, event: GameEvent, now: number, rule
     return;
   }
   if (!player) return;
+  if (rulesVersion >= 10 && command === '!auto') {
+    if (arg === 'on' || arg === 'off') player.auto = arg === 'on';
+    log(state, player.name + ' · Tự đánh thường ' + (player.auto ? 'BẬT' : 'TẮT'));
+    return;
+  }
   const definition = classes[player.classId];
   if (command === '!stats') {
     const details = rulesVersion >= 5 ? ' · Hệ ' + definition.element + ' · Chí mạng mỗi ' + definition.critEvery + ' đòn' : '';
@@ -321,4 +326,22 @@ export function applyEvent(state: GameState, event: GameEvent, now: number, rule
   effect(state, '-' + dealt + ' · ' + label, definition.color, kind, rulesVersion);
   log(state, player.name + ' · ' + label + ' · ' + dealt);
   if (raid.phase === 'DEAD') resolveVictory(state, rulesVersion >= 2);
+}
+
+export function autoReady(state: GameState, now: number) {
+  return !state.paused && activeRaid(state) && state.players.some(player =>
+    player.auto && player.hp > 0 && now >= player.ready[3]);
+}
+
+export function autoBattle(state: GameState, now: number, rulesVersion = 10) {
+  if (rulesVersion < 10 || !autoReady(state, now)) return false;
+  let changed = false;
+  for (const player of state.players) {
+    if (!activeRaid(state)) break;
+    if (!player.auto || player.hp <= 0 || now < player.ready[3]) continue;
+    applyEvent(state, { id:'auto:'+player.id+':'+now, user:player.id, name:player.name,
+      kind:'chat', command:'!attack' }, now, rulesVersion);
+    changed = true;
+  }
+  return changed;
 }

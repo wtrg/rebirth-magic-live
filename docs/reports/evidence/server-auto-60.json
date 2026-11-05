@@ -1,0 +1,42 @@
+{
+  "seconds": 60,
+  "players": 64,
+  "clients": 8,
+  "driver": "server-auto",
+  "accepted": 0,
+  "throttled": 0,
+  "overloadRejected": 96,
+  "peakQueue": 112,
+  "updatesPerClient": 135,
+  "stage": 36,
+  "requestMs": null,
+  "rssMiB": [
+    79.4,
+    73.7,
+    74.3,
+    73.9,
+    74.2,
+    74.3,
+    74.3,
+    74.4,
+    74.4,
+    74.4,
+    74.4,
+    74.4
+  ],
+  "heapMiB": [
+    14.3,
+    13.3,
+    13.6,
+    13.7,
+    13,
+    13.3,
+    13.4,
+    13.7,
+    13.4,
+    13.4,
+    13.3,
+    13.7
+  ],
+  "scope": "Working tree on feat/server-auto-battle based on 780a174; no measured client attack ingress, browser or OBS. accepted counts external attack events only."
+}

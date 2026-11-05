@@ -36,3 +36,5 @@ The full [MVP evidence audit](reports/MVP_ACCEPTANCE.md) lists remaining gates. 
 ## Post-RC3 main follow-ups
 
 Main additionally separates the session roster from archived profiles and preserves global ranking. Animation fixes restart consecutive boss impacts, keep idle looping and preserve temporary-pet expiry across pause, including newly opened clients. The 19-test suite includes actual GLB mixer and HTTP pause-metadata regressions. These follow-ups are not in the published RC3 tag. The combined ten-minute recording measured main at `7b225ea`, before the animation fixes. See P7 for exact scope and limitations.
+
+Main also adds opt-in server basic attacks with `!auto on/off`, saved preferences and replay v10. The current suite totals 26 tests, including browserless auto raid and stage persistence; the browser smoke checks the corresponding checkbox. A 64-auto-player server load ran for 60 seconds. These additions are also outside the RC3 tag and do not establish real LIVE acceptance.

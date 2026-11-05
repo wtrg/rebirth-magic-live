@@ -82,6 +82,22 @@ try {
   await sleep(230);
   await page.locator('#class').selectOption('thunder');
   await waitForText(page,'#party','Lôi Pháp Sư');
+  await sleep(230);
+  await page.route('**/event', route => route.fulfill({status:429,body:''}));
+  await page.locator('#auto').evaluate(input => {
+    input.checked = true;
+    input.dispatchEvent(new Event('change'));
+  });
+  await waitForText(page,'#feedback','gửi quá nhanh');
+  await page.waitForFunction(() => !document.querySelector('#auto').checked);
+  await page.unroute('**/event');
+  await page.locator('#auto').check();
+  await waitForText(page,'#logs','Tự đánh thường BẬT');
+  assert.equal(await page.locator('#auto').isChecked(),true);
+  await sleep(230);
+  await page.locator('#auto').uncheck();
+  await waitForText(page,'#logs','Tự đánh thường TẮT');
+  assert.equal(await page.locator('#auto').isChecked(),false);
   await page.locator('#audio-toggle').click();
   await page.getByRole('button',{ name:'Tắt âm thanh' }).waitFor();
   await page.getByRole('button',{ name:'Bắt đầu Raid' }).click();
