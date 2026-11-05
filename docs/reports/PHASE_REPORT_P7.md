@@ -65,3 +65,8 @@ On 2026-11-05, tested commit `4da323a` with the new combat effects on Intel UHD 
 The workload ran for 180 seconds. The server accepted 9,260 event requests including initial joins, rate-limited 3,040, and completed 95 ranked raids. The observed queue peak was 33. FFprobe measured a 179.900-second H.264 recording. OBS output 5,395 frames. All 17 in-run samples reported 30 FPS with zero OBS rendering or encoding skips. The final sample reported 0.45 ms average OBS render time. OBS memory increased from 334.1 to 363.4 MiB across in-run samples. Server working set ranged from 75.4 to 80.7 MiB over 17 samples. See [the recording frame](evidence/obs-combined-raid.png).
 
 These metrics cover OBS output, including any duplicated browser frames. Audio was disabled in this run. No network stream or actual TikTok session was active. The short sample leaves long-run memory, OBS audio routing and TikTok upstream readiness unverified. The project owner confirmed that a real test LIVE session is currently unavailable.
+
+
+## Graceful shutdown regression
+
+The local shutdown request stops new ingress, drains accepted events and closes SQLite after HTTP connections complete. Windows integration QA submitted 64 joins immediately before shutdown and recovered all 64 profiles and receipts. SQLite quick_check returned ok. An incorrect Origin was rejected before shutdown. Emergency pause continues to clear its pending queue by design.

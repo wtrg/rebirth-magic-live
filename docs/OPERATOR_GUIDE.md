@@ -21,3 +21,14 @@
 - Phục hồi dữ liệu: dừng server, khôi phục vào file mới và đặt `DB_PATH` sang file đó. Kiểm tra cấp độ, pet, trang bị, xếp hạng và phụ bản trước khi chơi tiếp. [Quy trình khôi phục](RECOVERY.md)
 
 Windows MOCK đã có bản ứng viên. TikTok LIVE thật và gift ID thực tế vẫn chờ một phiên thử được phép.
+
+
+## Dừng máy chủ có xử lý hàng đợi
+
+Ctrl+C gửi yêu cầu dừng trong terminal. Cũng có thể dừng từ PowerShell bằng endpoint local.
+
+```powershell
+Invoke-WebRequest http://127.0.0.1:4173/admin -Method Post -ContentType application/json -Headers @{Origin='http://127.0.0.1:4173'} -Body '"shutdown"'
+```
+
+Máy chủ ngừng nhận sự kiện mới, xử lý phần hàng đợi đã nhận rồi đóng kết nối và SQLite. Khi cần sao lưu hoặc đổi phiên bản, chờ tiến trình kết thúc trước khi khởi động lại. Thao tác kết thúc cưỡng bức qua Task Manager có thể bỏ các sự kiện còn trong bộ nhớ.
