@@ -32,3 +32,5 @@ Achievements derive from persisted ranked milestones: first boss, 10 victories, 
 `!stats` reports HP, MP, ATK, DEF, element, critical cadence, rebirth count and raid contribution. ATK and DEF use the same derived values as combat, with temporary skill modifiers applied separately.
 
 Replay version 10 records server auto-attack steps separately from normalized viewer events. Versions 1–9 retain their prior behavior and ignore the newly introduced auto command. No automatic raid restart or automatic skill casting is enabled.
+
+Replay version 11 rotates the first auto attacker by ranked stage while preserving roster display order. This avoids repeatedly giving earlier joins the first chance to contribute when a fast raid ends within one batch. Each attack still requires auto enabled, living HP and a ready shared cooldown; only positive contributors receive ranked rewards. Manual commands keep arrival order. Rotation distributes opportunities across stages; it does not guarantee everyone attacks or receives rewards in every raid, equal damage/score, or balance under arbitrary roster churn. Historical v10 traces retain fixed order.

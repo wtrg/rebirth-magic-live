@@ -59,6 +59,8 @@ node scripts/replay.ts data/rebirth-mock-replay.json
 
 Replay khởi tạo từ đội hình trống lúc máy chủ bật. Khi xử lý `!join`, bản ghi kèm hồ sơ được khôi phục; sau đó áp dụng các bước theo thứ tự và thời điểm gốc, gồm cả tự đánh. Lệnh phát lại in trạng thái cuối và không mở database. Bản ghi nằm trong bộ nhớ cho tới khi xuất, giới hạn 10.000 bước. Nếu vượt giới hạn, trường `truncated` báo rằng file chỉ chứa phần đầu. Máy chủ LIVE không ghi hoặc xuất replay.
 
+Mã nguồn hiện tại tạo replay v11 với lượt auto đầu tiên luân phiên theo phụ bản. Replay v1–v10 vẫn dùng quy tắc gốc; v10 giữ thứ tự auto cũ.
+
 [Master Plan](docs/MASTER_PLAN.md) · [Thiết kế game](docs/GAME_DESIGN.md) · [Kiến trúc](docs/ARCHITECTURE.md) · [Báo cáo](docs/reports)
 
 Original project source and procedural geometry are MIT. See [THIRD_PARTY.md](THIRD_PARTY.md) for dependency attributions.

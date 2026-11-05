@@ -1,4 +1,4 @@
-import { applyEvent, autoBattle, tick } from '../../packages/combat/index.ts';
+import { applyEvent, autoBattle, currentRulesVersion, tick } from '../../packages/combat/index.ts';
 import type { EventContext, GameEvent, GameState } from '../../packages/shared/index.ts';
 import { normalizeEvent } from '../../packages/tiktok-adapter/index.ts';
 import { applyAdmin, isAdminAction, type AdminAction } from './admin.ts';
@@ -12,7 +12,7 @@ type Step = { at: number } & (
 const limit = 10000;
 
 export function createReplay(initial: GameState) {
-  const trace = { version: 10, initial: structuredClone(initial), steps: [] as Step[], truncated: false };
+  const trace = { version: currentRulesVersion, initial: structuredClone(initial), steps: [] as Step[], truncated: false };
   return {
     record(step: Step) {
       if (trace.steps.length === limit) trace.truncated = true;
@@ -25,7 +25,7 @@ export function createReplay(initial: GameState) {
 export function playReplay(raw: unknown): GameState {
   if (!raw || typeof raw !== 'object') throw new Error('Invalid replay');
   const { version, initial, steps } = raw as { version?: unknown; initial?: GameState; steps?: Step[] };
-  if ((version !== 1 && version !== 2 && version !== 3 && version !== 4 && version !== 5 && version !== 6 && version !== 7 && version !== 8 && version !== 9 && version !== 10) || !initial?.raid || !Array.isArray(initial.players) ||
+  if ((version !== 1 && version !== 2 && version !== 3 && version !== 4 && version !== 5 && version !== 6 && version !== 7 && version !== 8 && version !== 9 && version !== 10 && version !== 11) || !initial?.raid || !Array.isArray(initial.players) ||
       !Array.isArray(initial.logs) || !Array.isArray(steps) || steps.length > limit) {
     throw new Error('Invalid replay');
   }

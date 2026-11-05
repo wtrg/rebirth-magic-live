@@ -1,6 +1,7 @@
 import { classes, pets, items, achievements, attackStats, defenseOf, maxHp, type ItemId, type EffectKind, type EventContext, type GameEvent, type GameState, type Player } from '../shared/index.ts';
 import { gifts } from '../tiktok-adapter/index.ts';
 
+export const currentRulesVersion = 11;
 
 export const activeRaid = (state: GameState) => ['PHASE_1', 'PHASE_2', 'ENRAGED'].includes(state.raid.phase);
 export const bossPhase = (hp: number, max: number) => hp <= 0 ? 'DEAD' : hp * 4 <= max ? 'ENRAGED' : hp * 100 <= max * 55 ? 'PHASE_2' : 'PHASE_1';
@@ -89,7 +90,7 @@ function resolveVictory(state: GameState, equipmentDrops: boolean) {
   log(state, 'Chiến thắng · +EXP · +1 mảnh linh thú');
 }
 
-export function tick(state: GameState, now: number, rulesVersion = 8) {
+export function tick(state: GameState, now: number, rulesVersion = currentRulesVersion) {
   if (state.paused || now < state.raid.next) return false;
   if (state.raid.phase === 'SPAWN') {
     state.raid.phase = 'PHASE_1';
@@ -118,7 +119,7 @@ export function tick(state: GameState, now: number, rulesVersion = 8) {
   return true;
 }
 
-export function applyEvent(state: GameState, event: GameEvent, now: number, rulesVersion = 10, context?: EventContext) {
+export function applyEvent(state: GameState, event: GameEvent, now: number, rulesVersion = currentRulesVersion, context?: EventContext) {
   if (state.paused) return;
   const player = state.players.find(player => player.id === event.user);
   const username = rulesVersion >= 7 && event.user.startsWith('live:') ? event.username : undefined;
@@ -333,10 +334,15 @@ export function autoReady(state: GameState, now: number) {
     player.auto && player.hp > 0 && now >= player.ready[3]);
 }
 
-export function autoBattle(state: GameState, now: number, rulesVersion = 10) {
+export function autoBattle(state: GameState, now: number, rulesVersion = currentRulesVersion) {
   if (rulesVersion < 10 || !autoReady(state, now)) return false;
   let changed = false;
-  for (const player of state.players) {
+  // Rotate opportunity between ranked stages without changing roster/display order.
+  // Historical auto traces must retain the original fixed-order resolution.
+  const count = state.players.length;
+  const start = rulesVersion >= 11 ? (state.raid.stage - 1) % count : 0;
+  for (let offset = 0; offset < count; offset++) {
+    const player = state.players[(start + offset) % count];
     if (!activeRaid(state)) break;
     if (!player.auto || player.hp <= 0 || now < player.ready[3]) continue;
     applyEvent(state, { id:'auto:'+player.id+':'+now, user:player.id, name:player.name,

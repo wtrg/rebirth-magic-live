@@ -20,7 +20,15 @@ Cleanup closed the backend port, removed the new QA source/scene and restored th
 
 Reproduce with [isolated OBS QA](../OBS_QA.md), `node scripts/obs-soak.mjs`, then `node scripts/analyze-obs.mjs PATH_TO_RESULTS`. [Raw/derived measurements](evidence/obs-auto-current-600.json) · [Encoded frame at 300 seconds](evidence/obs-auto-current-300.png) · [Post-run scene](evidence/obs-auto-current-end.png).
 
-The current-source ten-minute local combined proof gap is closed. Auto ordering requires correction. Actual TikTok LIVE remains untested because no test session is available; Gemini/Antigravity reports remain NOT_RECEIVED, and Leader art/gameplay approval and 8–12-hour stability remain pending.
+The measured-source ten-minute local combined proof gap is closed. This run identified the auto-order defect; the subsequent [v11 correction](AUTO_ORDER_FINDING.md#correction-and-evidence) has its own functional/integration evidence below. Actual TikTok LIVE remains untested because no test session is available; Gemini/Antigravity reports remain NOT_RECEIVED, and Leader art/gameplay approval and 8–12-hour stability remain pending.
+
+### v11 ordering integration follow-up
+
+At source `3fa4190`, typecheck, lint, all 36 tests, build and production Windows browser smoke passed on Intel UHD D3D11. The five added regressions include complete v10 historical-state digest, 32-stage forward/reverse opportunity cycles, eligibility/cooldowns, once-only rewards and deterministic v11 replay. Root reviewed the delegated production change; the implementer independently regenerated the root-owned golden fixture through immutable `054e544` source and verified its SHA, plus the eight career-cohort ranges.
+
+`QA_LOAD_AUTO=1` with `node scripts/load.mjs` then exercised 64 auto players and eight WebSocket consumers for 60 seconds. No manual attack ingress was sent in measurement. Every consumer remained connected with at least 134 snapshots and the world reached stage 36. Warm-up overload rejected 128 requests; sampled queue depth peaked at 112. Twelve five-second backend samples ranged 72.7–80.2 MiB RSS and 12.8–16.7 MiB heap, ending at 75.3/13.6 MiB. [v11 server sample](evidence/server-auto-v11-60.json) · [Eight synthetic career comparisons](evidence/auto-fairness-comparison.json).
+
+This is a short server integration measurement, not another combined OBS run or long-session memory proof. The preceding ten-minute OBS recording keeps its exact pre-v11 source scope. Neither workload establishes full manual/co-op class balance or actual TikTok LIVE operation.
 
 ```text
 PROJECT: RE:BIRTH

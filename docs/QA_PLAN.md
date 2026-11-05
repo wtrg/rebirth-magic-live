@@ -1,5 +1,7 @@
 # QA Plan
 
+Auto ordering: `node --test tests/auto-order.test.ts tests/auto-legacy.test.ts tests/auto.test.ts` checks full 32-stage opportunity cycles, forward/reversed rosters, eligibility/cooldowns, one-time rewards and versioned replay. The immutable v10 fixture was captured from commit `054e544` and compares the complete resulting-state SHA-256 after three raids, a manual skill and pause/resume. `node scripts/auto-fairness-qa.ts` separately compares eight synthetic 322-raid careers (v10/v11, forward/reversed, identical Fire/six-class), allowing earned growth but selecting no pets/equipment and sending no manual attacks. This is a game-rule comparison, not a performance benchmark or proof of full class balance.
+
 Combined current-source OBS/auto/HUD/audio QA uses `node scripts/obs-soak.mjs` and `node scripts/analyze-obs.mjs PATH_TO_RESULTS`. See [isolated OBS QA](OBS_QA.md) for the disposable portable configuration, workload, counter boundaries, cleanup and analysis. This runs separately from the test suite and requires local OBS/FFmpeg; CI does not claim to exercise recording hardware.
 
 Gate 1: npm run typecheck, npm run lint, npm run build.
@@ -24,7 +26,7 @@ Run `node scripts/animation-qa.mjs` with installed Chrome (or a compatible Playw
 The fixture controls its own animation clock and supplies six synthetic player snapshots with three earned pet selections. It checks real rendered class/pet colors, GLB root identity, tagged paws/wings, moving hip joints during the attack approach, weapon motion, HP recoil, collapse, revival, pause pixel stability and temporary-pet expiry. It repeats after a forced GLB 404. Screenshots and real transforms support manual review. Projected bounds check viewport intersection, not occlusion. The fixture isolates scene rendering from combat simulation, excludes the production HUD, and cannot measure FPS. Run the normal browser smoke separately for the production application and combat path.
 
 
-Set `QA_LOAD_AUTO=1` before `node scripts/load.mjs` to exercise 64 server-driven auto attackers and eight WebSocket consumers. The harness sends no attack commands during its measured interval; only the host starts the next raid. Its event-request latency is reported as null in this mode because no measured attack ingress occurs. This is a server-only check. `tests/auto.test.ts` additionally verifies a browserless raid, pause/resume, deterministic v10 replay and atomic stage/reward persistence.
+Set `QA_LOAD_AUTO=1` before `node scripts/load.mjs` to exercise 64 server-driven auto attackers and eight WebSocket consumers. The harness sends no attack commands during its measured interval; only the host starts the next raid. Its event-request latency is reported as null in this mode because no measured attack ingress occurs. This is a server-only check. `tests/auto.test.ts` additionally verifies a browserless raid, pause/resume, deterministic current replay and atomic stage/reward persistence. Separate ordering/golden tests protect historical v10 behavior.
 
 ## Relational design prototype
 
