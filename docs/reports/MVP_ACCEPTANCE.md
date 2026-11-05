@@ -4,7 +4,7 @@ Audit date 2026-11-05. Evidence spans source snapshots listed in P7, including t
 
 ## Demonstrated local requirements
 
-1. Windows execution — fresh public clone installed, built and passed browser smoke for RC2. See [RC scope](../RELEASE_CANDIDATE.md).
+1. Windows execution — fresh public clone of RC4 preparation commit `80fe1b9` installed and passed all required checks, production browser smoke and the animation harness using Playwright Chromium. See [RC scope](../RELEASE_CANDIDATE.md).
 2. Real 3D environment — Three.js arena rendered on Intel UHD Graphics. See [OBS capture](evidence/obs-combined-raid.png).
 3. 3D player — local GLB bundle, validated load and procedural fallback. See [model contract](../MODEL_ASSETS.md).
 4. 3D boss — Varkhazar renders in the arena with named animation clips and server-driven phase state.
@@ -22,7 +22,7 @@ Audit date 2026-11-05. Evidence spans source snapshots listed in P7, including t
 16. OBS overlay — actual portable OBS recording at 1080×1920 with local raid load. See [P7](PHASE_REPORT_P7.md).
 17. Admin and emergency stop — local operator pause/resume and Origin checks in browser smoke. Controlled server shutdown regression preserves accepted pending joins.
 18. Tests, setup and build — 26 tests, required quality checks and Windows browser smoke passed for the source lineage in this audit. See [QA plan](../QA_PLAN.md).
-19. Public source — [repository](https://github.com/wtrg/rebirth-magic-live) and [RC2 release](https://github.com/wtrg/rebirth-magic-live/releases/tag/v0.2.0-rc.2). Reliability and result-panel changes from PRs 21–23 were integrated into main via PR 24. RC3 also integrates actor animation and local OBS audio verification.
+19. Public source — [repository](https://github.com/wtrg/rebirth-magic-live). The RC4 scope consolidates session-roster, repeated-impact/pause fixes, action rendering checks and opt-in server auto battle. Release history and exact local QA scope are tracked in P7 and the release document.
 20. Codex acceptance report — P0–P7 reports and this audit identify measured evidence, gaps and external-agent status. [Leader handoff](../LEADER_REVIEW_REQUEST.md).
 
 ## Remaining gates
@@ -34,5 +34,6 @@ Audit date 2026-11-05. Evidence spans source snapshots listed in P7, including t
 - Longer combined OBS and browser operation. A ten-minute combined recording and separate ten-minute server soak are now documented in P7. Neither establishes 8–12-hour stability, browser/GPU memory behavior or upstream streaming readiness.
 - The six-class/three-pet technical action review now covers GLB and procedural fallback, idle, attack approach, changing leg angles, HP recoil, defeat, revival, pause and temporary-pet expiry. See P6 for captures and limits. Art quality, motion direction and Leader visual approval remain open.
 - Leader product and visual review. Antigravity and Gemini reports remain NOT_RECEIVED. The WT bridge connectivity check returned fetch failed.
+- The broader master prompt section 7.2 requires a database design for 17 named entities. The current architecture lists those future entities but does not yet specify their columns, keys, relationships, constraints or migration mapping. This design deliverable remains open; schema-v2 runtime storage currently uses JSON profiles, event receipts and world progression.
 
 Each local test proves only its stated scope. The present evidence supports an operational Windows MOCK candidate while the remaining gates stay open.

@@ -1,6 +1,6 @@
 # RE:BIRTH · Ma Pháp Bá Chủ Server
 
-Bản ứng viên 0.2.0-rc.3 cho Boss Raid 3D tương tác với bình luận. [Phạm vi và bằng chứng QA](docs/RELEASE_CANDIDATE.md). Chạy cục bộ trên Windows với Node 24 và WebGL 2.
+Bản ứng viên 0.2.0-rc.4 cho Boss Raid 3D tương tác với bình luận. [Phạm vi và bằng chứng QA](docs/RELEASE_CANDIDATE.md). Chạy cục bộ trên Windows với Node 24 và WebGL 2.
 
 ```powershell
 npm ci
@@ -34,8 +34,12 @@ npm run lint
 npm test
 npm run build
 npx playwright install chromium
+$env:QA_BROWSER = 'chromium'
 node scripts/smoke.mjs
+node scripts/animation-qa.mjs
 ```
+
+Các script browser mặc định dùng Chrome đã cài trên máy. Khối lệnh trên cài Chromium của Playwright và chọn nó qua `QA_BROWSER` khi cần môi trường QA riêng.
 
 ## Ghi và phát lại một phiên MOCK
 
@@ -53,7 +57,7 @@ Invoke-WebRequest http://127.0.0.1:4173/replay -OutFile data/rebirth-mock-replay
 node scripts/replay.ts data/rebirth-mock-replay.json
 ```
 
-Replay khởi tạo từ hồ sơ MOCK lúc máy chủ bật, rồi áp dụng các bước đã xử lý theo thứ tự và thời điểm gốc. Lệnh phát lại in trạng thái cuối và không mở database. Bản ghi nằm trong bộ nhớ cho tới khi xuất, giới hạn 10.000 bước. Nếu vượt giới hạn, trường `truncated` báo rằng file chỉ chứa phần đầu. Máy chủ LIVE không ghi hoặc xuất replay.
+Replay khởi tạo từ đội hình trống lúc máy chủ bật. Khi xử lý `!join`, bản ghi kèm hồ sơ được khôi phục; sau đó áp dụng các bước theo thứ tự và thời điểm gốc, gồm cả tự đánh. Lệnh phát lại in trạng thái cuối và không mở database. Bản ghi nằm trong bộ nhớ cho tới khi xuất, giới hạn 10.000 bước. Nếu vượt giới hạn, trường `truncated` báo rằng file chỉ chứa phần đầu. Máy chủ LIVE không ghi hoặc xuất replay.
 
 [Master Plan](docs/MASTER_PLAN.md) · [Thiết kế game](docs/GAME_DESIGN.md) · [Kiến trúc](docs/ARCHITECTURE.md) · [Báo cáo](docs/reports)
 
