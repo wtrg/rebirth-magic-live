@@ -46,3 +46,9 @@ Dùng `!leave` giữa các trận để rời đội, hoặc nút **Giải tán 
 Người xem gửi `!auto on` sau khi tham gia; dùng `!auto off` để dừng hoặc `!auto` để xem trạng thái qua log. Trong bảng MOCK, checkbox **Tự đánh thường** gửi cùng lệnh đó cho nhân vật đang chọn. Đây là lựa chọn được lưu theo hồ sơ, mặc định tắt với người mới.
 
 Server tự ra đòn thường khi nhân vật còn sống và raid đang chiến đấu. Không cần giữ trang điều khiển mở. Đòn tự động và `!attack` dùng chung cooldown 600 ms; `!skill1`, `!skill2`, `!ult` vẫn do người xem dùng. Hàng đợi bình luận của nhịp xử lý được áp dụng trước đòn tự động. **Dừng khẩn cấp** dừng cả tự đánh. Khi adapter mất kết nối, game cục bộ vẫn chạy; host có thể pause. Host vẫn phải mở từng raid mới.
+
+## Bố cục điều khiển
+
+Ở cửa sổ desktop từ 1000×700, đấu trường, đội hình và footer nằm trong màn hình; bảng điều khiển bên phải cuộn riêng. Nhóm mở raid/dừng/tiếp tục nằm đầu bảng và giữ vị trí khi cuộn. Có thể dùng Tab để đi tới các điều khiển; mục được chọn tự cuộn vào vùng nhìn thấy. Nhật ký dài và danh sách đóng góp có vùng cuộn bàn phím riêng.
+
+Cửa sổ hẹp dùng một cột; cửa sổ thấp hơn 700 px dùng cuộn trang thông thường để mọi mục vẫn truy cập được. Màn hình OBS tiếp tục dùng URL overlay và tỷ lệ 9:16.

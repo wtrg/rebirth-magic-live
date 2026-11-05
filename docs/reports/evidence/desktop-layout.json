@@ -1,0 +1,375 @@
+{
+  "sourceCommit": "91d069207bee7c58a20b96d02749d706470160e7",
+  "audit": false,
+  "fixture": "Six synthetic class/pet profiles; real stage-3 wraiths and victory. Boundary logs and result names are DOM text stress fixtures.",
+  "results": [
+    {
+      "viewport": {
+        "width": 1280,
+        "height": 900
+      },
+      "broadcast": {
+        "x": 0,
+        "y": 0,
+        "width": 950,
+        "height": 900,
+        "bottom": 900,
+        "right": 950
+      },
+      "arena": {
+        "x": 0,
+        "y": 206.515625,
+        "width": 950,
+        "height": 447.484375,
+        "bottom": 654,
+        "right": 950
+      },
+      "party": {
+        "x": 0,
+        "y": 654,
+        "width": 950,
+        "height": 120,
+        "bottom": 774,
+        "right": 950
+      },
+      "footer": {
+        "x": 0,
+        "y": 774,
+        "width": 950,
+        "height": 126,
+        "bottom": 900,
+        "right": 950
+      },
+      "operator": {
+        "x": 950,
+        "y": 0,
+        "width": 330,
+        "height": 900,
+        "bottom": 900,
+        "right": 1280
+      },
+      "rootWidth": 1280,
+      "rootHeight": 900,
+      "operatorClientHeight": 900,
+      "operatorScrollHeight": 1346
+    },
+    {
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "broadcast": {
+        "x": 0,
+        "y": 0,
+        "width": 1036,
+        "height": 768,
+        "bottom": 768,
+        "right": 1036
+      },
+      "arena": {
+        "x": 0,
+        "y": 207,
+        "width": 1036,
+        "height": 315,
+        "bottom": 522,
+        "right": 1036
+      },
+      "party": {
+        "x": 0,
+        "y": 522,
+        "width": 1036,
+        "height": 120,
+        "bottom": 642,
+        "right": 1036
+      },
+      "footer": {
+        "x": 0,
+        "y": 642,
+        "width": 1036,
+        "height": 126,
+        "bottom": 768,
+        "right": 1036
+      },
+      "operator": {
+        "x": 1036,
+        "y": 0,
+        "width": 330,
+        "height": 768,
+        "bottom": 768,
+        "right": 1366
+      },
+      "rootWidth": 1366,
+      "rootHeight": 768,
+      "operatorClientHeight": 768,
+      "operatorScrollHeight": 1346
+    },
+    {
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "broadcast": {
+        "x": 0,
+        "y": 0,
+        "width": 694,
+        "height": 768,
+        "bottom": 768,
+        "right": 694
+      },
+      "arena": {
+        "x": 0,
+        "y": 197.8125,
+        "width": 694,
+        "height": 265.1875,
+        "bottom": 463,
+        "right": 694
+      },
+      "party": {
+        "x": 0,
+        "y": 463,
+        "width": 694,
+        "height": 179,
+        "bottom": 642,
+        "right": 694
+      },
+      "footer": {
+        "x": 0,
+        "y": 642,
+        "width": 694,
+        "height": 126,
+        "bottom": 768,
+        "right": 694
+      },
+      "operator": {
+        "x": 694,
+        "y": 0,
+        "width": 330,
+        "height": 768,
+        "bottom": 768,
+        "right": 1024
+      },
+      "rootWidth": 1024,
+      "rootHeight": 768,
+      "operatorClientHeight": 768,
+      "operatorScrollHeight": 1346
+    },
+    {
+      "viewport": {
+        "width": 1000,
+        "height": 700
+      },
+      "broadcast": {
+        "x": 0,
+        "y": 0,
+        "width": 670,
+        "height": 700,
+        "bottom": 700,
+        "right": 670
+      },
+      "arena": {
+        "x": 0,
+        "y": 197,
+        "width": 670,
+        "height": 198,
+        "bottom": 395,
+        "right": 670
+      },
+      "party": {
+        "x": 0,
+        "y": 395,
+        "width": 670,
+        "height": 179,
+        "bottom": 574,
+        "right": 670
+      },
+      "footer": {
+        "x": 0,
+        "y": 574,
+        "width": 670,
+        "height": 126,
+        "bottom": 700,
+        "right": 670
+      },
+      "operator": {
+        "x": 670,
+        "y": 0,
+        "width": 330,
+        "height": 700,
+        "bottom": 700,
+        "right": 1000
+      },
+      "rootWidth": 1000,
+      "rootHeight": 700,
+      "operatorClientHeight": 700,
+      "operatorScrollHeight": 1346
+    },
+    {
+      "viewport": {
+        "width": 1280,
+        "height": 640
+      },
+      "broadcast": {
+        "x": 0,
+        "y": 0,
+        "width": 950,
+        "height": 1291,
+        "bottom": 1291,
+        "right": 950
+      },
+      "arena": {
+        "x": 0,
+        "y": 235,
+        "width": 950,
+        "height": 810,
+        "bottom": 1045,
+        "right": 950
+      },
+      "party": {
+        "x": 0,
+        "y": 1045,
+        "width": 950,
+        "height": 120,
+        "bottom": 1165,
+        "right": 950
+      },
+      "footer": {
+        "x": 0,
+        "y": 1165,
+        "width": 950,
+        "height": 126,
+        "bottom": 1291,
+        "right": 950
+      },
+      "operator": {
+        "x": 950,
+        "y": 0,
+        "width": 330,
+        "height": 1291,
+        "bottom": 1291,
+        "right": 1280
+      },
+      "rootWidth": 1280,
+      "rootHeight": 1291,
+      "operatorClientHeight": 1291,
+      "operatorScrollHeight": 1291
+    },
+    {
+      "viewport": {
+        "width": 900,
+        "height": 600
+      },
+      "broadcast": {
+        "x": 0,
+        "y": 0,
+        "width": 900,
+        "height": 802,
+        "bottom": 802,
+        "right": 900
+      },
+      "arena": {
+        "x": 0,
+        "y": 226,
+        "width": 900,
+        "height": 330,
+        "bottom": 556,
+        "right": 900
+      },
+      "party": {
+        "x": 0,
+        "y": 556,
+        "width": 900,
+        "height": 120,
+        "bottom": 676,
+        "right": 900
+      },
+      "footer": {
+        "x": 0,
+        "y": 676,
+        "width": 900,
+        "height": 126,
+        "bottom": 802,
+        "right": 900
+      },
+      "operator": {
+        "x": 0,
+        "y": 802,
+        "width": 900,
+        "height": 1165,
+        "bottom": 1967,
+        "right": 900
+      },
+      "rootWidth": 900,
+      "rootHeight": 1967,
+      "operatorClientHeight": 1164,
+      "operatorScrollHeight": 1164
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "broadcast": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 1014.1875,
+        "bottom": 1014.1875,
+        "right": 390
+      },
+      "arena": {
+        "x": 0,
+        "y": 221,
+        "width": 390,
+        "height": 464.1875,
+        "bottom": 685.1875,
+        "right": 390
+      },
+      "party": {
+        "x": 0,
+        "y": 685.1875,
+        "width": 390,
+        "height": 203,
+        "bottom": 888.1875,
+        "right": 390
+      },
+      "footer": {
+        "x": 0,
+        "y": 888.1875,
+        "width": 390,
+        "height": 126,
+        "bottom": 1014.1875,
+        "right": 390
+      },
+      "operator": {
+        "x": 0,
+        "y": 1014.1875,
+        "width": 390,
+        "height": 1292,
+        "bottom": 2306.1875,
+        "right": 390
+      },
+      "rootWidth": 390,
+      "rootHeight": 2306,
+      "operatorClientHeight": 1291,
+      "operatorScrollHeight": 1291
+    }
+  ],
+  "overlay": {
+    "x": 0,
+    "y": 0,
+    "width": 540,
+    "height": 960
+  },
+  "result": {
+    "x": 53.59375,
+    "y": 201.109375,
+    "width": 562.8125,
+    "height": 168.78125
+  },
+  "arena": {
+    "x": 0,
+    "y": 176,
+    "width": 670,
+    "height": 219
+  }
+}
