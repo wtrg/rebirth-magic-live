@@ -1,5 +1,7 @@
 # RE:BIRTH 0.2.0-rc.4 · Windows MOCK candidate
 
+This page describes the immutable RC4 tag. Later main-branch QA includes layout fixes and a current-source combined OBS/server-auto recording; see [P7](reports/PHASE_REPORT_P7.md). That recording also prompted a [confirmed auto-order finding](reports/AUTO_ORDER_FINDING.md) awaiting correction. Do not interpret later evidence as code included in the RC4 tag or as full gameplay acceptance.
+
 This prerelease packages the local Windows Boss Raid. It includes an optional TikTok transport; actual room events and gifts remain unverified because no authorized test LIVE session is available.
 
 ## Install this candidate

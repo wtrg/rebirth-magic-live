@@ -27,7 +27,7 @@ Audit date 2026-11-05. Evidence spans source snapshots listed in P7, including t
 
 ## Remaining gates
 
-Master-wide traceability is indexed in the [task ledger](../TASK_LEDGER.md). The [measured art specification](../ART_SPECIFICATION.md) closes the prototype dimension/manifest documentation gap. The [rebirth worksheet](REBIRTH_BALANCE.md) verifies all five cycles and quantifies current gains/reset losses; gameplay approval remains pending. The current combined auto/HUD/audio evidence refresh is READY: the older ten-minute combined run predates auto and the latest animation/layout fixes, while the newer server and scene benchmarks measure separate scopes.
+Master-wide traceability is indexed in the [task ledger](../TASK_LEDGER.md). The [measured art specification](../ART_SPECIFICATION.md) closes the prototype dimension/manifest documentation gap. The [rebirth worksheet](REBIRTH_BALANCE.md) verifies all five cycles and quantifies current gains/reset losses; gameplay approval remains pending. P7 now includes a current-source ten-minute combined auto/HUD/audio recording at `46cf80d`, with exact counter/memory/audio limits. A separate [confirmed auto-order defect](AUTO_ORDER_FINDING.md) remains READY for correction: fixed roster ordering can repeatedly exclude same-time eligible attackers from contribution/rewards. This prevents claiming full gameplay acceptance.
 
 - The active roster limitation was corrected in the session-roster follow-up. Join restores the saved profile, leave and host clear free active slots, and global ranking retains archived players. The HTTP regression covers viewer 65 and archived profile restoration. See P7.
 

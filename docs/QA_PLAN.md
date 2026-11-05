@@ -1,5 +1,7 @@
 # QA Plan
 
+Combined current-source OBS/auto/HUD/audio QA uses `node scripts/obs-soak.mjs` and `node scripts/analyze-obs.mjs PATH_TO_RESULTS`. See [isolated OBS QA](OBS_QA.md) for the disposable portable configuration, workload, counter boundaries, cleanup and analysis. This runs separately from the test suite and requires local OBS/FFmpeg; CI does not claim to exercise recording hardware.
+
 Gate 1: npm run typecheck, npm run lint, npm run build.
 Gate 2: npm test and node scripts/smoke.mjs. Exercise boss phase boundaries, victory, defeat, cooldown, progression, pet and gift ranking.
 Gate 3: Capture the portrait overlay in a browser, verify canvas and result HUD. Open OBS Browser Source on the target machine as a separate check.
