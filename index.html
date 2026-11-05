@@ -6,7 +6,7 @@
     <section class="boss-hud"><div class="eyebrow" id="stage">PHỤ BẢN 01 · CỔNG HƯ VÔ</div><h1>Varkhazar</h1><div class="boss-track"><div id="boss-hp"></div></div><div class="metrics"><span id="phase">CHỜ KHAI CHIẾN</span><span id="boss-value">480 / 480</span></div><div id="wraith-hp" hidden></div></section>
     <div id="viewport"><div id="notice" role="status"></div><div id="effect"></div><div id="boss-intro" hidden><small>CỔNG HƯ VÔ MỞ RA</small><strong>Varkhazar</strong></div><section id="raid-result" hidden aria-live="polite" aria-label="Kết quả Raid"><small id="result-mode"></small><h2 id="result-title"></h2><p id="result-reward"></p><ol id="result-contributors"></ol></section><button id="overlay-audio" hidden>Bật âm thanh</button></div>
     <section class="party"><div class="eyebrow">ĐỘI HÌNH ĐỘT KÍCH <span id="count">00</span></div><div id="party"></div></section>
-    <footer><div class="eyebrow">NHẬT KÝ CHIẾN ĐẤU</div><ul id="logs"></ul><div class="ticker">!join <b>·</b> !class fire <b>·</b> !skill1 <b>·</b> !ult</div></footer>
+    <footer><div class="eyebrow">NHẬT KÝ CHIẾN ĐẤU</div><ul id="logs"></ul><div class="ticker">!join <b>·</b> !auto on/off <b>·</b> !skill1 <b>·</b> !ult</div></footer>
   </section>
   <aside id="operator">
     <div class="eyebrow">RE:BIRTH / OPERATOR</div><h2>Bàn điều khiển</h2><p id="operator-mode">Mô phỏng bình luận và quà tặng trên máy này.</p>
@@ -16,7 +16,7 @@
     <div id="quick"><button data-command="!join">Tham gia</button><button data-command="!leave">Rời đội</button><button data-command="!attack">Tấn công</button><button data-command="!attack left" hidden>Ảnh Linh trái</button><button data-command="!attack right" hidden>Ảnh Linh phải</button><button data-command="!skill1">Phép I</button><button data-command="!skill2">Phép II</button><button data-command="!ult">Đại chiêu</button><button data-command="!pet">Gọi Pet</button></div>
     <div id="skill-status" aria-label="Trạng thái kỹ năng"></div>
     <label>Class<select id="class"></select></label><label>Trang bị<select id="inventory" disabled></select></label>
-    <label>Linh thú<select id="pet-list" disabled></select></label><small id="pet-shards">Mảnh nâng cấp: 0</small><button id="pet-up" data-command="!petup" disabled>Nâng pet đang gọi</button><label><input type="checkbox" id="auto"> Tự đánh (MOCK)</label>
+    <label>Linh thú<select id="pet-list" disabled></select></label><small id="pet-shards">Mảnh nâng cấp: 0</small><button id="pet-up" data-command="!petup" disabled>Nâng pet đang gọi</button><label><input type="checkbox" id="auto" disabled> Tự đánh thường</label>
     <div class="eyebrow">QUÀ MOCK</div><div id="gifts"></div>
     </div>
     <div class="operator-actions"><button data-admin="start" class="accent">Bắt đầu Raid</button><button data-admin="practice">Raid luyện tập</button><button data-admin="pause">Dừng khẩn cấp</button><button data-admin="resume">Tiếp tục</button><button data-admin="clear-roster">Giải tán đội hình</button></div>

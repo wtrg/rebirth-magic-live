@@ -114,6 +114,8 @@ function update(next: GameSnapshot) {
   }));
   get('logs').replaceChildren(...next.logs.slice(0,3).map(log => line(log)));
   const owner = players.find(player => player.id === 'mock:' + username.value.toLowerCase());
+  get<HTMLInputElement>('auto').checked = owner?.auto === true;
+  get<HTMLInputElement>('auto').disabled = !owner || next.paused;
   const badges = owner ? achievements.filter(achievement => achievement.earned(owner)) : [];
   get('profile-stats').textContent = owner ? 'Lv.' + owner.level + ' · ' + owner.xp + ' EXP · Hệ ' +
     classes[owner.classId].element + ' · ATK ' + attackStats(owner).attack + ' · DEF ' + defenseOf(owner) +
@@ -159,7 +161,8 @@ async function post(path: string, body: unknown) {
   try {
     const res = await fetch(path,{ method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
     get('feedback').textContent = res.ok ? 'Đã gửi.' : ({ 429: 'Đang dừng hoặc gửi quá nhanh.', 409: 'Cần có người chơi và Raid đang rảnh.' }[res.status as 429 | 409] ?? 'Yêu cầu bị từ chối.');
-  } catch { get('feedback').textContent = 'Mất kết nối máy chủ.'; }
+    return res.ok;
+  } catch { get('feedback').textContent = 'Mất kết nối máy chủ.'; return false; }
 }
 function emit(payload: object) {
   if (!username.reportValidity()) return;
@@ -190,14 +193,12 @@ for (const value of [1,5,10,20,30]) {
   button.onclick = () => void emit({ kind:'gift', giftId:'mock-' + value, complete:true });
   get('gifts').append(button);
 }
-if (!overlay) setInterval(() => {
-  if (get('mock-controls').hidden || !get<HTMLInputElement>('auto').checked || !state || state.paused || !['PHASE_1','PHASE_2','ENRAGED'].includes(state.raid.phase)) return;
-  const player = state.players.find(player => player.id === 'mock:' + username.value.toLowerCase());
-  if (player && player.hp > 0) {
-    const index = [2,1,0].find(index => player.ready[index] <= Date.now() && player.mp >= [8,16,30][index]);
-    void chat(index === undefined ? '!attack' : ['!skill1','!skill2','!ult'][index]);
+get<HTMLInputElement>('auto').onchange = async () => {
+  const input = get<HTMLInputElement>('auto');
+  if (!await chat('!auto ' + (input.checked ? 'on' : 'off'))) {
+    input.checked = state?.players.find(player => player.id === 'mock:' + username.value.toLowerCase())?.auto === true;
   }
-}, 650);
+};
 function updateSkillStatus() {
   const player = state?.players.find(player => player.id === 'mock:' + username.value.toLowerCase());
   const status = get('skill-status');

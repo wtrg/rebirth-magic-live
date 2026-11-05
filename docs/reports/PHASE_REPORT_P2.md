@@ -41,3 +41,14 @@ LEADER_STATUS: LEADER_REVIEW_PENDING
 ## Class signature follow-up
 
 The class-combat branch adds a deterministic critical cadence, class-specific signature effects, and a shared control ceiling per boss attack. It keeps replay versions 1–4 on their earlier rules. The focused simulation cases cover all six class effects and the control ceiling. The follow-up stage-3 encounter adds two Ảnh Linh targets. Current Fire area attacks damage both. The boss and summons are simulated server-side. See [combat signatures](../GAME_DESIGN.md#combat-signatures).
+
+
+## Server-side idle battle
+
+The earlier automatic mode was a MOCK browser command generator. The server now supports opt-in basic attacks with `!auto on` and `!auto off`; a new player starts with it disabled. The saved preference restores on join. Auto eligibility requires an active raid, living joined character and ready basic cooldown. Manual and automatic basic attacks share the same 600 ms cooldown. Skills remain manual, and the host starts each raid.
+
+The scheduler applies the boss turn, the current FIFO command batch, then eligible auto attacks. Thus a processed off command or manual attack takes effect before the auto batch. Profiles, victory rewards and stage unlock commit together before auto state is published. The existing pause stops auto and extends cooldowns on resume. A disconnected TikTok source does not stop local simulation; the host can pause. Closing the operator page no longer disables auto battle.
+
+MOCK replay v10 records automatic batches and reproduces mixed manual, boss and auto steps. Versions 1–9 retain their previous behavior. Seven focused regressions cover cooldown sharing, inactive/dead/paused players, one-time rewards, legacy replay, deterministic current replay and saved preferences. An isolated HTTP test completes a raid without a browser attack loop, checks pause/resume and persists the enabled preference, one victory and stage 2.
+
+Windows typecheck, lint, all 26 tests and build passed. The production browser smoke verified checkbox on/off and rejection recovery, then the existing combat, replay, backup and restore flow on Intel UHD D3D11. A separate read-only Codex review found no blocker in scheduler ordering, atomic persistence, replay or checkbox state. The seven auto tests were authored by that Codex sub-agent; this is not an external Qoder or Antigravity report. Real TikTok LIVE remains untested.

@@ -8,7 +8,7 @@ Audit date 2026-11-05. Evidence spans source snapshots listed in P7, including t
 2. Real 3D environment — Three.js arena rendered on Intel UHD Graphics. See [OBS capture](evidence/obs-combined-raid.png).
 3. 3D player — local GLB bundle, validated load and procedural fallback. See [model contract](../MODEL_ASSETS.md).
 4. 3D boss — Varkhazar renders in the arena with named animation clips and server-driven phase state.
-5. Combat — phase thresholds, damage, cooldown, MP, critical cadence, support effects, wraith targets and outcomes are covered by [combat tests](../../tests/combat.test.ts) and browser smoke.
+5. Combat — opt-in server-side auto battle, phase thresholds, damage, cooldown, MP, critical cadence, support effects, wraith targets and outcomes are covered by [combat tests](../../tests/combat.test.ts) and browser smoke.
 6. Command join — HTTP MOCK join and the normalized provider fixture both create stable player IDs.
 7. At least three playable classes — six classes have three skills, dedicated silhouettes and signature behavior. See [six-class render](evidence/portrait-six-classes.png).
 8. EXP and level — ranked victory and SQLite recovery verified in browser smoke.
@@ -21,7 +21,7 @@ Audit date 2026-11-05. Evidence spans source snapshots listed in P7, including t
 15. TikTok adapter with truthful status — optional provider WebSocket transport and local fixture coverage. Actual LIVE remains unverified. See [P5](PHASE_REPORT_P5.md).
 16. OBS overlay — actual portable OBS recording at 1080×1920 with local raid load. See [P7](PHASE_REPORT_P7.md).
 17. Admin and emergency stop — local operator pause/resume and Origin checks in browser smoke. Controlled server shutdown regression preserves accepted pending joins.
-18. Tests, setup and build — 19 tests, required quality checks and Windows browser smoke passed for the source lineage in this audit. See [QA plan](../QA_PLAN.md).
+18. Tests, setup and build — 26 tests, required quality checks and Windows browser smoke passed for the source lineage in this audit. See [QA plan](../QA_PLAN.md).
 19. Public source — [repository](https://github.com/wtrg/rebirth-magic-live) and [RC2 release](https://github.com/wtrg/rebirth-magic-live/releases/tag/v0.2.0-rc.2). Reliability and result-panel changes from PRs 21–23 were integrated into main via PR 24. RC3 also integrates actor animation and local OBS audio verification.
 20. Codex acceptance report — P0–P7 reports and this audit identify measured evidence, gaps and external-agent status. [Leader handoff](../LEADER_REVIEW_REQUEST.md).
 

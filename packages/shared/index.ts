@@ -23,6 +23,7 @@ export type Player = {
   id: string; name: string; username?: string; classId: ClassId; level: number; xp: number; hp: number;
   mp: number; rebirth: number; wins: number; score: number; shards: number; owned: number;
   attackCount?: number; guard?: boolean;
+  auto?: boolean;
   petLevels?: number[]; spentPetShards?: number;
   inventory?: ItemId[]; equipment?: Partial<Record<ItemSlot, ItemId>>;
   pet: number | null; ready: number[]; contribution: number; lastHit: number;

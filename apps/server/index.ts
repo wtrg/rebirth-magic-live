@@ -2,7 +2,7 @@ import { createServer, type IncomingMessage } from 'node:http';
 import { createReadStream, statSync } from 'node:fs';
 import { resolve, extname, sep } from 'node:path';
 import { WebSocketServer, WebSocket } from 'ws';
-import { activeRaid, applyEvent, newGame, nextRaidStage, tick } from '../../packages/combat/index.ts';
+import { activeRaid, applyEvent, autoBattle, autoReady, newGame, nextRaidStage, tick } from '../../packages/combat/index.ts';
 import { LiveAdapter, normalizeEvent } from '../../packages/tiktok-adapter/index.ts';
 import { eulerSource, eulerUrl, normalizeEulerMessage, readGiftMap } from '../../packages/tiktok-adapter/euler.ts';
 import type { EventContext, GameEvent, GameSnapshot } from '../../packages/shared/index.ts';
@@ -176,7 +176,7 @@ function processQueue(now: number, limit: number) {
       if (event.command.split(/\s+/)[0] === '!join' && !member && next.players.length < 64) context.restored = store.find(event.user);
       if (event.command.split(/\s+/)[0] === '!rank') context.leader = store.leaderboard()[0];
     }
-    applyEvent(next, event, now, 9, context);
+    applyEvent(next, event, now, 10, context);
     const departing = member && !next.players.includes(member) ? [member] : [];
     const nextStage = nextRaidStage(next);
     const unlock = nextStage > nextRaidStage(state) ? nextStage : undefined;
@@ -189,16 +189,26 @@ function processQueue(now: number, limit: number) {
 }
 
 const clock = setInterval(() => {
-  if (state.paused || (!queue.length && (!activeRaid(state) && state.raid.phase !== 'SPAWN' || Date.now() < state.raid.next))) return;
+  if (state.paused) return;
   const now = Date.now();
+  if (!queue.length && !autoReady(state, now) && (!activeRaid(state) && state.raid.phase !== 'SPAWN' || now < state.raid.next)) return;
   try {
     const draft = structuredClone(state);
-    if (tick(draft, now)) {
+    if (tick(draft, now, 10)) {
       store.commit(draft.players);
       state = draft;
       replay?.record({ kind: 'tick', at: now });
     }
     processQueue(now, 16);
+    if (autoReady(state, now)) {
+      const automatic = structuredClone(state);
+      if (autoBattle(automatic, now)) {
+        const nextStage = nextRaidStage(automatic);
+        store.commit(automatic.players, undefined, now, nextStage > nextRaidStage(state) ? nextStage : undefined);
+        state = automatic;
+        replay?.record({ kind: 'auto', at: now });
+      }
+    }
     broadcast();
   } catch {
     applyAdmin(state, 'pause', now, adminClock);

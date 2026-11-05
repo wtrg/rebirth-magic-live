@@ -126,3 +126,10 @@ Read-only Codex review reproduced a boss Hit clip that remained clamped after re
 Server snapshots expose the server pause timestamp as optional transport metadata. Pet visibility compares its expiry with that timestamp while paused. This handles an already-expired pet and a valid pet when a client opens during a long pause. The simulation state and replay versions remain unchanged. HTTP coverage checks both existing and newly connected clients receive the same pause boundary. The actual GLB mixer regression checks repeated impacts, zero-delta freeze, idle repetition and clamped defeat. Detailed visual review of all class/pet action sequences remains open.
 
 Windows typecheck, lint, the 19-test suite and build passed. Browser smoke passed with Intel UHD D3D11, including GLB/fallback rendering, pause, replay and recovery. The independent Codex reviewer reran the three targeted animation/roster tests and found no blocking issues. This review is not a Gemini art report or Leader approval. Antigravity and Gemini reports remain NOT_RECEIVED; Leader review remains pending.
+
+
+## Automatic battle capacity sample
+
+On 2026-11-05, `QA_LOAD_AUTO=1` with `node scripts/load.mjs` exercised 64 opt-in automatic players and eight WebSocket consumers for 60 seconds. The host started each new raid, but no client attack commands were sent during measurement. The world reached stage 36 and every consumer stayed connected with at least 135 snapshots. A separate warm-up overload burst rejected 96 requests; sampled queue depth peaked at 112. The measured attack ingress count is zero by design, and HTTP attack latency is null.
+
+Twelve five-second backend samples ranged from 73.7 to 79.4 MiB RSS and 13.0 to 14.3 MiB heap. This short server-only sample does not establish long-session, renderer or OBS behavior. It was measured in the auto-battle working tree based on main `780a174`, before commit. [Measurements](evidence/server-auto-60.json)

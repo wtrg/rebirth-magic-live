@@ -18,3 +18,5 @@ Status LEADER_REVIEW_PENDING. Share the repository and phase evidence with the C
 The owner confirmed that a real TikTok LIVE test session is unavailable. Actual room events and gift pricing are unverified. The verified release is the Windows MOCK prerelease. [Public release](https://github.com/wtrg/rebirth-magic-live/releases/tag/v0.2.0-rc.3)
 
 P7 now includes a ten-minute combined OBS/audio recording at source `7b225ea`, followed by separate animation regression fixes. This evidence supports local MOCK operation; product and visual approval remain pending.
+
+The baseline idle-battle requirement now has opt-in server basic attacks (`!auto on/off`) independent of a MOCK browser loop. See P2 for cooldown, persistence, replay and browserless test evidence. Skills remain manual and the host starts each raid. Review the resulting idle/manual gameplay balance alongside the existing class balance request.

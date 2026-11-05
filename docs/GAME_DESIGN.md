@@ -2,7 +2,7 @@
 
 Varkhazar guards the Cổng Hư Vô. Viewers arrive as reborn mages, select one of six classes, and raid together. Fire is the default. Ice skill II delays a boss strike. Healer skill II restores living allies. Summoner receives a larger pet contribution. Knight has high defense and thunder high attack. All classes have three named, timed skills.
 
-Combat moves from spawn to phase I, phase II at 55% HP, enrage at 25%, and victory or defeat. Defeat allows a retry. Victory moves the next raid to a higher stage. The host starts each raid. Viewers can use !attack, !skill1, !skill2 or !ult. The local operator can generate periodic mock attacks.
+Combat moves from spawn to phase I, phase II at 55% HP, enrage at 25%, and victory or defeat. Defeat allows a retry. Victory moves the next raid to a higher stage. The host starts each raid. Viewers can use !attack, !skill1, !skill2 or !ult. Viewers can opt into server-side basic attacks with !auto on and stop with !auto off. Default is off. The preference persists, and every server process still requires !join to enter its active roster. Basic auto attacks share the 600 ms manual basic cooldown; skills remain manual. Pausing freezes both. The host still starts each raid.
 
 Contributors earn 100 + 20 × stage EXP and one pet shard per win. The first three shards unlock Hỏa Hồ, Băng Vũ, and Lôi Miêu in order. !pet 1–3 equips an unlocked pet. !rebirth at level 3 resets level and current XP, retains pets and score, and gives permanent attack and HP. Cap 5.
 
@@ -30,3 +30,5 @@ Replay versions 1–4 retain their earlier combat rules. Version 5 introduced th
 Achievements derive from persisted ranked milestones: first boss, 10 victories, full equipment collection, three pets, a level-5 pet and first rebirth. Existing profiles receive earned badges immediately. Badges do not modify score or combat stats.
 
 `!stats` reports HP, MP, ATK, DEF, element, critical cadence, rebirth count and raid contribution. ATK and DEF use the same derived values as combat, with temporary skill modifiers applied separately.
+
+Replay version 10 records server auto-attack steps separately from normalized viewer events. Versions 1–9 retain their prior behavior and ignore the newly introduced auto command. No automatic raid restart or automatic skill casting is enabled.

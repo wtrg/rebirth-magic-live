@@ -1,4 +1,4 @@
-import { applyEvent, tick } from '../../packages/combat/index.ts';
+import { applyEvent, autoBattle, tick } from '../../packages/combat/index.ts';
 import type { EventContext, GameEvent, GameState } from '../../packages/shared/index.ts';
 import { normalizeEvent } from '../../packages/tiktok-adapter/index.ts';
 import { applyAdmin, isAdminAction, type AdminAction } from './admin.ts';
@@ -6,12 +6,13 @@ import { applyAdmin, isAdminAction, type AdminAction } from './admin.ts';
 type Step = { at: number } & (
   { kind: 'event'; event: GameEvent; context?: EventContext } |
   { kind: 'tick' } |
+  { kind: 'auto' } |
   { kind: 'admin'; action: AdminAction }
 );
 const limit = 10000;
 
 export function createReplay(initial: GameState) {
-  const trace = { version: 9, initial: structuredClone(initial), steps: [] as Step[], truncated: false };
+  const trace = { version: 10, initial: structuredClone(initial), steps: [] as Step[], truncated: false };
   return {
     record(step: Step) {
       if (trace.steps.length === limit) trace.truncated = true;
@@ -24,7 +25,7 @@ export function createReplay(initial: GameState) {
 export function playReplay(raw: unknown): GameState {
   if (!raw || typeof raw !== 'object') throw new Error('Invalid replay');
   const { version, initial, steps } = raw as { version?: unknown; initial?: GameState; steps?: Step[] };
-  if ((version !== 1 && version !== 2 && version !== 3 && version !== 4 && version !== 5 && version !== 6 && version !== 7 && version !== 8 && version !== 9) || !initial?.raid || !Array.isArray(initial.players) ||
+  if ((version !== 1 && version !== 2 && version !== 3 && version !== 4 && version !== 5 && version !== 6 && version !== 7 && version !== 8 && version !== 9 && version !== 10) || !initial?.raid || !Array.isArray(initial.players) ||
       !Array.isArray(initial.logs) || !Array.isArray(steps) || steps.length > limit) {
     throw new Error('Invalid replay');
   }
@@ -34,6 +35,8 @@ export function playReplay(raw: unknown): GameState {
     if (!step || !Number.isSafeInteger(step.at) || step.at < 0) throw new Error('Invalid replay timestamp');
     if (step.kind === 'tick') {
       tick(state, step.at, version);
+    } else if (step.kind === 'auto' && version >= 10) {
+      autoBattle(state, step.at, version);
     } else if (step.kind === 'admin' && isAdminAction(step.action)) {
       if (!applyAdmin(state, step.action, step.at, clock)) throw new Error('Replay admin action rejected');
     } else if (step.kind === 'event') {
