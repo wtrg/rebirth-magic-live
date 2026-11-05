@@ -37,3 +37,36 @@
 #raid-result p,#raid-result ol{font-size:clamp(11px,2.4cqw,26px);color:#f5dcea}
 #raid-result ol{text-align:left;margin:12px 0 0;padding-left:24px}
 #skill-status{display:grid;gap:4px;color:#d4becf}
+
+/* The desktop workspace has one fixed-height stage and a separately scrolling console. */
+@media(min-width:1000px) and (min-height:700px){
+  body:not(.overlay) main{height:100dvh;min-height:0;overflow:hidden}
+  body:not(.overlay) #broadcast{min-height:0;container-type:inline-size;grid-template-rows:auto auto minmax(180px,1fr) auto auto}
+  body:not(.overlay) header{padding-block:14px}
+  body:not(.overlay) .boss-hud{padding-top:12px}
+  body:not(.overlay) h1{font-size:clamp(32px,3.4vw,44px)}
+  body:not(.overlay) #operator{min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-gutter:stable;scroll-padding-top:110px}
+  body:not(.overlay) #operator>*{flex-shrink:0}
+  body:not(.overlay) #logs{height:52px;min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-gutter:stable}
+  body:not(.overlay) .operator-actions{position:sticky;top:0;z-index:3;background:#1e1828;padding-block:8px;border-block:1px solid #58445d}
+}
+@container(max-width:740px){
+  body:not(.overlay) #party{grid-template-columns:repeat(3,minmax(0,1fr))}
+  body:not(.overlay) #party article{gap:2px;padding:4px 6px}
+  body:not(.overlay) #party strong{font-size:13px}
+  body:not(.overlay) progress{height:5px}
+}
+@media(max-width:999px){
+  body:not(.overlay) main{grid-template-columns:1fr}
+  body:not(.overlay) #operator{border-left:0;border-top:1px solid #43344a}
+  body:not(.overlay) #broadcast{grid-template-rows:auto auto minmax(300px,55dvh) auto auto}
+  body:not(.overlay) header{flex-wrap:wrap;gap:6px}
+}
+body:not(.overlay) #raid-result{top:50%;transform:translateY(-50%);padding:12px}
+body:not(.overlay) #raid-result small{font-size:10px;line-height:1.2}
+body:not(.overlay) #raid-result h2{font-size:32px;margin:6px 0}
+body:not(.overlay) #raid-result p,body:not(.overlay) #raid-result ol{font-size:12px;line-height:1.3}
+body:not(.overlay) #result-contributors{max-height:52px;overflow-y:auto;margin-top:8px;overscroll-behavior:contain}
+#result-contributors{overflow-wrap:anywhere}
+button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible,summary:focus-visible,#operator:focus-visible,#logs:focus-visible,#result-contributors:focus-visible{outline:2px solid #ffbbac;outline-offset:3px}
+.metrics,progress,#profile-stats{font-variant-numeric:tabular-nums}

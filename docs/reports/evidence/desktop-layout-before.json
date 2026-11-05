@@ -1,0 +1,311 @@
+{
+  "audit": true,
+  "results": [
+    {
+      "viewport": {
+        "width": 1280,
+        "height": 900
+      },
+      "broadcast": {
+        "x": 0,
+        "y": 0,
+        "width": 950,
+        "height": 1254,
+        "bottom": 1254,
+        "right": 950
+      },
+      "arena": {
+        "x": 0,
+        "y": 214,
+        "width": 950,
+        "height": 794,
+        "bottom": 1008,
+        "right": 950
+      },
+      "party": {
+        "x": 0,
+        "y": 1008,
+        "width": 950,
+        "height": 120,
+        "bottom": 1128,
+        "right": 950
+      },
+      "footer": {
+        "x": 0,
+        "y": 1128,
+        "width": 950,
+        "height": 126,
+        "bottom": 1254,
+        "right": 950
+      },
+      "operator": {
+        "x": 950,
+        "y": 0,
+        "width": 330,
+        "height": 1254,
+        "bottom": 1254,
+        "right": 1280
+      },
+      "rootWidth": 1280,
+      "rootHeight": 1254,
+      "operatorClientHeight": 1254,
+      "operatorScrollHeight": 1254
+    },
+    {
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "broadcast": {
+        "x": 0,
+        "y": 0,
+        "width": 1036,
+        "height": 1254,
+        "bottom": 1254,
+        "right": 1036
+      },
+      "arena": {
+        "x": 0,
+        "y": 214,
+        "width": 1036,
+        "height": 794,
+        "bottom": 1008,
+        "right": 1036
+      },
+      "party": {
+        "x": 0,
+        "y": 1008,
+        "width": 1036,
+        "height": 120,
+        "bottom": 1128,
+        "right": 1036
+      },
+      "footer": {
+        "x": 0,
+        "y": 1128,
+        "width": 1036,
+        "height": 126,
+        "bottom": 1254,
+        "right": 1036
+      },
+      "operator": {
+        "x": 1036,
+        "y": 0,
+        "width": 330,
+        "height": 1254,
+        "bottom": 1254,
+        "right": 1366
+      },
+      "rootWidth": 1366,
+      "rootHeight": 1254,
+      "operatorClientHeight": 1254,
+      "operatorScrollHeight": 1254
+    },
+    {
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "broadcast": {
+        "x": 0,
+        "y": 0,
+        "width": 694,
+        "height": 1254,
+        "bottom": 1254,
+        "right": 694
+      },
+      "arena": {
+        "x": 0,
+        "y": 211.203125,
+        "width": 694,
+        "height": 713.796875,
+        "bottom": 925,
+        "right": 694
+      },
+      "party": {
+        "x": 0,
+        "y": 925,
+        "width": 694,
+        "height": 203,
+        "bottom": 1128,
+        "right": 694
+      },
+      "footer": {
+        "x": 0,
+        "y": 1128,
+        "width": 694,
+        "height": 126,
+        "bottom": 1254,
+        "right": 694
+      },
+      "operator": {
+        "x": 694,
+        "y": 0,
+        "width": 330,
+        "height": 1254,
+        "bottom": 1254,
+        "right": 1024
+      },
+      "rootWidth": 1024,
+      "rootHeight": 1254,
+      "operatorClientHeight": 1254,
+      "operatorScrollHeight": 1254
+    },
+    {
+      "viewport": {
+        "width": 1280,
+        "height": 640
+      },
+      "broadcast": {
+        "x": 0,
+        "y": 0,
+        "width": 950,
+        "height": 1254,
+        "bottom": 1254,
+        "right": 950
+      },
+      "arena": {
+        "x": 0,
+        "y": 214,
+        "width": 950,
+        "height": 794,
+        "bottom": 1008,
+        "right": 950
+      },
+      "party": {
+        "x": 0,
+        "y": 1008,
+        "width": 950,
+        "height": 120,
+        "bottom": 1128,
+        "right": 950
+      },
+      "footer": {
+        "x": 0,
+        "y": 1128,
+        "width": 950,
+        "height": 126,
+        "bottom": 1254,
+        "right": 950
+      },
+      "operator": {
+        "x": 950,
+        "y": 0,
+        "width": 330,
+        "height": 1254,
+        "bottom": 1254,
+        "right": 1280
+      },
+      "rootWidth": 1280,
+      "rootHeight": 1254,
+      "operatorClientHeight": 1254,
+      "operatorScrollHeight": 1254
+    },
+    {
+      "viewport": {
+        "width": 900,
+        "height": 600
+      },
+      "broadcast": {
+        "x": 0,
+        "y": 0,
+        "width": 570,
+        "height": 1254,
+        "bottom": 1254,
+        "right": 570
+      },
+      "arena": {
+        "x": 0,
+        "y": 205,
+        "width": 570,
+        "height": 720,
+        "bottom": 925,
+        "right": 570
+      },
+      "party": {
+        "x": 0,
+        "y": 925,
+        "width": 570,
+        "height": 203,
+        "bottom": 1128,
+        "right": 570
+      },
+      "footer": {
+        "x": 0,
+        "y": 1128,
+        "width": 570,
+        "height": 126,
+        "bottom": 1254,
+        "right": 570
+      },
+      "operator": {
+        "x": 570,
+        "y": 0,
+        "width": 330,
+        "height": 1254,
+        "bottom": 1254,
+        "right": 900
+      },
+      "rootWidth": 900,
+      "rootHeight": 1254,
+      "operatorClientHeight": 1254,
+      "operatorScrollHeight": 1254
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "broadcast": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 993.1875,
+        "bottom": 993.1875,
+        "right": 390
+      },
+      "arena": {
+        "x": 0,
+        "y": 200,
+        "width": 390,
+        "height": 464.1875,
+        "bottom": 664.1875,
+        "right": 390
+      },
+      "party": {
+        "x": 0,
+        "y": 664.1875,
+        "width": 390,
+        "height": 203,
+        "bottom": 867.1875,
+        "right": 390
+      },
+      "footer": {
+        "x": 0,
+        "y": 867.1875,
+        "width": 390,
+        "height": 126,
+        "bottom": 993.1875,
+        "right": 390
+      },
+      "operator": {
+        "x": 0,
+        "y": 993.1875,
+        "width": 390,
+        "height": 1254,
+        "bottom": 2247.1875,
+        "right": 390
+      },
+      "rootWidth": 390,
+      "rootHeight": 2247,
+      "operatorClientHeight": 1254,
+      "operatorScrollHeight": 1254
+    }
+  ],
+  "overlay": {
+    "x": 0,
+    "y": 0,
+    "width": 540,
+    "height": 960
+  }
+}
