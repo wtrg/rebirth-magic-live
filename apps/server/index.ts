@@ -39,11 +39,16 @@ function sameOrigin(req: IncomingMessage) {
 }
 
 async function readJson(req: IncomingMessage): Promise<unknown> {
-  let body = '';
-  for await (const chunk of req) {
-    body += chunk.toString();
-    if (body.length > 2048) throw new Error('payload too large');
+  const limit = 2048;
+  if (Number(req.headers['content-length']) > limit) throw new RangeError('payload too large');
+  const chunks: Buffer[] = [];
+  let size = 0;
+  for await (const chunk of req.iterator({ destroyOnReturn: false })) {
+    size += chunk.length;
+    if (size > limit) throw new RangeError('payload too large');
+    chunks.push(chunk);
   }
+  const body = new TextDecoder('utf-8', { fatal: true }).decode(Buffer.concat(chunks));
   return JSON.parse(body);
 }
 
@@ -80,7 +85,14 @@ const server = createServer(async (req, res) => {
       res.writeHead(403).end(); return;
     }
     let body: unknown;
-    try { body = await readJson(req); } catch { res.writeHead(400).end(); return; }
+    try {
+      body = await readJson(req);
+    } catch (error) {
+      res.setHeader('Connection', 'close');
+      req.resume();
+      res.writeHead(error instanceof RangeError ? 413 : 400).end();
+      return;
+    }
     if (stopping) { res.writeHead(503).end(); return; }
     const now = Date.now();
     if (path === '/event') {
