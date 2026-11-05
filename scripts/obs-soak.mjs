@@ -16,7 +16,7 @@ assert.ok(typeof config.server_password === 'string' && config.server_password.l
 const seconds = Number(process.env.QA_OBS_SECONDS ?? 600);
 const pairedPreview = process.env.QA_OBS_P9_PREVIEW === '1';
 const port = Number(process.env.QA_OBS_PORT ?? 4193);
-assert.ok(Number.isInteger(seconds) && seconds >= 30 && seconds <= 3600);
+assert.ok(Number.isInteger(seconds) && seconds >= 30 && seconds <= 43200);
 assert.ok(Number.isInteger(port) && port >= 1024 && port <= 65535);
 const dir = resolve('test-results/obs-current-'+Date.now());
 await mkdir(dir,{recursive:true});
