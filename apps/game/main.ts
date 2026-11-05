@@ -20,6 +20,7 @@ audioToggle.onclick = async () => {
   audioToggle.textContent = enabled ? 'Tắt âm thanh' : 'Bật âm thanh';
 };
 overlayAudio.onclick = async () => { overlayAudio.hidden = await audio.enable(); };
+if (overlay && params.get('audio') === '1') void audio.enable().then(enabled => { overlayAudio.hidden = enabled; });
 document.body.classList.toggle('overlay', overlay);
 const low = get<HTMLInputElement>('low');
 low.checked = params.get('quality') !== 'high';

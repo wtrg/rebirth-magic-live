@@ -1,0 +1,15 @@
+{
+  "date": "2026-11-05",
+  "source": "character-animation branch plus overlay audio startup",
+  "scope": "OBS portable 33.0.1, Browser Source only, reroute_audio=true, 1080x1920 30 FPS, AAC 48kHz stereo",
+  "durationSeconds": 17.5,
+  "baseline": {
+    "rmsDbfs": -200.0,
+    "peakDbfs": -200.0
+  },
+  "combat": {
+    "rmsDbfs": -46.19,
+    "peakDbfs": -22.58
+  },
+  "notes": "Baseline before first raid. Three synthetic players. Audio enabled by overlay URL audio=1. No microphone or desktop sources in isolated scene."
+}

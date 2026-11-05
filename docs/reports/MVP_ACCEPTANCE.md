@@ -28,7 +28,7 @@ Audit date 2026-11-05. Source snapshot 14b66c062251497d482a98c5e7f5cd0f8aa42aaa.
 ## Remaining gates
 
 - Actual TikTok account, room events, verified gift IDs and platform behavior. The owner confirmed no real test LIVE session is currently available.
-- OBS audio routing. Chrome verifies local synthesis after opt-in. An OBS audio capture has not established the audible output path.
+- OBS audio routing was subsequently verified in a 17.5-second recording with Browser Source as the only audio input. Sustained audio operation remains unmeasured. See P7.
 - Longer combined OBS and browser operation. The current combined recording lasts three minutes. The completed ten-minute server run is tracked in P7 and cannot establish combined stability.
 - Full character animation review, including running and hit reactions across all six class models and all pets. The GLB clips cover boss weapon pivots, with other motion procedural.
 - Leader product and visual review. Antigravity and Gemini reports remain NOT_RECEIVED. The WT bridge connectivity check returned fetch failed.
