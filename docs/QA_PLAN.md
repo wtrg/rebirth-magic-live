@@ -1,5 +1,7 @@
 # QA Plan
 
+Auto ordering: `node --test tests/auto-order.test.ts tests/auto-legacy.test.ts tests/auto.test.ts` checks full 32-stage opportunity cycles, forward/reversed rosters, eligibility/cooldowns, one-time rewards and versioned replay. The immutable v10 fixture was captured from commit `054e544` and compares the complete resulting-state SHA-256 after three raids, a manual skill and pause/resume. `node scripts/auto-fairness-qa.ts` separately compares eight synthetic 322-raid careers (v10/v11, forward/reversed, identical Fire/six-class), allowing earned growth but selecting no pets/equipment and sending no manual attacks. This is a game-rule comparison, not a performance benchmark or proof of full class balance.
+
 Combined current-source OBS/auto/HUD/audio QA uses `node scripts/obs-soak.mjs` and `node scripts/analyze-obs.mjs PATH_TO_RESULTS`. See [isolated OBS QA](OBS_QA.md) for the disposable portable configuration, workload, counter boundaries, cleanup and analysis. This runs separately from the test suite and requires local OBS/FFmpeg; CI does not claim to exercise recording hardware.
 
 Gate 1: npm run typecheck, npm run lint, npm run build.

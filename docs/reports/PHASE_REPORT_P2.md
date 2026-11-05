@@ -1,5 +1,9 @@
 # Phase report P2
 
+## Rotating auto opportunity and replay v11
+
+The [auto-order correction](AUTO_ORDER_FINDING.md#correction-and-evidence) rotates the first auto attacker by ranked stage without mutating roster order, changing positive-contribution reward eligibility or adding a persistent cursor. `currentRulesVersion=11` is shared by the server and new trace writer; explicit v10 traces keep fixed order. Full-cycle/permutation, skipped eligibility, cooldown, once-only reward and mixed-replay regressions accompany an immutable historical v10 complete-state digest. An independent eight-cohort/322-raid comparison quantifies the removal of permanent tail exclusion in that synthetic workload. It does not establish full class or manual-input balance. Final source, integration QA and exact evidence are recorded in [the task ledger](../TASK_LEDGER.md).
+
 ```text
 PROJECT: RE:BIRTH
 PHASE: P2

@@ -7,7 +7,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { setTimeout as sleep } from 'node:timers/promises';
 import { WebSocket } from 'ws';
-import { applyEvent, autoBattle, beginRaid, newGame, tick } from '../packages/combat/index.ts';
+import { applyEvent, autoBattle, beginRaid, currentRulesVersion, newGame, tick } from '../packages/combat/index.ts';
 import { createReplay, playReplay } from '../apps/server/replay.ts';
 import { openStore } from '../apps/server/store.ts';
 import type { GameEvent, GameSnapshot, GameState } from '../packages/shared/index.ts';
@@ -15,14 +15,14 @@ import type { GameEvent, GameSnapshot, GameState } from '../packages/shared/inde
 const event = (command: string, user = 'mock:auto'): GameEvent => ({
   id: 'auto:' + command.replace(/[^a-z0-9]/gi, ''), user, name: user, kind: 'chat', command,
 });
-const chat = (state: GameState, command: string, now = 1000, version = 10) =>
+const chat = (state: GameState, command: string, now = 1000, version = currentRulesVersion) =>
   applyEvent(state, event(command), now, version);
 
 function active() {
   const state = newGame();
   chat(state, '!join');
   assert.ok(beginRaid(state, 1000));
-  tick(state, 1800, 10);
+  tick(state, 1800, currentRulesVersion);
   return state;
 }
 
@@ -94,7 +94,7 @@ test('auto finishes a raid and awards progress exactly once', () => {
   const settled = structuredClone(state);
   for (const now of [1800, 2400, 10000]) {
     assert.equal(autoBattle(state, now), false);
-    tick(state, now, 10);
+    tick(state, now, currentRulesVersion);
   }
   assert.deepEqual(state, settled);
 });
@@ -112,23 +112,23 @@ test('legacy version 9 ignores auto commands and rejects auto replay steps', () 
   assert.throws(() => playReplay({ ...legacy, steps: [{ kind: 'auto', at: 1800 }] }), /Invalid replay/);
 });
 
-test('version 10 replays mixed auto, manual and boss ticks deterministically', () => {
+test('current replay records mixed auto, manual and boss ticks deterministically', () => {
   const state = active();
   const replay = createReplay(state);
   const enabled = event('!auto on');
-  applyEvent(state, enabled, 1800, 10);
+  applyEvent(state, enabled, 1800, currentRulesVersion);
   replay.record({ kind: 'event', event: enabled, at: 1800 });
   for (const now of [1800, 1850, 2400, 6400]) {
     autoBattle(state, now);
     replay.record({ kind: 'auto', at: now });
   }
   const manual = event('!attack');
-  applyEvent(state, manual, 6400, 10);
+  applyEvent(state, manual, 6400, currentRulesVersion);
   replay.record({ kind: 'event', event: manual, at: 6400 });
-  tick(state, 6400, 10);
+  tick(state, 6400, currentRulesVersion);
   replay.record({ kind: 'tick', at: 6400 });
   const trace = JSON.parse(replay.export());
-  assert.equal(trace.version, 10);
+  assert.equal(trace.version, 11);
   assert.deepEqual(playReplay(trace), state);
   assert.deepEqual(playReplay(trace), state);
 });
@@ -145,10 +145,10 @@ test('auto preference persists through archive and restored join', () => {
     assert.equal(restored?.auto, true);
     chat(state, '!leave');
     assert.equal(state.players.length, 0);
-    applyEvent(state, event('!join'), 2000, 10, { restored });
+    applyEvent(state, event('!join'), 2000, currentRulesVersion, { restored });
     assert.equal(state.players[0].auto, true);
     assert.ok(beginRaid(state, 2000));
-    tick(state, 2800, 10);
+    tick(state, 2800, currentRulesVersion);
     assert.equal(autoBattle(state, 2800), true);
     chat(state, '!auto off', 2800);
     store.commit(state.players);
@@ -220,7 +220,7 @@ test('browserless server auto pauses, replays and commits one victory with stage
     assert.equal(state!.players[0].shards, 1);
     assert.equal(state!.players[0].xp, 120);
     const trace = await (await fetch(base + '/replay', { signal: AbortSignal.timeout(3000) })).json();
-    assert.equal(trace.version, 10);
+    assert.equal(trace.version, 11);
     assert.ok(trace.steps.some((step: { kind: string }) => step.kind === 'auto'));
     const game: GameState = {
       raid: state!.raid, players: state!.players, logs: state!.logs, paused: state!.paused, effect: state!.effect,

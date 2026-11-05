@@ -43,6 +43,8 @@ Dùng `!leave` giữa các trận để rời đội, hoặc nút **Giải tán 
 
 ## Tự đánh thường
 
+Người được đánh auto trước luân phiên khi đội thắng và mở phụ bản cao hơn. Đội hình hiển thị giữ nguyên. Boss có thể bị hạ trước khi tất cả kịp đánh; chỉ người có đóng góp nhận thưởng. Lệnh kỹ năng thủ công vẫn được xử lý theo thứ tự nhận.
+
 Người xem gửi `!auto on` sau khi tham gia; dùng `!auto off` để dừng hoặc `!auto` để xem trạng thái qua log. Trong bảng MOCK, checkbox **Tự đánh thường** gửi cùng lệnh đó cho nhân vật đang chọn. Đây là lựa chọn được lưu theo hồ sơ, mặc định tắt với người mới.
 
 Server tự ra đòn thường khi nhân vật còn sống và raid đang chiến đấu. Không cần giữ trang điều khiển mở. Đòn tự động và `!attack` dùng chung cooldown 600 ms; `!skill1`, `!skill2`, `!ult` vẫn do người xem dùng. Hàng đợi bình luận của nhịp xử lý được áp dụng trước đòn tự động. **Dừng khẩn cấp** dừng cả tự đánh. Khi adapter mất kết nối, game cục bộ vẫn chạy; host có thể pause. Host vẫn phải mở từng raid mới.
