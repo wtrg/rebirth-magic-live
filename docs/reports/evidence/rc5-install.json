@@ -1,0 +1,28 @@
+{
+  "testedCommit": "3d74b3270f277956180843ae72b1c470dd870b74",
+  "publicBranch": "release/rc5",
+  "packageVersion": "0.2.0-rc.5",
+  "platform": "Windows",
+  "node": "24.17.0",
+  "npm": "11.13.0",
+  "browserSelection": "Playwright Chromium",
+  "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x0000A7A8) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "initialState": "New public clone; no previous node_modules, dist or game database",
+  "checks": [
+    {"command": "npm ci", "result": "PASS", "installationAuditVulnerabilities": 0},
+    {"command": "npm run typecheck", "result": "PASS"},
+    {"command": "npm run lint", "result": "PASS"},
+    {"command": "npm test", "result": "PASS", "tests": 36, "passed": 36, "failed": 0},
+    {"command": "npm run build", "result": "PASS", "advisory": "Minified client chunk exceeds 500 kB"},
+    {"command": "node scripts/inspect-models.ts", "result": "PASS", "roots": 10, "clips": 5, "bytes": 50364},
+    {"command": "git diff --exit-code -- assets/manifest.json", "result": "PASS"},
+    {"command": "npx playwright install chromium", "result": "PASS"},
+    {"command": "QA_BROWSER=chromium node scripts/smoke.mjs", "result": "PASS", "scope": "Production portrait/GLB/procedural/no-WebGL, victory, pause/resume, ingress/security, replay, backup/restore, stage and reconnect"},
+    {"command": "QA_BROWSER=chromium node scripts/animation-qa.mjs", "result": "PASS", "scope": "Six classes and three pets, GLB/404, idle/approach/recoil/pause/defeat/revival; manual clock, not FPS"},
+    {"command": "QA_BROWSER=chromium node scripts/layout-qa.mjs", "result": "PASS", "scope": "Seven viewport sizes plus portrait, wraith/victory, controls and long content"},
+    {"command": "npm audit --omit=dev", "result": "PASS", "vulnerabilities": 0},
+    {"command": "git status --porcelain with explicit empty-output assertion", "result": "PASS", "trackedChanges": 0}
+  ],
+  "windowsManifestFix": {"rule": "assets/manifest.json text eol=lf", "observedCheckout": "i/lf w/lf attr/text eol=lf", "priorTrialCommit": "e738347b3eabcf8e53271db9bd12eaea06a1dc2c", "priorIssue": "LF inspector output under autocrlf left false modified status despite identical normalized blob hashes; complete QA rerun in a second new clone"},
+  "limits": "Curated record of actual local CLI output retained in ignored QA directory. No real viewer data, account secret or SQLite file published. Actual LIVE, Leader/Gemini approval, full balance, long-session and GPU-memory claims remain unverified. No new performance measurement is asserted by these installation checks."
+}

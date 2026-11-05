@@ -1,6 +1,6 @@
 # RE:BIRTH 0.2.0-rc.5 · Windows MOCK candidate
 
-RC5 packages the post-RC4 desktop fixes and v11 auto-order correction. The release preparation requires a fresh public Windows clone, local QA and green integration CI before publishing its immutable tag. Exact tested source and execution results are recorded in [P7](reports/PHASE_REPORT_P7.md). Older tags retain their original behavior; RC4 uses fixed-order v10 auto.
+RC5 packages the post-RC4 desktop fixes and v11 auto-order correction. A fresh public Windows clone at `3d74b32` passed installation, all 36 tests, quality/build, manifest, smoke, action and layout QA; its working tree stayed clean. The tag is published after integration CI. Exact execution results and limits are recorded in [P7](reports/PHASE_REPORT_P7.md). Older tags retain their original behavior; RC4 uses fixed-order v10 auto.
 
 This prerelease packages the local Windows Boss Raid. It includes an optional TikTok transport; actual room events and gifts remain unverified because no authorized test LIVE session is available.
 
