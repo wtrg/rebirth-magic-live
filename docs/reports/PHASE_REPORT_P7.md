@@ -70,3 +70,8 @@ These metrics cover OBS output, including any duplicated browser frames. Audio w
 ## Graceful shutdown regression
 
 The local shutdown request stops new ingress, drains accepted events and closes SQLite after HTTP connections complete. Windows integration QA submitted 64 joins immediately before shutdown and recovered all 64 profiles and receipts. SQLite quick_check returned ok. An incorrect Origin was rejected before shutdown. Emergency pause continues to clear its pending queue by design.
+
+
+## HTTP text and size regression
+
+Windows integration tests split a multibyte Vietnamese character across HTTP chunks and verified the stored name after controlled shutdown. Oversized Content-Length and chunked requests returned 413. Invalid UTF-8 returned 400. Typecheck, lint, the 16-test suite and build passed.
