@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { participationOrder, recordParticipationWindow, settleParticipationRaid, type Participation } from '../apps/server/participation.ts';
+import { openStore } from '../apps/server/store.ts';
 
 test('first service precedes smoothed rate, oldest service and deterministic ties', () => {
   const served = (eligibleRaids: number, servedRaids: number, lastServedSeq: number) =>
@@ -31,4 +32,32 @@ test('committed windows record actual service separately from completed raid tot
   assert.equal(settled.get('waiting')?.eligibleRaids, 1);
   assert.equal(settled.get('waiting')?.servedRaids, 0);
   assert.equal(history.get('served')?.servedRaids, 0);
+});
+
+test('participation transaction rolls back and retries by raid identity, independent of stage', () => {
+  const store = openStore(':memory:', true);
+  try {
+    const changes = new Map<string, Participation>([['player', {
+      eligibleRaids: 1, servedRaids: 1, everExecuted: true, firstEligibleSeq: 1, lastServedSeq: 1,
+    }]]);
+    const window = { id: 'window-1', raidId: 'raid-1', sequence: 1 };
+    const settlement = { raidId: 'raid-1', sequence: 1, stage: 1, at: 42 };
+    const receipt = { id: 'attack-1', at: 42 };
+    assert.ok(store.commitBatch([], [receipt]));
+    assert.equal(store.commitBatch([], [receipt], 2, undefined, { changes, window, settlement }), false);
+    assert.deepEqual(store.loadParticipation(), { history: new Map(), windowSeq: 0, settlementSeq: 0 });
+    assert.equal(store.loadStage(), 1);
+
+    assert.ok(store.commitBatch([], [{ id: 'attack-2', at: 43 }], 2, undefined, { changes, window, settlement }));
+    assert.equal(store.commitBatch([], [], 3, undefined, { changes, settlement }), false);
+    assert.deepEqual(store.loadParticipation(), { history: changes, windowSeq: 1, settlementSeq: 1 });
+    assert.equal(store.loadStage(), 2);
+
+    assert.ok(store.commitBatch([], [], undefined, undefined, {
+      changes: new Map(), settlement: { ...settlement, raidId: 'raid-2', sequence: 2 },
+    }));
+    assert.equal(store.loadParticipation().settlementSeq, 2);
+  } finally {
+    store.close();
+  }
 });
