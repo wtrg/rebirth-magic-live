@@ -113,6 +113,51 @@ try {
     results.push({mode,renderer,idle,attack,hit,defeat,revived});
     await page.close();
   }
+  const firePage = await browser.newPage({viewport:{width:1080,height:1920}});
+  const fireErrors = [];
+  firePage.on('pageerror', error => fireErrors.push(error.message));
+  await firePage.goto('http://127.0.0.1:4193/scripts/fixtures/animation.html?fire-preview=1');
+  await firePage.waitForFunction(() => !!window.animationQA?.firePose());
+  const firePose = () => firePage.evaluate(() => window.animationQA.firePose());
+  const fireStep = ms => firePage.evaluate(ms => window.animationQA.advance(ms), ms);
+  const fireStage = name => firePage.evaluate(name => window.animationQA.stage(name), name);
+  const rest = await firePose();
+  await fireStage('attack');
+  await fireStep(50);
+  const run = await firePose();
+  await fireStep(100);
+  const approach = await firePose();
+  assert.ok(approach.z < run.z && run.z <= rest.z);
+  assert.notDeepEqual(approach.leftLeg, rest.leftLeg);
+  await fireStep(200);
+  assert.notDeepEqual((await firePose()).orb, rest.orb);
+  await fireStep(400);
+  assert.equal((await firePose()).z, rest.z);
+  await fireStage('hit');
+  await fireStep(50);
+  const hitStart = await firePose();
+  await fireStep(100);
+  assert.notDeepEqual((await firePose()).hips, hitStart.hips);
+  await fireStage('hit');
+  await fireStep(50);
+  assert.deepEqual(await firePose(), hitStart);
+  await fireStage('pause');
+  await fireStep(1000);
+  assert.deepEqual(await firePose(), hitStart);
+  await fireStage('resume');
+  await fireStep(100);
+  assert.notDeepEqual(await firePose(), hitStart);
+  await fireStage('defeat');
+  await fireStep(2000);
+  const down = await firePose();
+  assert.notDeepEqual(down.hips, rest.hips);
+  await fireStep(500);
+  assert.deepEqual(await firePose(), down);
+  await fireStage('revive');
+  await fireStep(200);
+  assert.notDeepEqual((await firePose()).hips, down.hips);
+  assert.deepEqual(fireErrors, []);
+  await firePage.close();
   await writeFile(`${output}/results.json`,JSON.stringify(results,null,2)+'\n');
   await writeFile(`${output}/manifest.json`,JSON.stringify({
     runtimeSourceCommit:execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),
@@ -126,6 +171,7 @@ try {
       'Fixture excludes production HUD; visual and product approval remain pending.'],
   },null,2)+'\n');
   console.log('PASS: six classes / three pets, GLB and 404 fallback, idle, attack approach, recoil, pause, defeat and revival.');
+  console.log('PASS: Fire Mage skinned approach, cast, repeated hit, pause/resume, held defeat and revival.');
 } finally {
   await browser?.close();
   await server.close();
