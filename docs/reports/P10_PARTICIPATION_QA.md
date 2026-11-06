@@ -112,3 +112,14 @@ consecutive eligible raids. The replay eligibility and rate gates were
 checked against the captured per-ID results and added to the harness.
 
 [Raw 96-raid six-slot HTTP evidence](evidence/p10-v14-http-six-96.jsonl)
+
+## Variable-capacity follow-up
+
+At `96f3ea5`, `QA_MATRIX_RAIDS=12` with `--participation --mixed`
+completed 108 HTTP raids. All nine roster/spread cells passed replay,
+WebSocket and SQLite parity. The roster started at level 30 and kept the
+levels earned during each cell. The boss took damage from 6–14 contributors
+per raid. Each of the 32 IDs executed at least once in every cell. Two
+offered manual commands were absent from replay windows, both at 350 ms.
+This test uses basic auto and manual ultimates with synthetic rosters.
+[Raw 108-raid evidence](evidence/p10-v14-http-variable-108.jsonl)
