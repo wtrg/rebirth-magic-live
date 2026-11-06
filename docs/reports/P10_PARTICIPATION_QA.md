@@ -123,3 +123,15 @@ per raid. Each of the 32 IDs executed at least once in every cell. Two
 offered manual commands were absent from replay windows, both at 350 ms.
 This test uses basic auto and manual ultimates with synthetic rosters.
 [Raw 108-raid evidence](evidence/p10-v14-http-variable-108.jsonl)
+
+## Fairness QA disposition
+
+The Leader reviewed the controlled 324- and 96-raid results at PR head
+`1d928598997aa8c02dbf3fa3b31e384b8ef03e9e` and accepted the policy for
+the measured Windows MOCK QA scope, subject to the exact-checkout rerun.
+That rerun passed with both runtime and harness at
+`aa1da98aa4e40b06ab54b4daf2d6a0bb74a3dbad`. The command was
+`node scripts/p10-ranked-matrix.mjs --participation` after `npm ci`.
+The separately recorded capacity audit supplies the per-window evidence
+for the two unserved IDs. Policy research is closed for this scope.
+PR #68 remains a draft pending a separate integration decision.
