@@ -128,6 +128,12 @@ function bossPose() {
   const rig = captured.scene?.getObjectByName('Varkhazar_Rig');
   return rig?.getObjectByName('ArmR')?.quaternion.toArray();
 }
+function castIceUltimate() {
+  const player = state.players.find(player => player.classId === 'ice')!;
+  const before = state.raid.next;
+  applyEvent(state, { id: 'fixture-ice-ultimate', user: player.id, name: player.name, kind: 'chat', command: '!ult' }, Date.now());
+  return state.raid.next - before;
+}
 function firePose() {
   for (const root of captured.scene!.children) {
     if (!root.visible) continue;
@@ -140,6 +146,6 @@ function firePose() {
     };
   }
 }
-Object.assign(window, { animationQA: { advance, poses, stage, state, beginMetrics, endMetrics, bossPose, firePose, realClock, models:models ? 'glb' : 'procedural' } });
+Object.assign(window, { animationQA: { advance, poses, stage, state, beginMetrics, endMetrics, bossPose, castIceUltimate, firePose, realClock, models:models ? 'glb' : 'procedural' } });
 stage('idle');
 if (!realClock) advance(200);

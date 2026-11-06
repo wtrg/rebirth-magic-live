@@ -19,17 +19,28 @@ try {
   const windup=await get();
   assert.equal(await warning.isVisible(),true);
   assert.notDeepEqual(windup,idle);
+  const delay=await page.evaluate(()=>{
+    const qa=window.animationQA;
+    const delay=qa.castIceUltimate();
+    qa.advance(50);
+    return delay;
+  });
+  assert.equal(delay,900);
+  assert.equal(await warning.isVisible(),false);
+  await page.evaluate(()=>window.animationQA.advance(850));
+  assert.equal(await warning.isVisible(),true);
+  const rescheduled=await get();
   await page.evaluate(()=>{const q=window.animationQA;q.stage('pause');q.advance(600);});
-  assert.deepEqual(await get(),windup);
+  assert.deepEqual(await get(),rescheduled);
   assert.equal(await warning.isVisible(),true);
   await page.evaluate(()=>{const q=window.animationQA;q.state.raid.next+=600;q.stage('resume');q.advance(350);});
   await page.screenshot({path:'test-results/p9-boss-client-telegraph.png'});
   const charged=await get();
-  assert.notDeepEqual(charged,windup);
+  assert.notDeepEqual(charged,rescheduled);
   await page.evaluate(()=>{const q=window.animationQA;q.state.bossImpactAt=Date.now();q.state.raid.next=Date.now()+4600;q.state.effect={serial:2,label:'Concurrent player hit',color:'#ff6600',kind:'skill'};q.advance(200);});
   assert.notDeepEqual(await get(),charged);
   assert.equal(await warning.isVisible(),false);
   await page.screenshot({path:'test-results/p9-boss-client-attack.png'});
   assert.deepEqual(errors,[]);
-  console.log('PASS: scheduled telegraph, pause/resume, and attack while player effect occupies the shared effect slot.');
+  console.log('PASS: scheduled telegraph, ice delay, pause/resume, and attack while player effect occupies the shared effect slot.');
 } finally {await browser.close();await server.close();}
