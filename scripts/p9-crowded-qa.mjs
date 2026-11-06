@@ -13,6 +13,7 @@ const folder = await mkdtemp(join(tmpdir(), 'rebirth-crowded-'));
 const database = join(folder, 'synthetic.sqlite');
 const base = 'http://127.0.0.1:4243';
 const roster = ['ice', 'fire', 'thunder', 'knight', 'healer', 'summon', 'ice', 'fire'];
+const benchmark = process.argv.includes('--benchmark');
 const event = (i, command) => ({ id: 'crowded:' + i + ':' + command.slice(1), user: 'mock:crowded-' + i,
   name: 'QA ' + i, kind: 'chat', command });
 const seed = newGame();
@@ -42,7 +43,8 @@ try {
   await Promise.all(roster.map((_, i) => post('/event', event(i, '!join'))));
   await post('/admin', 'start');
   browser = await chromium.launch({ channel: 'chrome', headless: false });
-  for (const mode of ['default', 'paired', 'ice-missing', 'fox-missing']) {
+  const modes = benchmark ? ['default', 'paired', 'paired', 'default'] : ['default', 'paired', 'ice-missing', 'fox-missing'];
+  for (const mode of modes) {
     const page = await browser.newPage({ viewport: { width: 1080, height: 1920 } });
     const errors = [], candidateRequests = [];
     page.on('pageerror', error => errors.push(error.message));
@@ -51,6 +53,24 @@ try {
     });
     if (mode === 'ice-missing') await page.route('**/ice-mage-*.glb', route => route.fulfill({ status: 404 }));
     if (mode === 'fox-missing') await page.route('**/fire-fox-*.glb', route => route.fulfill({ status: 404 }));
+    if (benchmark) await page.addInitScript(() => {
+      let draws = 0;
+      const prototype = WebGL2RenderingContext.prototype;
+      for (const name of ['drawElements', 'drawArrays', 'drawElementsInstanced', 'drawArraysInstanced']) {
+        const draw = prototype[name];
+        prototype[name] = function (...args) {
+          draws++;
+          return draw.apply(this, args);
+        };
+      }
+      const request = window.requestAnimationFrame.bind(window);
+      window.qaDraws = [];
+      window.requestAnimationFrame = callback => request(time => {
+        const before = draws;
+        callback(time);
+        if (draws > before) window.qaDraws.push([time, draws - before]);
+      });
+    });
     await page.goto(base + '/?overlay&fire-preview=1&boss-preview=1' + (mode === 'default' ? '' : '&crowded-qa=1'));
     const canvas = page.locator('canvas[data-fire-preview=skinned][data-boss-preview=skinned]');
     await canvas.waitFor();
@@ -58,8 +78,24 @@ try {
     assert.equal(await canvas.getAttribute('data-ice-preview'), ['paired', 'fox-missing'].includes(mode) ? 'skinned' : null);
     assert.equal(await canvas.getAttribute('data-fox-preview'), ['paired', 'ice-missing'].includes(mode) ? 'skinned' : null);
     assert.equal(candidateRequests.length, mode === 'default' ? 0 : 2);
-    await page.screenshot({ path: 'test-results/p9-crowded-' + mode + '.png' });
-    if (mode === 'paired') {
+    if (benchmark) {
+      await page.waitForFunction(() => document.querySelector('#phase')?.textContent === 'GIAI ĐOẠN I');
+      await page.evaluate(() => { window.qaDraws.length = 0; });
+      await sleep(3000);
+      const samples = await page.evaluate(() => window.qaDraws.slice());
+      assert.ok(samples.length > 10);
+      assert.equal(await page.locator('#phase').textContent(), 'GIAI ĐOẠN I');
+      const renderer = await canvas.evaluate(node => {
+        const gl = node.getContext('webgl2');
+        const info = gl.getExtension('WEBGL_debug_renderer_info');
+        return gl.getParameter(info?.UNMASKED_RENDERER_WEBGL ?? gl.RENDERER);
+      });
+      const gaps = samples.slice(1).map(([time], i) => time - samples[i][0]).sort((a, b) => a - b);
+      const draws = samples.map(([, count]) => count).sort((a, b) => a - b);
+      console.log(JSON.stringify({ mode, renderer, samples: samples.length, p95Ms: gaps[Math.floor(.95 * (gaps.length - 1))],
+        maxGapMs: gaps.at(-1), medianDraws: draws[Math.floor(draws.length / 2)] }));
+    } else await page.screenshot({ path: 'test-results/p9-crowded-' + mode + '.png' });
+    if (!benchmark && mode === 'paired') {
       await page.waitForFunction(() => document.querySelector('#phase')?.textContent === 'GIAI ĐOẠN I');
       await post('/event', event(0, '!attack'));
       await page.locator('canvas[data-fox-attacking]').waitFor();
@@ -69,7 +105,7 @@ try {
     assert.deepEqual(errors, []);
     await page.close();
   }
-  console.log('PASS: eight-player HUD, both opt-in assets and independent fallback');
+  if (!benchmark) console.log('PASS: eight-player HUD, both opt-in assets and independent fallback');
 } finally {
   await browser?.close();
   if (server.exitCode === null && server.signalCode === null) server.kill();
