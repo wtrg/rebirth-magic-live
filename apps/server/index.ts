@@ -61,10 +61,14 @@ async function readJson(req: IncomingMessage): Promise<unknown> {
   return JSON.parse(body);
 }
 
+function pendingEventCount() {
+  return queue.length + (window?.intents.size ?? 0);
+}
+
 function enqueue(event: GameEvent, now: number) {
   if (event.kind === 'gift' && !event.complete) return true;
   const limiterKey = event.kind + ':' + event.user;
-  if (stopping || state.paused || queue.length + (window?.intents.size ?? 0) >= 128 ||
+  if (stopping || state.paused || pendingEventCount() >= 128 ||
       lastEvent.size >= 4096 && !lastEvent.has(limiterKey)) return false;
   if (now - (lastEvent.get(limiterKey) ?? 0) < 200) return false;
   lastEvent.set(limiterKey, now);
@@ -81,7 +85,7 @@ const server = createServer(async (req, res) => {
   const path = req.url?.split('?')[0];
   if (path === '/health' && req.method === 'GET') {
     res.setHeader('Content-Type', 'application/json');
-    res.end(JSON.stringify({ status: 'ok', mode, live: live.status, queue: queue.length }));
+    res.end(JSON.stringify({ status: 'ok', mode, live: live.status, queue: pendingEventCount() }));
     return;
   }
   if (path === '/replay' && req.method === 'GET' && replay) {

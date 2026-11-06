@@ -149,6 +149,11 @@ for (const terminal of [true, false]) test('ranked shutdown drains once with ter
     const sentAt = performance.now();
     await post('/event', second, 202);
     await post('/event', first, 202);
+    // Wait for the scheduler tick to move these commands from ingress into its window.
+    await setTimeout(90);
+    const health = await (await fetch(base + '/health', { signal: AbortSignal.timeout(3000) })).json();
+    assert.equal(health.queue, 2);
+    assert.equal(snapshot?.raid.result, null);
     await post('/admin', 'shutdown', 204);
     assert.ok(performance.now() - sentAt < 400, 'Shutdown must occur before the opening window expires');
     assert.equal((await closed)[0], 0, errors);
