@@ -276,3 +276,5 @@ Each entry's dependencies name the actual Git base used for integration, not a r
 | RB-LIVE | Authorized real LIVE end-to-end test | Codex + owner session | BLOCKED | User confirms no test LIVE session available | Local configuration and synthetic/redacted QA report only | Verify permitted channel, gift IDs and event flow without exposing secrets | docs/LIVE_SETUP.md runbook | No real session; credentials stay local | NOT_RUN |
 
 Blocked task rows describe external dependencies, not the status of the overall active project goal. No paid connector, cloud service or asset is authorized. P8 expansion remains deferred.
+
+Current evidence for open follow-ups is indexed in the [MVP acceptance audit](reports/MVP_ACCEPTANCE.md), including the separate P9 crowded-scene and P10 scheduler review branches.
