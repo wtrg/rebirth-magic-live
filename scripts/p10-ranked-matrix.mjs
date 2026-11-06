@@ -99,9 +99,16 @@ async function cohort(pattern, spread, index) {
     assert.equal(trace.truncated, false);
     const executedSlots = new Map();
     const terminalDeniedSlots = new Map();
-    const replay = playReplayWithDebt(trace, ({ executed, denied }) => {
+    const deniedWindows = new Map();
+    const replay = playReplayWithDebt(trace, ({ executed, denied, stage, windowSeq, firstService }) => {
       for (const id of executed) executedSlots.set(id, (executedSlots.get(id) ?? 0) + 1);
-      for (const id of denied) terminalDeniedSlots.set(id, (terminalDeniedSlots.get(id) ?? 0) + 1);
+      for (const id of denied) {
+        terminalDeniedSlots.set(id, (terminalDeniedSlots.get(id) ?? 0) + 1);
+        const evidence = deniedWindows.get(id) ?? [];
+        evidence.push({ stage, windowSeq, availableSlots: executed.size, higherPriorityFirstService: firstService,
+          residualSlots: executed.size - firstService.length });
+        deniedWindows.set(id, evidence);
+      }
     });
     assert.deepEqual(replay.state, { raid, players, logs, paused, effect });
     const windows = trace.steps.filter(step => step.kind === 'opportunity');
@@ -130,7 +137,15 @@ async function cohort(pattern, spread, index) {
           executedSlots: executedSlots.get(id) ?? 0, terminalDeniedSlots: terminalDeniedSlots.get(id) ?? 0,
           ...replay.participation.history.get(id) };
       }) : undefined;
+      const firstServiceAudit = players?.filter(player => player.eligibleRaids > 0 && !player.everExecuted)
+        .map(({ id, eligibleRaids, firstEligibleSeq }) => {
+          const opportunities = deniedWindows.get(id) ?? [];
+          assert.equal(new Set(opportunities.map(window => window.stage)).size, eligibleRaids);
+          return { id, eligibleRaids, firstEligibleSeq, opportunities,
+            reason: opportunities.every(window => window.residualSlots === 0) ? 'capacity-exhausted' : 'available-slot-missed' };
+        });
       return { roster: pattern.map(group => group.length), spread, raids, offeredManual, scheduledManual, contributorCounts, windowWaitMs, players,
+        firstServiceAudit,
         latestAdmissionMs: Math.max(0, ...windows.flatMap(step => step.intents.map(intent => intent.admittedAt - step.openedAt))),
         firstSlots, wins: [...wins.values()], replayAndSqlite: 'pass' };
     } finally { saved.close(); }
@@ -143,10 +158,13 @@ async function cohort(pattern, spread, index) {
 }
 
 const scenarios = rosterPatterns.flatMap(pattern => [60, 180, 350].map(spread => ({ pattern, spread })));
+let missedFirstService = false;
 for (let i = 0; i < scenarios.length; i += 3) {
   const batch = await Promise.allSettled(scenarios.slice(i, i + 3).map(({ pattern, spread }, j) => cohort(pattern, spread, i + j)));
   for (const result of batch) {
     if (result.status === 'rejected') throw result.reason;
     console.log(JSON.stringify(result.value));
+    missedFirstService ||= result.value.firstServiceAudit?.some(player => player.reason === 'available-slot-missed') ?? false;
   }
 }
+assert.equal(missedFirstService, false, 'A never-served ID missed an available ranked slot');

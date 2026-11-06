@@ -44,7 +44,21 @@ replay/WebSocket/SQLite parity in all nine cells. For spreads of 60, 180 and
 (24/24/32). One manual request in the 32-player, 350 ms cell did not appear
 in a window. All other offered manual requests appeared in a window.
 
-First-service acceptance remains open. The six-slot simulation and this
+The initial fixed-36-raid first-service gate failed. On 2026-11-07, the Leader
+retained the ordering policy and replaced that gate with one based on available
+capacity. For each never-served eligible ID, the updated harness lists each
+eligible terminal window, the slots that executed before the terminal hit,
+which were consumed by higher-priority first-service candidates, and the
+residual capacity. An unserved ID with residual capacity fails the harness.
+Unserved IDs with exhausted capacity remain visible in the raw data.
+The 324-raid capacity audit passed parity and found no missed residual
+slots. In each 24/32 cell, `mock:matrix25` and `mock:matrix30` were
+eligible in 18 raids and remained unserved. Every eligible terminal window
+for each of those IDs exhausted its capacity on a higher-priority first
+service. The other six cells had no unserved eligible IDs. This audit uses
+actual window capacity under the chosen policy.
+
+The six-slot simulation and this
 one-hit HTTP run do not cover a six-class, multi-phase HTTP workload.
 Following independent review, v14 replay rejects ranked actions outside its
 window protocol. SQLite writes now check both opening sequence counters inside
@@ -64,3 +78,5 @@ capacity. The fixed six-slot 96-raid results above remain simulation evidence.
 Raw synthetic results are available for the [324-raid repeat](evidence/p10-v14-http-324.jsonl),
 [54 mixed raids](evidence/p10-v14-http-mixed-54.jsonl), and
 [controlled three-policy comparison](evidence/p10-v14-policy-study.jsonl).
+The [capacity audit](evidence/p10-v14-capacity-324.jsonl) includes window-level
+evidence for both unserved IDs at every spread.

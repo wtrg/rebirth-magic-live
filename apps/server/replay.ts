@@ -38,6 +38,7 @@ export function playReplay(raw: unknown): GameState {
 
 export function playReplayWithDebt(raw: unknown, onWindow?: (result: {
   executed: ReadonlySet<string>; denied: ReadonlySet<string>;
+  stage: number; windowSeq?: number; firstService: readonly string[];
 }) => void) {
   if (!raw || typeof raw !== 'object') throw new Error('Invalid replay');
   const { version, initial, steps, openingDebt, policyId, openingParticipation } = raw as {
@@ -147,6 +148,8 @@ export function playReplayWithDebt(raw: unknown, onWindow?: (result: {
       const before = state.raid.result;
       const order = participation && participationOrder(participation.history, participation.windowSeq + 1);
       const result = resolveOpportunityWindow(state, intents, debt, step.at, step.reason !== 'shutdown', order);
+      const firstService = participation && onWindow
+        ? [...result.executed].filter(id => !participation.history.get(id)?.everExecuted) : [];
       const terminal = !before && !!result.state.raid.result;
       // Early v13 MOCK captures predate the explicit terminal marker.
       if ((participation || step.terminal !== undefined) && step.terminal !== terminal) throw new Error('Invalid opportunity terminal outcome');
@@ -167,7 +170,8 @@ export function playReplayWithDebt(raw: unknown, onWindow?: (result: {
         });
         if (settled) { eligible.clear(); executed.clear(); }
       } else if (terminal) settle(result.denied);
-      onWindow?.({ executed: result.executed, denied: result.denied });
+      onWindow?.({ executed: result.executed, denied: result.denied, stage: state.raid.stage,
+        windowSeq: step.windowSeq, firstService });
     } else if (step.kind === 'auto' && version >= 10) {
       if (participation && !state.raid.practice && activeRaid(state)) throw new Error('Ranked auto requires a participation window');
       autoBattle(state, step.at, version);
