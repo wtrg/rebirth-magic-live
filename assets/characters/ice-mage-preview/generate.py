@@ -22,7 +22,7 @@ def material(name, color, metal=0, emission=0):
     shader.inputs['Emission Strength'].default_value = emission
     return mat
 
-mantle = material('Deep indigo wool', (.045,.079,.18))
+mantle = material('Glacier blue wool', (.075,.17,.31))
 steel = material('Frost steel', (.22,.40,.61), .42)
 ice = material('Glacier crystal', (.30,.80,1), emission=.22)
 face = material('Warm porcelain', (.64,.39,.29))

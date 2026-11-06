@@ -22,3 +22,5 @@ Run `node scripts/ice-portrait-qa.mjs` for the standalone 1080 × 1920 fixture u
 [Portrait pose sheet](portrait-poses.png)
 
 [Continuous portrait playback](portrait-playback.mp4) records the five exported clips in sequence on Intel UHD. Run `node scripts/ice-portrait-qa.mjs --record` to reproduce the browser capture. The fixture keeps the actor in place with a simplified HUD, so the footage is scoped to pose and silhouette review.
+
+[Material comparison](portrait-material.png) shows the original indigo on the left and revised glacier blue on the right under the same arena camera and lights. The revised cloth is easier to distinguish from the floor. The playback uses the revised GLB. Earlier stills show the original material.
