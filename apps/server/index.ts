@@ -7,12 +7,11 @@ import { activeRaid, applyEvent, autoBattle, autoReady, canExecuteCombatAction, 
 import { LiveAdapter, normalizeEvent } from '../../packages/tiktok-adapter/index.ts';
 import { eulerSource, eulerUrl, normalizeEulerMessage, readGiftMap } from '../../packages/tiktok-adapter/euler.ts';
 import type { EventContext, GameEvent, GameSnapshot } from '../../packages/shared/index.ts';
-import { openStore } from './store.ts';
+import { openStore, type ParticipationWrite } from './store.ts';
 import { applyAdmin, isAdminAction } from './admin.ts';
 import { createReplay } from './replay.ts';
 import { admitOpportunityIntent, openOpportunityWindow, resolveOpportunityWindow, settleRankedDebt, type OpportunityWindow } from './opportunity.ts';
-import { applyParticipationCommit, participationOrder, participationPolicyId, recordParticipationWindow, settleParticipationRaid,
-  type ParticipationCommit } from './participation.ts';
+import { applyParticipationCommit, participationOrder, participationPolicyId, recordParticipationWindow, settleParticipationRaid } from './participation.ts';
 
 const port = Number(process.env.PORT ?? 4173);
 const dist = resolve('dist');
@@ -239,10 +238,11 @@ function closeWindow(now: number, closedAt: number, reason: 'deadline' | 'shutdo
   const changes = useDebt && terminal ? settleRankedDebt(opportunityDebt, executed, result.denied) : undefined;
   const windowEligible = new Set([...result.executed, ...result.denied]);
   const eligible = new Set([...eligibleThisRaid, ...windowEligible]);
-  let participationCommit: ParticipationCommit | undefined;
+  let participationCommit: ParticipationWrite | undefined;
   if (participation) {
     const windowChanges = recordParticipationWindow(participation.history, windowEligible, result.executed, windowSeq);
     participationCommit = {
+      expected: participation,
       changes: terminal ? settleParticipationRaid(new Map([...participation.history, ...windowChanges]), eligible, executed) : windowChanges,
       window: { id: raidInstanceId + ':' + windowSeq, sequence: windowSeq, raidId: raidInstanceId },
       settlement: terminal ? settlementAt(now) : undefined,
@@ -310,6 +310,7 @@ function processBossTick(now: number) {
       const terminal = useRankedScheduler() && !!draft.raid.result;
       const changes = useDebt && terminal ? settleRankedDebt(opportunityDebt, executedThisRaid, new Set()) : undefined;
       const participationCommit = participation && terminal ? {
+        expected: participation,
         changes: settleParticipationRaid(participation.history, eligibleThisRaid, executedThisRaid),
         settlement: settlementAt(now),
       } : undefined;

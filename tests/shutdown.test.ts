@@ -202,6 +202,12 @@ for (const scenario of ['terminal', 'nonterminal', 'rollback', 'participation-te
       assert.throws(() => playReplayWithDebt({ ...trace, steps: [
         ...trace.steps.slice(0, -1), { ...windowStep, windowSeq: 2 },
       ] }), /Invalid participation window sequence/);
+      assert.throws(() => playReplayWithDebt({ ...trace, steps: [
+        ...trace.steps.slice(0, -1), { kind: 'auto', at: windowStep.at },
+      ] }), /Ranked auto requires a participation window/);
+      if (terminal) assert.throws(() => playReplayWithDebt({ ...trace, steps: [
+        ...trace.steps, { ...windowStep, windowSeq: 2, settlementSeq: undefined },
+      ] }), /Participation window outside an active ranked raid/);
       const saved = openStore(database, true);
       try {
         const { history, windowSeq, settlementSeq } = saved.loadParticipation();

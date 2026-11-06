@@ -1,4 +1,4 @@
-import { applyEvent, autoBattle, currentRulesVersion, tick } from '../../packages/combat/index.ts';
+import { activeRaid, applyEvent, autoBattle, currentRulesVersion, tick } from '../../packages/combat/index.ts';
 import type { EventContext, GameEvent, GameState } from '../../packages/shared/index.ts';
 import { normalizeEvent } from '../../packages/tiktok-adapter/index.ts';
 import { applyAdmin, isAdminAction, type AdminAction } from './admin.ts';
@@ -116,6 +116,9 @@ export function playReplayWithDebt(raw: unknown) {
         executed.clear();
       }
     } else if (step.kind === 'opportunity' && version >= 13) {
+      if (participation && (!raidId || step.raidId !== raidId || state.paused || state.raid.practice || !activeRaid(state))) {
+        throw new Error('Participation window outside an active ranked raid');
+      }
       if (!Number.isFinite(step.openedAt) || !Number.isFinite(step.deadline) || !Number.isFinite(step.closedAt) ||
           ![60, 400].includes(step.deadline - step.openedAt) || step.closedAt < step.openedAt ||
           (step.reason !== 'deadline' && step.reason !== 'shutdown') ||
@@ -132,7 +135,12 @@ export function playReplayWithDebt(raw: unknown) {
         users.add(event.user);
         intents.push({ event, admittedAt: intent.admittedAt });
       }
-      if (step.outcome === 'rollback') continue;
+      if (step.outcome === 'rollback') {
+        if (participation && (step.windowSeq !== undefined || step.settlementSeq !== undefined)) {
+          throw new Error('Rolled back participation window has a commit sequence');
+        }
+        continue;
+      }
       if (step.outcome !== 'committed') throw new Error('Invalid opportunity outcome');
       const before = state.raid.result;
       const order = participation && participationOrder(participation.history, participation.windowSeq + 1);
@@ -158,6 +166,7 @@ export function playReplayWithDebt(raw: unknown) {
         if (settled) { eligible.clear(); executed.clear(); }
       } else if (terminal) settle(result.denied);
     } else if (step.kind === 'auto' && version >= 10) {
+      if (participation && !state.raid.practice && activeRaid(state)) throw new Error('Ranked auto requires a participation window');
       autoBattle(state, step.at, version);
     } else if (step.kind === 'admin' && isAdminAction(step.action)) {
       if (!applyAdmin(state, step.action, step.at, clock)) throw new Error('Replay admin action rejected');
@@ -174,6 +183,10 @@ export function playReplayWithDebt(raw: unknown) {
     } else if (step.kind === 'event') {
       const event = normalizeEvent(step.event);
       if (!event || event.kind === 'gift' && !event.complete) throw new Error('Invalid replay event');
+      if (participation && !state.raid.practice && activeRaid(state) && event.kind === 'chat' &&
+          /^!(skill1|skill2|ult|attack)(?:\s|$)/.test(event.command)) {
+        throw new Error('Ranked combat command requires a participation window');
+      }
       applyEvent(state, event, step.at, version, version >= 9 ? step.context : undefined);
     } else {
       throw new Error('Invalid replay operation');

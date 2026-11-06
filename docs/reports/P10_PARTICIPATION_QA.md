@@ -42,6 +42,8 @@ replay/WebSocket/SQLite parity in all nine cells. For spreads of 60, 180 and
 in a window. All other offered manual requests appeared in a window.
 
 First-service acceptance remains open. The six-slot simulation and this
-one-hit HTTP run do not cover a six-class, multi-phase HTTP workload. The
-independent review also flagged acceptance of impossible v14 replay operations
-and stale ledger writes when multiple servers share one SQLite database.
+one-hit HTTP run do not cover a six-class, multi-phase HTTP workload.
+Following independent review, v14 replay rejects ranked actions outside its
+window protocol. SQLite writes now check both opening sequence counters inside
+the transaction. Regression tests cover an injected ranked auto step, an extra
+window after victory, and stale settlement-only writes.

@@ -2,7 +2,11 @@ import { DatabaseSync } from 'node:sqlite';
 import { mkdirSync } from 'node:fs';
 import { dirname } from 'node:path';
 import type { GameEvent, Player, RankedPlayer } from '../../packages/shared/index.ts';
-import type { Participation, ParticipationCommit } from './participation.ts';
+import type { Participation, ParticipationCommit, ParticipationLedger } from './participation.ts';
+
+export type ParticipationWrite = ParticipationCommit & {
+  expected: Pick<ParticipationLedger, 'windowSeq' | 'settlementSeq'>;
+};
 
 export function openStore(path: string, participation = false) {
   if (path !== ':memory:') mkdirSync(dirname(path), { recursive: true });
@@ -85,13 +89,13 @@ export function openStore(path: string, participation = false) {
     receipts: readonly { id: string; at: number }[],
     nextStage?: number,
     debtChanges?: ReadonlyMap<string, number>,
-    participationCommit?: ParticipationCommit,
+    participationCommit?: ParticipationWrite,
   ) {
     db.exec('BEGIN IMMEDIATE');
     try {
       if (participationCommit) {
         if (!ledger) throw new Error('Ranked participation storage is disabled');
-        const { window, settlement, changes } = participationCommit;
+        const { window, settlement, changes, expected } = participationCommit;
         const raidId = settlement?.raidId ?? window?.raidId;
         if (window && settlement && window.raidId !== settlement.raidId) throw new Error('Ranked raid identity mismatch');
         if ((raidId !== undefined && ledger.findSettlement.get(raidId)) ||
@@ -100,8 +104,9 @@ export function openStore(path: string, participation = false) {
           return false;
         }
         const sequences = ledger.sequences.get();
-        if ((window && window.sequence !== Number(sequences?.window_seq) + 1) ||
-            (settlement && settlement.sequence !== Number(sequences?.raid_seq) + 1)) {
+        if (expected.windowSeq !== Number(sequences?.window_seq) || expected.settlementSeq !== Number(sequences?.raid_seq) ||
+            (window && window.sequence !== expected.windowSeq + 1) ||
+            (settlement && settlement.sequence !== expected.settlementSeq + 1)) {
           throw new Error('Ranked participation sequence mismatch');
         }
         if (window) ledger.window.run(window.id, window.sequence, window.raidId);
