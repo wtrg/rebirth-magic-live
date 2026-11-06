@@ -100,9 +100,9 @@ test('local shutdown drains accepted events and closes the database', { timeout:
   }
 });
 
-for (const scenario of ['terminal', 'nonterminal', 'rollback', 'participation-terminal']) test('ranked window HTTP and SQLite: ' + scenario, { timeout: 15000 }, async () => {
-  const terminal = scenario !== 'nonterminal';
-  const participation = scenario === 'participation-terminal';
+for (const scenario of ['terminal', 'nonterminal', 'rollback', 'participation-terminal', 'participation-nonterminal']) test('ranked window HTTP and SQLite: ' + scenario, { timeout: 15000 }, async () => {
+  const terminal = !scenario.endsWith('nonterminal');
+  const participation = scenario.startsWith('participation-');
   const directory = await mkdtemp(join(tmpdir(), 'rebirth-ranked-shutdown-'));
   const database = join(directory, 'synthetic.sqlite');
   const replayFile = join(directory, 'shutdown.json');
@@ -112,7 +112,7 @@ for (const scenario of ['terminal', 'nonterminal', 'rollback', 'participation-te
   const winner = 'mock:shutdown-a', other = 'mock:shutdown-b';
   for (const id of [winner, other]) applyEvent(seed, chat(id, '!join'), 1);
   if (terminal) seed.players[0].level = 1100;
-  if (participation) seed.players[1].level = 1100;
+  if (participation && terminal) seed.players[1].level = 1100;
   const initial = openStore(database);
   initial.commitBatch(seed.players, [], undefined, new Map([[winner, 5]]));
   initial.close();
@@ -192,20 +192,33 @@ for (const scenario of ['terminal', 'nonterminal', 'rollback', 'participation-te
     if (scenario !== 'rollback') assert.ok(performance.now() - sentAt < 400, 'Shutdown must occur before the opening window expires');
     assert.equal((await closed)[0], 0, errors);
     if (participation) {
+      const trace = JSON.parse(await readFile(replayFile, 'utf8'));
+      assert.equal(trace.version, 14);
+      assert.equal(trace.policyId, 'ranked-participation-v1');
+      const replayed = playReplayWithDebt(trace);
+      const windowStep = trace.steps.at(-1);
+      assert.equal(windowStep.reason, 'shutdown');
+      assert.equal(windowStep.terminal, terminal);
+      assert.throws(() => playReplayWithDebt({ ...trace, steps: [
+        ...trace.steps.slice(0, -1), { ...windowStep, windowSeq: 2 },
+      ] }), /Invalid participation window sequence/);
       const saved = openStore(database, true);
       try {
         const { history, windowSeq, settlementSeq } = saved.loadParticipation();
+        assert.deepEqual(replayed.participation, { history, windowSeq, settlementSeq });
+        assert.equal(replayed.state.raid.result, terminal ? 'victory' : null);
+        for (const player of replayed.state.players) assert.deepEqual(player, saved.find(player.id));
         assert.equal(windowSeq, 1);
-        assert.equal(settlementSeq, 1);
-        assert.equal(saved.loadStage(), 2);
+        assert.equal(settlementSeq, Number(terminal));
+        assert.equal(saved.loadStage(), terminal ? 2 : 1);
         assert.deepEqual(saved.loadOpportunityDebt(), new Map([[winner, 5]]));
         assert.equal(history.size, 2);
         for (const id of [winner, other]) {
           // With two new identities, the stage-one stable hash puts B first.
-          const served = id === other;
+          const served = !terminal || id === other;
           assert.ok(saved.hasReceipt(chat(id, '!attack').id));
           assert.deepEqual(history.get(id), {
-            eligibleRaids: 1, servedRaids: Number(served), everExecuted: served,
+            eligibleRaids: Number(terminal), servedRaids: Number(terminal && served), everExecuted: served,
             firstEligibleSeq: 1, lastServedSeq: served ? 1 : null,
           });
         }

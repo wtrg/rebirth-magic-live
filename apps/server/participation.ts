@@ -8,6 +8,24 @@ export type Participation = {
   lastServedSeq: number | null;
 };
 
+export type ParticipationLedger = {
+  history: Map<string, Participation>;
+  windowSeq: number;
+  settlementSeq: number;
+};
+
+export type ParticipationCommit = {
+  changes: ReadonlyMap<string, Participation>;
+  window?: { id: string; sequence: number; raidId: string };
+  settlement?: { raidId: string; sequence: number; stage: number; at: number };
+};
+
+export function applyParticipationCommit(ledger: ParticipationLedger, commit: ParticipationCommit) {
+  for (const [id, stats] of commit.changes) ledger.history.set(id, stats);
+  if (commit.window) ledger.windowSeq = commit.window.sequence;
+  if (commit.settlement) ledger.settlementSeq = commit.settlement.sequence;
+}
+
 const empty: Readonly<Participation> = {
   eligibleRaids: 0, servedRaids: 0, everExecuted: false,
   firstEligibleSeq: null, lastServedSeq: null,

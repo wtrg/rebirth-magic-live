@@ -7,11 +7,12 @@ import { activeRaid, applyEvent, autoBattle, autoReady, canExecuteCombatAction, 
 import { LiveAdapter, normalizeEvent } from '../../packages/tiktok-adapter/index.ts';
 import { eulerSource, eulerUrl, normalizeEulerMessage, readGiftMap } from '../../packages/tiktok-adapter/euler.ts';
 import type { EventContext, GameEvent, GameSnapshot } from '../../packages/shared/index.ts';
-import { openStore, type ParticipationCommit } from './store.ts';
+import { openStore } from './store.ts';
 import { applyAdmin, isAdminAction } from './admin.ts';
 import { createReplay } from './replay.ts';
 import { admitOpportunityIntent, openOpportunityWindow, resolveOpportunityWindow, settleRankedDebt, type OpportunityWindow } from './opportunity.ts';
-import { participationOrder, participationPolicyId, recordParticipationWindow, settleParticipationRaid } from './participation.ts';
+import { applyParticipationCommit, participationOrder, participationPolicyId, recordParticipationWindow, settleParticipationRaid,
+  type ParticipationCommit } from './participation.ts';
 
 const port = Number(process.env.PORT ?? 4173);
 const dist = resolve('dist');
@@ -34,9 +35,8 @@ const useDebt = mode === 'mock' && process.env.REBIRTH_RANKED_SCHEDULER === '1';
 const rankedScheduler = useDebt || useParticipation;
 const opportunityDebt = useDebt ? store.loadOpportunityDebt() : new Map<string, number>();
 const participation = useParticipation ? store.loadParticipation() : undefined;
-// The v13 recorder cannot describe participation ordering.
-const replay = mode === 'mock' && !useParticipation && process.env.REBIRTH_RECORD_REPLAY === '1' ?
-  createReplay(state, useDebt ? opportunityDebt : undefined) : null;
+const replay = mode === 'mock' && process.env.REBIRTH_RECORD_REPLAY === '1' ?
+  createReplay(state, useDebt ? opportunityDebt : undefined, participation) : null;
 const replayFile = process.env.REBIRTH_MOCK_REPLAY_FILE;
 const queue: { event: GameEvent; admittedAt: number }[] = [];
 const monotonicNow = () => Math.floor(performance.now());
@@ -161,7 +161,8 @@ const server = createServer(async (req, res) => {
       queue.length = 0;
       window = undefined;
     }
-    replay?.record({ kind: 'admin', action: body, at: now });
+    replay?.record({ kind: 'admin', action: body, at: now,
+      raidId: participation && body === 'start' ? raidInstanceId : undefined });
     broadcast();
     res.writeHead(204).end();
     return;
@@ -214,13 +215,6 @@ function publishDebt(changes: ReadonlyMap<string, number>) {
   }
 }
 
-function publishParticipation(commit: ParticipationCommit) {
-  if (!participation) return;
-  for (const [id, stats] of commit.changes) participation.history.set(id, stats);
-  if (commit.window) participation.windowSeq = commit.window.sequence;
-  if (commit.settlement) participation.settlementSeq = commit.settlement.sequence;
-}
-
 function settlementAt(now: number) {
   if (!participation) throw new Error('Participation scheduler is disabled');
   return { raidId: raidInstanceId, sequence: participation.settlementSeq + 1, stage: state.raid.stage, at: now };
@@ -236,7 +230,7 @@ function closeWindow(now: number, closedAt: number, reason: 'deadline' | 'shutdo
     return true;
   });
   const step = { kind: 'opportunity' as const, at: now, openedAt: closing.openedAt, deadline: closing.deadline,
-    closedAt, reason, intents };
+    closedAt, reason, intents, raidId: participation ? raidInstanceId : undefined };
   const windowSeq = (participation?.windowSeq ?? 0) + 1;
   const order = participation && participationOrder(participation.history, windowSeq);
   const result = resolveOpportunityWindow(state, intents, opportunityDebt, now, reason !== 'shutdown', order);
@@ -264,10 +258,11 @@ function closeWindow(now: number, closedAt: number, reason: 'deadline' | 'shutdo
   }
   state = result.state;
   if (changes) publishDebt(changes);
-  if (participationCommit) publishParticipation(participationCommit);
+  if (participation && participationCommit) applyParticipationCommit(participation, participationCommit);
   executedThisRaid = terminal ? new Set() : executed;
   if (participation) eligibleThisRaid = terminal ? new Set() : eligible;
-  replay?.record({ ...step, outcome: 'committed', terminal });
+  replay?.record({ ...step, outcome: 'committed', terminal, windowSeq: participationCommit?.window?.sequence,
+    settlementSeq: participationCommit?.settlement?.sequence });
   window = undefined;
 }
 
@@ -321,14 +316,15 @@ function processBossTick(now: number) {
       if (!store.commitBatch(draft.players, [], undefined, changes, participationCommit)) throw new Error('Duplicate ranked settlement');
       if (terminal) {
         if (changes) publishDebt(changes);
-        if (participationCommit) publishParticipation(participationCommit);
+        if (participation && participationCommit) applyParticipationCommit(participation, participationCommit);
         executedThisRaid.clear();
         eligibleThisRaid.clear();
         window = undefined;
       }
       if (draft.effect?.kind === 'boss' && draft.effect.serial !== state.effect?.serial) bossImpactAt = now;
       state = draft;
-      replay?.record({ kind: 'tick', at: now });
+      replay?.record({ kind: 'tick', at: now, raidId: participationCommit?.settlement.raidId,
+        settlementSeq: participationCommit?.settlement.sequence });
     }
 }
 

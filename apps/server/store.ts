@@ -2,13 +2,7 @@ import { DatabaseSync } from 'node:sqlite';
 import { mkdirSync } from 'node:fs';
 import { dirname } from 'node:path';
 import type { GameEvent, Player, RankedPlayer } from '../../packages/shared/index.ts';
-import type { Participation } from './participation.ts';
-
-export type ParticipationCommit = {
-  changes: ReadonlyMap<string, Participation>;
-  window?: { id: string; sequence: number; raidId: string };
-  settlement?: { raidId: string; sequence: number; stage: number; at: number };
-};
+import type { Participation, ParticipationCommit } from './participation.ts';
 
 export function openStore(path: string, participation = false) {
   if (path !== ':memory:') mkdirSync(dirname(path), { recursive: true });
