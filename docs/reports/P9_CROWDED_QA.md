@@ -77,3 +77,20 @@ passed the original mixed-roster run with independent 404 fallback.
 
 [Eight foxes, 1080×1920](evidence/p9-eight-foxes.png) ·
 [Attack, 540×960](evidence/p9-eight-foxes-attack-phone.png)
+
+### Staggered-formation revision benchmark
+
+The same default/paired/paired/default method ran on clean runtime and harness
+`6059d3c3328c1e9fe9739b6da6950d80757dc1eb` with the original mixed-pet roster.
+The paired median draw counts were 205/205 at 1080×1920 and 205/206 at
+540×960. All p95 gaps were 33.4–33.5 ms. The largest paired gap was 49.5 ms
+at 1080×1920 and 33.6 ms at 540×960.
+
+The first phone run also recorded a 1,000.1 ms gap in the last default window
+with 46 samples. A repeat without other UI interaction had 89–91 samples per
+window and a largest gap of 49.5 ms. The cause of the first gap was not
+isolated. Both runs are retained. These are CPU draw-submission samples.
+
+[1080×1920](evidence/p9-benchmark-6059d3c-portrait.jsonl) ·
+[540×960 first run](evidence/p9-benchmark-6059d3c-phone.jsonl) ·
+[540×960 repeat](evidence/p9-benchmark-6059d3c-phone-repeat.jsonl)
