@@ -1,15 +1,17 @@
 import { createServer, type IncomingMessage } from 'node:http';
 import { createReadStream, statSync, writeFileSync } from 'node:fs';
+import { randomUUID } from 'node:crypto';
 import { resolve, extname, sep } from 'node:path';
 import { WebSocketServer, WebSocket } from 'ws';
 import { activeRaid, applyEvent, autoBattle, autoReady, canExecuteCombatAction, currentRulesVersion, newGame, nextRaidStage, tick } from '../../packages/combat/index.ts';
 import { LiveAdapter, normalizeEvent } from '../../packages/tiktok-adapter/index.ts';
 import { eulerSource, eulerUrl, normalizeEulerMessage, readGiftMap } from '../../packages/tiktok-adapter/euler.ts';
 import type { EventContext, GameEvent, GameSnapshot } from '../../packages/shared/index.ts';
-import { openStore } from './store.ts';
+import { openStore, type ParticipationCommit } from './store.ts';
 import { applyAdmin, isAdminAction } from './admin.ts';
 import { createReplay } from './replay.ts';
 import { admitOpportunityIntent, openOpportunityWindow, resolveOpportunityWindow, settleRankedDebt, type OpportunityWindow } from './opportunity.ts';
+import { participationOrder, participationPolicyId, recordParticipationWindow, settleParticipationRaid } from './participation.ts';
 
 const port = Number(process.env.PORT ?? 4173);
 const dist = resolve('dist');
@@ -25,18 +27,24 @@ const sourceUrl = mode === 'live' && key ? eulerUrl(channel, key) : null;
 const liveGiftMap = mode === 'live' ? readGiftMap(process.env.TIKTOK_GIFT_MAP ?? '{}') : new Map<string, string>();
 const abortLive = new AbortController();
 const live = new LiveAdapter(broadcast);
-const store = openStore(process.env.DB_PATH ?? (mode === 'live' ? 'data/rebirth-live.sqlite' : 'data/rebirth.sqlite'));
+const useParticipation = mode === 'mock' && process.env.REBIRTH_RANKED_SCHEDULER === participationPolicyId;
+const store = openStore(process.env.DB_PATH ?? (mode === 'live' ? 'data/rebirth-live.sqlite' : 'data/rebirth.sqlite'), useParticipation);
 let state = newGame([], store.loadStage());
-const rankedScheduler = mode === 'mock' && process.env.REBIRTH_RANKED_SCHEDULER === '1';
-const opportunityDebt = rankedScheduler ? store.loadOpportunityDebt() : new Map<string, number>();
-const replay = mode === 'mock' && process.env.REBIRTH_RECORD_REPLAY === '1' ?
-  createReplay(state, rankedScheduler ? opportunityDebt : undefined) : null;
+const useDebt = mode === 'mock' && process.env.REBIRTH_RANKED_SCHEDULER === '1';
+const rankedScheduler = useDebt || useParticipation;
+const opportunityDebt = useDebt ? store.loadOpportunityDebt() : new Map<string, number>();
+const participation = useParticipation ? store.loadParticipation() : undefined;
+// The v13 recorder cannot describe participation ordering.
+const replay = mode === 'mock' && !useParticipation && process.env.REBIRTH_RECORD_REPLAY === '1' ?
+  createReplay(state, useDebt ? opportunityDebt : undefined) : null;
 const replayFile = process.env.REBIRTH_MOCK_REPLAY_FILE;
 const queue: { event: GameEvent; admittedAt: number }[] = [];
 const monotonicNow = () => Math.floor(performance.now());
 let window: OpportunityWindow | undefined;
 let firstWindow = true;
 let executedThisRaid = new Set<string>();
+let eligibleThisRaid = new Set<string>();
+let raidInstanceId = '';
 let stopping = false;
 const lastEvent = new Map<string, number>();
 const adminClock = { pausedAt: 0 };
@@ -145,6 +153,8 @@ const server = createServer(async (req, res) => {
       window = undefined;
       firstWindow = true;
       executedThisRaid.clear();
+      eligibleThisRaid.clear();
+      raidInstanceId = useParticipation && body === 'start' ? randomUUID() : '';
     }
     if (body === 'resume' && wasPaused && bossImpactAt !== undefined) bossImpactAt += now - adminClock.pausedAt;
     if (body === 'pause') {
@@ -204,6 +214,18 @@ function publishDebt(changes: ReadonlyMap<string, number>) {
   }
 }
 
+function publishParticipation(commit: ParticipationCommit) {
+  if (!participation) return;
+  for (const [id, stats] of commit.changes) participation.history.set(id, stats);
+  if (commit.window) participation.windowSeq = commit.window.sequence;
+  if (commit.settlement) participation.settlementSeq = commit.settlement.sequence;
+}
+
+function settlementAt(now: number) {
+  if (!participation) throw new Error('Participation scheduler is disabled');
+  return { raidId: raidInstanceId, sequence: participation.settlementSeq + 1, stage: state.raid.stage, at: now };
+}
+
 function closeWindow(now: number, closedAt: number, reason: 'deadline' | 'shutdown') {
   const closing = window;
   if (!closing) return;
@@ -215,21 +237,36 @@ function closeWindow(now: number, closedAt: number, reason: 'deadline' | 'shutdo
   });
   const step = { kind: 'opportunity' as const, at: now, openedAt: closing.openedAt, deadline: closing.deadline,
     closedAt, reason, intents };
-  const result = resolveOpportunityWindow(state, intents, opportunityDebt, now, reason !== 'shutdown');
+  const windowSeq = (participation?.windowSeq ?? 0) + 1;
+  const order = participation && participationOrder(participation.history, windowSeq);
+  const result = resolveOpportunityWindow(state, intents, opportunityDebt, now, reason !== 'shutdown', order);
   const executed = new Set([...executedThisRaid, ...result.executed]);
   const terminal = !state.raid.result && !!result.state.raid.result;
-  const changes = terminal ? settleRankedDebt(opportunityDebt, executed, result.denied) : new Map<string, number>();
+  const changes = useDebt && terminal ? settleRankedDebt(opportunityDebt, executed, result.denied) : undefined;
+  const windowEligible = new Set([...result.executed, ...result.denied]);
+  const eligible = new Set([...eligibleThisRaid, ...windowEligible]);
+  let participationCommit: ParticipationCommit | undefined;
+  if (participation) {
+    const windowChanges = recordParticipationWindow(participation.history, windowEligible, result.executed, windowSeq);
+    participationCommit = {
+      changes: terminal ? settleParticipationRaid(new Map([...participation.history, ...windowChanges]), eligible, executed) : windowChanges,
+      window: { id: raidInstanceId + ':' + windowSeq, sequence: windowSeq, raidId: raidInstanceId },
+      settlement: terminal ? settlementAt(now) : undefined,
+    };
+  }
   const stage = nextRaidStage(result.state);
   try {
     if (!store.commitBatch(result.state.players, intents.map(({ event }) => ({ id: event.id, at: now })),
-      stage > nextRaidStage(state) ? stage : undefined, changes)) throw new Error('Duplicate ranked window receipt');
+      stage > nextRaidStage(state) ? stage : undefined, changes, participationCommit)) throw new Error('Duplicate ranked window receipt');
   } catch (error) {
     replay?.record({ ...step, outcome: 'rollback' });
     throw error;
   }
   state = result.state;
-  publishDebt(changes);
+  if (changes) publishDebt(changes);
+  if (participationCommit) publishParticipation(participationCommit);
   executedThisRaid = terminal ? new Set() : executed;
+  if (participation) eligibleThisRaid = terminal ? new Set() : eligible;
   replay?.record({ ...step, outcome: 'committed', terminal });
   window = undefined;
 }
@@ -276,11 +313,17 @@ function processBossTick(now: number) {
     const draft = structuredClone(state);
     if (tick(draft, now, currentRulesVersion)) {
       const terminal = useRankedScheduler() && !!draft.raid.result;
-      const changes = terminal ? settleRankedDebt(opportunityDebt, executedThisRaid, new Set()) : undefined;
-      store.commitBatch(draft.players, [], undefined, changes);
-      if (changes) {
-        publishDebt(changes);
+      const changes = useDebt && terminal ? settleRankedDebt(opportunityDebt, executedThisRaid, new Set()) : undefined;
+      const participationCommit = participation && terminal ? {
+        changes: settleParticipationRaid(participation.history, eligibleThisRaid, executedThisRaid),
+        settlement: settlementAt(now),
+      } : undefined;
+      if (!store.commitBatch(draft.players, [], undefined, changes, participationCommit)) throw new Error('Duplicate ranked settlement');
+      if (terminal) {
+        if (changes) publishDebt(changes);
+        if (participationCommit) publishParticipation(participationCommit);
         executedThisRaid.clear();
+        eligibleThisRaid.clear();
         window = undefined;
       }
       if (draft.effect?.kind === 'boss' && draft.effect.serial !== state.effect?.serial) bossImpactAt = now;

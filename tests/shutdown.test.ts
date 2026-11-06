@@ -100,8 +100,9 @@ test('local shutdown drains accepted events and closes the database', { timeout:
   }
 });
 
-for (const scenario of ['terminal', 'nonterminal', 'rollback']) test('ranked window HTTP and SQLite: ' + scenario, { timeout: 15000 }, async () => {
+for (const scenario of ['terminal', 'nonterminal', 'rollback', 'participation-terminal']) test('ranked window HTTP and SQLite: ' + scenario, { timeout: 15000 }, async () => {
   const terminal = scenario !== 'nonterminal';
+  const participation = scenario === 'participation-terminal';
   const directory = await mkdtemp(join(tmpdir(), 'rebirth-ranked-shutdown-'));
   const database = join(directory, 'synthetic.sqlite');
   const replayFile = join(directory, 'shutdown.json');
@@ -111,12 +112,14 @@ for (const scenario of ['terminal', 'nonterminal', 'rollback']) test('ranked win
   const winner = 'mock:shutdown-a', other = 'mock:shutdown-b';
   for (const id of [winner, other]) applyEvent(seed, chat(id, '!join'), 1);
   if (terminal) seed.players[0].level = 1100;
+  if (participation) seed.players[1].level = 1100;
   const initial = openStore(database);
   initial.commitBatch(seed.players, [], undefined, new Map([[winner, 5]]));
   initial.close();
   const launch = (outputFile = '') => spawn(process.execPath, ['apps/server/index.ts'], {
     env: { ...process.env, PORT: '4227', DB_PATH: database, REBIRTH_MODE: 'mock',
-      REBIRTH_RANKED_SCHEDULER: '1', REBIRTH_RECORD_REPLAY: '1', REBIRTH_MOCK_REPLAY_FILE: outputFile },
+      REBIRTH_RANKED_SCHEDULER: participation ? 'ranked-participation-v1' : '1',
+      REBIRTH_RECORD_REPLAY: '1', REBIRTH_MOCK_REPLAY_FILE: outputFile },
     stdio: ['ignore', 'pipe', 'pipe'],
   });
   let server = launch(replayFile);
@@ -188,6 +191,27 @@ for (const scenario of ['terminal', 'nonterminal', 'rollback']) test('ranked win
     await post('/admin', 'shutdown', 204);
     if (scenario !== 'rollback') assert.ok(performance.now() - sentAt < 400, 'Shutdown must occur before the opening window expires');
     assert.equal((await closed)[0], 0, errors);
+    if (participation) {
+      const saved = openStore(database, true);
+      try {
+        const { history, windowSeq, settlementSeq } = saved.loadParticipation();
+        assert.equal(windowSeq, 1);
+        assert.equal(settlementSeq, 1);
+        assert.equal(saved.loadStage(), 2);
+        assert.deepEqual(saved.loadOpportunityDebt(), new Map([[winner, 5]]));
+        assert.equal(history.size, 2);
+        for (const id of [winner, other]) {
+          // With two new identities, the stage-one stable hash puts B first.
+          const served = id === other;
+          assert.ok(saved.hasReceipt(chat(id, '!attack').id));
+          assert.deepEqual(history.get(id), {
+            eligibleRaids: 1, servedRaids: Number(served), everExecuted: served,
+            firstEligibleSeq: 1, lastServedSeq: served ? 1 : null,
+          });
+        }
+      } finally { saved.close(); }
+      return;
+    }
     const shutdownTrace = JSON.parse(await readFile(replayFile, 'utf8'));
     const shutdownReplay = playReplayWithDebt(shutdownTrace);
     const saved = openStore(database);
