@@ -31,6 +31,7 @@ const queue: GameEvent[] = [];
 let stopping = false;
 const lastEvent = new Map<string, number>();
 const adminClock = { pausedAt: 0 };
+let bossImpactAt: number | undefined;
 const hosts = new Set(['127.0.0.1:' + port, 'localhost:' + port]);
 const mime: Record<string, string> = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.glb': 'model/gltf-binary' };
 
@@ -122,7 +123,10 @@ const server = createServer(async (req, res) => {
         return;
       }
     }
+    const wasPaused = state.paused;
     if (!applyAdmin(state, body, now, adminClock)) { res.writeHead(409).end(); return; }
+    if (body === 'start' || body === 'practice' || body === 'clear-roster') bossImpactAt = undefined;
+    if (body === 'resume' && wasPaused && bossImpactAt !== undefined) bossImpactAt += now - adminClock.pausedAt;
     if (body === 'pause') queue.length = 0;
     replay?.record({ kind: 'admin', action: body, at: now });
     broadcast();
@@ -153,7 +157,7 @@ server.on('upgrade', (req, socket, head) => {
 
 function snapshot() {
   const data: GameSnapshot = { ...state, mode, live: live.status, leaderboard: store.leaderboard(),
-    pausedAt: state.paused ? adminClock.pausedAt : undefined };
+    pausedAt: state.paused ? adminClock.pausedAt : undefined, bossImpactAt };
   return JSON.stringify(data);
 }
 
@@ -196,6 +200,7 @@ const clock = setInterval(() => {
     const draft = structuredClone(state);
     if (tick(draft, now, currentRulesVersion)) {
       store.commit(draft.players);
+      if (draft.effect?.kind === 'boss' && draft.effect.serial !== state.effect?.serial) bossImpactAt = now;
       state = draft;
       replay?.record({ kind: 'tick', at: now });
     }
