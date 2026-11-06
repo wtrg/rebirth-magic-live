@@ -16,3 +16,7 @@ Both exported GLBs use the same ground plane and camera at their authored scale.
 
 Run `python inspect-motion.py` in the same Blender Python environment to sample each exported clip. Each clip moves the skinned mesh and keeps its lowest vertex within 0.01 m of the ground at the sampled integer frames. This check does not evaluate foot sliding, mesh intersections, or legibility in the game camera.
 Standing clips contact the floor through leg bones. The revised defeat clip rolls away from the spear. Its sampled floor contacts are the left leg and left arm. [Defeat pose rendered from the export](defeat.png).
+
+Run `node scripts/ice-portrait-qa.mjs` for the standalone 1080 × 1920 fixture using the game arena camera and simplified HUD. Chrome on Intel UHD rendered all five sampled poses and remained operational after a forced Ice GLB 404. The spear and crystal fins read clearly in the sampled frames, while the indigo body has low contrast against the floor. These stills do not cover continuous motion, crowded raids, or the production HUD.
+
+[Portrait pose sheet](portrait-poses.png)
