@@ -119,6 +119,24 @@ export function tick(state: GameState, now: number, rulesVersion = currentRulesV
   return true;
 }
 
+function readyCombatAction(state: GameState, player: Player, command: string, arg: string | undefined, now: number, rulesVersion: number) {
+  const index = ['!skill1', '!skill2', '!ult', '!attack'].indexOf(command);
+  if (index < 0 || !activeRaid(state) || player.hp <= 0 || now < player.ready[index]) return;
+  const side = rulesVersion >= 8 && command === '!attack' ? ['left', 'right'].indexOf(arg ?? '') : -1;
+  const target = side >= 0 ? state.raid.wraiths?.[side] : undefined;
+  if (side >= 0 && (!target || target.hp <= 0)) return;
+  const skill = skills[index] ?? { cost: 0, cooldown: 600, multiplier: 1 };
+  if (player.mp < skill.cost) return;
+  return { index, side, target, skill };
+}
+
+export function canExecuteCombatAction(state: GameState, event: GameEvent, now: number, rulesVersion = currentRulesVersion) {
+  if (state.paused || event.kind !== 'chat') return false;
+  const [command, arg, extra] = event.command.split(/\s+/);
+  const player = state.players.find(player => player.id === event.user);
+  return !extra && !!player && !!readyCombatAction(state, player, command, arg, now, rulesVersion);
+}
+
 export function applyEvent(state: GameState, event: GameEvent, now: number, rulesVersion = currentRulesVersion, context?: EventContext) {
   if (state.paused) return;
   const player = state.players.find(player => player.id === event.user);
@@ -262,13 +280,9 @@ export function applyEvent(state: GameState, event: GameEvent, now: number, rule
     player.hp = maxHp(player);
     log(state, player.name + ' trùng sinh lần ' + player.rebirth);
   }
-  const index = ['!skill1', '!skill2', '!ult', '!attack'].indexOf(command);
-  if (index < 0 || !activeRaid(state) || player.hp <= 0 || now < player.ready[index]) return;
-  const side = rulesVersion >= 8 && command === '!attack' ? ['left','right'].indexOf(arg ?? '') : -1;
-  const target = side >= 0 ? state.raid.wraiths?.[side] : undefined;
-  if (side >= 0 && (!target || target.hp <= 0)) return;
-  const skill = skills[index] ?? { cost: 0, cooldown: 600, multiplier: 1 };
-  if (player.mp < skill.cost) return;
+  const action = readyCombatAction(state, player, command, arg, now, rulesVersion);
+  if (!action) return;
+  const { index, side, target, skill } = action;
   player.ready[index] = now + skill.cooldown;
   player.mp -= skill.cost;
   const raid = state.raid;
@@ -327,6 +341,7 @@ export function applyEvent(state: GameState, event: GameEvent, now: number, rule
   effect(state, '-' + dealt + ' · ' + label, definition.color, kind, rulesVersion);
   log(state, player.name + ' · ' + label + ' · ' + dealt);
   if (raid.phase === 'DEAD') resolveVictory(state, rulesVersion >= 2);
+  return true;
 }
 
 export function autoReady(state: GameState, now: number) {
