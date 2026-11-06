@@ -216,8 +216,27 @@ for (const scenario of ['terminal', 'nonterminal', 'rollback']) test('ranked win
       socket.on('message', data => { snapshot = JSON.parse(String(data)) as GameSnapshot; });
       await post('/event', { ...chat(winner, '!join'), id: 'restarted-join' }, 202);
       await until(() => snapshot?.players[0]?.wins === 1);
+      await post('/admin', 'practice', 204);
+      await until(() => snapshot?.raid.practice === true && snapshot.raid.phase === 'PHASE_1');
+      await post('/event', { ...first, id: 'practice-attack' }, 202);
+      await until(() => snapshot?.raid.result === 'victory');
+      const practiceTrace = await (await fetch(base + '/replay', { signal: AbortSignal.timeout(3000) })).json();
+      assert.ok(practiceTrace.steps.some((step: { kind: string; event?: { id: string } }) =>
+        step.kind === 'event' && step.event?.id === 'practice-attack'));
+      assert.ok(practiceTrace.steps.every((step: { kind: string }) => step.kind !== 'opportunity'));
+      const practice = playReplayWithDebt(practiceTrace);
+      const { raid, players, logs, paused, effect } = snapshot!;
+      assert.deepEqual(practice.state, { raid, players, logs, paused, effect });
+      assert.deepEqual(practice.debt, restored.debt);
+      assert.equal(players[0].wins, 1);
       await post('/admin', 'shutdown', 204);
       assert.equal((await closed)[0], 0, errors);
+      const afterPractice = openStore(database);
+      try {
+        assert.equal(afterPractice.loadStage(), 2);
+        assert.equal(afterPractice.find(winner)?.wins, 1);
+        assert.deepEqual(afterPractice.loadOpportunityDebt(), restored.debt);
+      } finally { afterPractice.close(); }
     }
   } finally {
     socket?.terminate();
