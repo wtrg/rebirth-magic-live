@@ -27,8 +27,8 @@ The baseline idle-battle requirement now has opt-in server basic attacks (`!auto
 
 ## Open follow-up decisions
 
-- P9: Review the paired Fire Mage and Varkhazar preview, including the revised pre-impact warning. The ChatGPT Web request was sent, but the reply failed to load. [Draft PR #48](https://github.com/wtrg/rebirth-magic-live/pull/48)
-- P10: Decide whether to prototype a bounded attack collection window and how auto and manual attacks should share priority. The production ingress and replay evidence is available, and the decision request was posted on GitHub. [P10 evidence](reports/P10_MANUAL_INGRESS.md) · [Decision request](https://github.com/wtrg/rebirth-magic-live/issues/41#issuecomment-6667014615)
+- P9: Leader approved merging Fire Mage and Varkhazar behind independent preview flags. PR #48 merged at `4270be2` after Windows/Intel UHD fallback QA and CI. Leader reviewed PNGs and the contact sheet. Continuous MP4 playback and final production art review remain open. [Paired preview](reports/PHASE_REPORT_P9_PREVIEW.md) · [Hỏa Hồ candidate](https://github.com/wtrg/rebirth-magic-live/pull/58) · [Băng Pháp Sư candidate](https://github.com/wtrg/rebirth-magic-live/pull/59)
+- P10: Leader approved the narrow auto rejoin fix, merged at `99db549` through PR #56. Leader selected persistent opportunity deficit for manual and auto contention and requested design review before implementation. [Scheduling proposal](P10_OPPORTUNITY_DESIGN.md) · [Issue #51](https://github.com/wtrg/rebirth-magic-live/issues/51)
 - P11: A permitted TikTok room and test session are required to verify real comments, gifts and reconnect. [LIVE setup](LIVE_SETUP.md)
 - P12: The eight-hour local OBS and recovery measurements are available for the tested P9 commit. [Endurance report](reports/OBS_ENDURANCE_8H.md)
 
