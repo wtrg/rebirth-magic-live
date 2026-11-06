@@ -79,6 +79,14 @@ Raw synthetic results are available for the [324-raid repeat](evidence/p10-v14-h
 The [capacity audit](evidence/p10-v14-capacity-324.jsonl) includes window-level
 evidence for both unserved IDs at every spread.
 
+A clean detached checkout at exactly
+`aa1da98aa4e40b06ab54b4daf2d6a0bb74a3dbad` independently reran all 324
+raids using that commit's original harness. All nine cells passed parity.
+Unserved counts matched the guarded repeat. At 350 ms, 1, 1 and 7 manual
+commands respectively were absent from the replay windows; at 60 and
+180 ms every offered manual command was recorded.
+[Exact-checkout JSONL](evidence/p10-v14-aa1da98-http-324.jsonl)
+
 ## Fixed-capacity HTTP fixture
 
 Run `node scripts/p10-ranked-matrix.mjs --participation --six-slots`.
