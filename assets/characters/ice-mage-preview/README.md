@@ -15,4 +15,4 @@ Review this alongside the Hỏa Hồ candidate. In-game scale, portrait readabil
 Both exported GLBs use the same ground plane and camera at their authored scale. The study isolates the silhouettes with neutral lighting. The actual arena camera, combat HUD and effects still need separate evaluation.
 
 Run `python inspect-motion.py` in the same Blender Python environment to sample each exported clip. Each clip moves the skinned mesh and keeps its lowest vertex within 0.01 m of the ground at the sampled integer frames. This check does not evaluate foot sliding, mesh intersections, or legibility in the game camera.
-Standing clips contact the floor through leg bones. The defeat clip also contacts through ArmR, which carries the spear. Check that contact visually before approving the defeat pose.
+Standing clips contact the floor through leg bones. The revised defeat clip rolls away from the spear. Its sampled floor contacts are the left leg and left arm. [Defeat pose rendered from the export](defeat.png).

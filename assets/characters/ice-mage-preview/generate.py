@@ -121,7 +121,7 @@ clip('attack',[(1,{}),(8,{'Torso':(-9,19,0),'ArmR':(-47,0,-16)}),
                (13,{'Torso':(14,-16,0),'ArmR':(-89,5,4)}),(28,{})])
 clip('hit',[(1,{}),(5,{'Torso':(-17,10,5),'Head':(-10,-9,0),'ArmL':(-18,0,17)}),(15,{})])
 clip('defeat',[(1,{}),(12,{'Torso':(24,0,12),'Head':(18,0,0)}),
-               (35,{'Root':(0,0,77),'Torso':(11,0,0)}),(44,{'Root':(0,0,77),'Torso':(11,0,0)})])
+               (35,{'Root':(0,0,-88),'Torso':(11,0,0)}),(44,{'Root':(0,0,-88),'Torso':(11,0,0)})])
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--output',type=Path,default=Path('ice-mage.glb'))
 args = parser.parse_args(sys.argv[sys.argv.index('--')+1:] if '--' in sys.argv else [])
