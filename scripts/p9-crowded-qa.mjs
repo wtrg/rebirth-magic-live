@@ -47,7 +47,7 @@ try {
   await post('/admin', 'start');
   browser = await chromium.launch({ channel: 'chrome', headless: false });
   const modes = record ? ['paired'] : benchmark ? ['default', 'paired', 'paired', 'default'] :
-    ['default', 'paired', 'ice-missing', 'fox-missing'];
+    ['default', 'paired', 'ice-missing', 'fox-missing', 'live-mode'];
   for (const mode of modes) {
     const size = phone ? { width: 540, height: 960 } : { width: 1080, height: 1920 };
     const page = await browser.newPage({ viewport: size, recordVideo: record ? { dir: 'test-results', size } : undefined });
@@ -58,6 +58,7 @@ try {
     });
     if (mode === 'ice-missing') await page.route('**/ice-mage-*.glb', route => route.fulfill({ status: 404 }));
     if (mode === 'fox-missing') await page.route('**/fire-fox-*.glb', route => route.fulfill({ status: 404 }));
+    if (mode === 'live-mode') await page.route('**/health', route => route.fulfill({ json: { mode: 'live' } }));
     if (benchmark) await page.addInitScript(() => {
       let draws = 0;
       const prototype = WebGL2RenderingContext.prototype;
@@ -82,7 +83,7 @@ try {
     await page.waitForFunction(() => document.querySelector('#count')?.textContent === '08');
     assert.equal(await canvas.getAttribute('data-ice-preview'), ['paired', 'fox-missing'].includes(mode) ? 'skinned' : null);
     assert.equal(await canvas.getAttribute('data-fox-preview'), ['paired', 'ice-missing'].includes(mode) ? 'skinned' : null);
-    assert.equal(candidateRequests.length, mode === 'default' ? 0 : 2);
+    assert.equal(candidateRequests.length, ['default', 'live-mode'].includes(mode) ? 0 : 2);
     if (benchmark) {
       await page.waitForFunction(() => document.querySelector('#phase')?.textContent === 'GIAI ĐOẠN I');
       await page.evaluate(() => { window.qaDraws.length = 0; });

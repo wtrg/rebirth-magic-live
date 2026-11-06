@@ -71,6 +71,7 @@ export function createArena(view: HTMLElement, low: () => boolean, portrait: boo
     if (!preview) return { ...character(id), clips: undefined };
     const root = new T.Group();
     const rig = cloneSkinned(preview.scene);
+    if (id === 'ice') rig.scale.set(1.14, 1.08, 1.08);
     root.add(rig);
     scene.add(root);
     return { root, body: rig, weapon: undefined, clips: createClipPlayer(rig, preview.animations) };
@@ -261,7 +262,10 @@ export function createArena(view: HTMLElement, low: () => boolean, portrait: boo
         if (actor.companion.children[0]?.userData.index !== petIndex) {
           actor.companion.clear();
           const model = petIndex === 0 && fox ? cloneSkinned(fox.scene) : petModels[petIndex].clone();
-          if (petIndex === 0 && fox) foxPlayers.set(model, createClipPlayer(model, fox.animations));
+          if (petIndex === 0 && fox) {
+            model.scale.multiplyScalar(1.12);
+            foxPlayers.set(model, createClipPlayer(model, fox.animations));
+          }
           model.userData.index = petIndex;
           actor.companion.add(model);
         }
@@ -271,7 +275,7 @@ export function createArena(view: HTMLElement, low: () => boolean, portrait: boo
           const clip = strike > 0.73 ? 'Run' : strike > 0 ? 'Attack' : 'Idle';
           foxClips.update(clip, delta, actor.strike);
           foxAttack ||= clip === 'Attack';
-          actor.companion.position.set(-0.9, 0.1, -0.7 + strike * 0.8);
+          actor.companion.position.set(-0.95, 0.1, 0.4 + strike * 0.5);
           actor.companion.rotation.x = 0;
           return;
         }

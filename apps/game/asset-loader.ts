@@ -12,6 +12,17 @@ export async function loadFireMagePreview(ice = false): Promise<FireMagePreview>
   if (animations.length !== names.size || ![...names.keys()].every(name => animations.some(clip => clip.name === name))) {
     throw new Error('Missing Fire Mage preview clips');
   }
+  if (ice) {
+    const wool = new Set<MeshStandardMaterial>();
+    scene.traverse(node => {
+      if (!(node instanceof Mesh)) return;
+      const materials = Array.isArray(node.material) ? node.material : [node.material];
+      for (const material of materials) {
+        if (material instanceof MeshStandardMaterial && material.name === 'Glacier blue wool') wool.add(material);
+      }
+    });
+    for (const material of wool) material.color.multiplyScalar(1.55);
+  }
   return { scene, animations: animations.map(clip => {
     const action = clip.clone();
     action.name = names.get(clip.name)!;

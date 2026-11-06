@@ -28,3 +28,18 @@ The draft is a reproducible QA branch for review. The candidate assets still req
 The `--phone` option runs the same loading, fallback and owner-attack checks in a native 540 x 960 viewport. The ice spears and orange fox tails still distinguish the candidates, but the fox's paws and faces are difficult to read at this size. The HUD retains its boss HP, roster count and combat log.
 
 [Phone-size raid](evidence/p9-crowded-paired-phone.png) · [Phone-size attack](evidence/p9-crowded-fox-attack-phone.png)
+
+## MOCK readability revision
+
+The Fire Fox preview is 12% larger and its offset is closer to the camera.
+The Ice Mage preview is 14% wider and 8% taller, with lighter blue cloth.
+The phone capture shows a clearer Ice Mage torso and orange fox silhouettes.
+Small facial and paw details remain difficult to distinguish when actors overlap.
+
+The paired preview now checks the server mode before requesting either
+candidate. Both viewport runs passed eight-player HUD, owner attack animation,
+independent GLB 404 fallback, default request isolation and a mocked LIVE
+health response that suppresses both candidate requests.
+
+[Revised portrait](evidence/p9-crowded-readability.png) ·
+[Revised phone attack](evidence/p9-crowded-readability-phone.png)

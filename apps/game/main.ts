@@ -28,8 +28,11 @@ let render: ((state: GameSnapshot) => void) | undefined;
 const bossPreview = params.get('boss-preview') === '1' ? loadVarkhazarPreview().catch(() => undefined) : undefined;
 const firePreview = params.get('fire-preview') === '1' ? loadFireMagePreview().catch(() => undefined) : undefined;
 const qa = params.get('crowded-qa') === '1';
-const icePreview = qa ? loadFireMagePreview(true).catch(() => undefined) : undefined;
-const foxPreview = qa ? loadFoxForQa().catch(() => undefined) : undefined;
+const mockQa = qa ? fetch('/health', { signal: AbortSignal.timeout(3000) })
+  .then(async response => response.ok && (await response.json()).mode === 'mock')
+  .catch(() => false) : undefined;
+const icePreview = mockQa?.then(enabled => enabled ? loadFireMagePreview(true) : undefined).catch(() => undefined);
+const foxPreview = mockQa?.then(enabled => enabled ? loadFoxForQa() : undefined).catch(() => undefined);
 void Promise.all([loadRaidModels().catch(() => undefined), firePreview, bossPreview, icePreview, foxPreview]).then(([models, fireMage, varkhazar, iceMage, fox]) => {
   try {
     render = createArena(get('viewport'), () => low.checked, overlay, models, { fireMage, varkhazar, iceMage, fox });
