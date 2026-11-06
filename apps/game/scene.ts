@@ -6,7 +6,8 @@ import { classes, pets, type GameSnapshot } from '../../packages/shared/index.ts
 import { createClipPlayer, hasTemporaryPet } from './animation.ts';
 
 export function createArena(view: HTMLElement, low: () => boolean, portrait: boolean, models?: ModelTemplates,
-  previews?: { fireMage?: FireMagePreview; iceMage?: FireMagePreview; fox?: FireMagePreview; varkhazar?: Awaited<ReturnType<typeof loadVarkhazarPreview>> }) {
+  previews?: { fireMage?: FireMagePreview; iceMage?: FireMagePreview; fox?: FireMagePreview; varkhazar?: Awaited<ReturnType<typeof loadVarkhazarPreview>> },
+  animationQa = false) {
   const { fireMage, varkhazar, iceMage, fox } = previews ?? {};
   const renderer = new T.WebGLRenderer({ antialias: false, powerPreference: 'low-power' });
   renderer.domElement.setAttribute('aria-label', 'Đấu trường 3D Cổng Hư Vô');
@@ -111,6 +112,14 @@ export function createArena(view: HTMLElement, low: () => boolean, portrait: boo
   });
   const squad = new Map<string, ReturnType<typeof playerCharacter> & { classId: string; companion: T.Group; lastHit: number; strike: number; hp: number; recoil: number }>();
   const foxPlayers = new WeakMap<T.Object3D, ReturnType<typeof createClipPlayer>>();
+  const reportedClips = new WeakMap<T.Object3D, string>();
+  function reportClip(model: T.Object3D, id: string, actor: string, action: T.AnimationAction | undefined) {
+    if (!animationQa || !action?.isRunning() || action.time <= 0) return;
+    const clip = action.getClip().name;
+    if (reportedClips.get(model) === clip) return;
+    reportedClips.set(model, clip);
+    renderer.domElement.dispatchEvent(new CustomEvent('qa-animation', { bubbles: true, detail: { id, actor, clip } }));
+  }
   const flash = mesh(scene, new T.TorusGeometry(1.8,0.09,4,36), '#ffd3a4', [0,0.08,-1.45], [1,1,1], true);
   flash.rotation.x = -Math.PI/2;
   flash.material = flash.material.clone();
@@ -244,11 +253,13 @@ export function createArena(view: HTMLElement, low: () => boolean, portrait: boo
       const lean = actor.clips ? 0 : player.hp <= 0 ? 1.4 : strike*0.14;
       actor.root.rotation.set(0,Math.PI+arc,T.MathUtils.lerp(actor.root.rotation.z,lean,Math.min(1,delta*10)));
       if (actor.clips) {
-        if (player.hp <= 0) actor.clips.update('Defeat', delta);
-        else if (recoil > 0) actor.clips.update('Hit', delta * 0.833 / 0.45, actor.recoil);
-        else if (strike > 0.73) actor.clips.update('Run', delta);
-        else if (strike > 0) actor.clips.update('Attack', delta * 1.25 / 0.38, actor.strike);
-        else actor.clips.update('Idle', delta);
+        let action;
+        if (player.hp <= 0) action = actor.clips.update('Defeat', delta);
+        else if (recoil > 0) action = actor.clips.update('Hit', delta * 0.833 / 0.45, actor.recoil);
+        else if (strike > 0.73) action = actor.clips.update('Run', delta);
+        else if (strike > 0) action = actor.clips.update('Attack', delta * 1.25 / 0.38, actor.strike);
+        else action = actor.clips.update('Idle', delta);
+        reportClip(actor.body, player.id, player.classId, action);
       } else {
         actor.body.rotation.x = -recoil*0.23;
         const stride = Math.sin(time*(strike > 0 ? 0.03 : 0.004)+index)*(strike > 0 ? 0.5*strike : 0.025);
@@ -273,9 +284,11 @@ export function createArena(view: HTMLElement, low: () => boolean, portrait: boo
         const foxClips = foxPlayers.get(model);
         if (foxClips) {
           const clip = strike > 0.73 ? 'Run' : strike > 0 ? 'Attack' : 'Idle';
-          foxClips.update(clip, delta, actor.strike);
+          const action = foxClips.update(clip, delta, actor.strike);
+          reportClip(model, player.id, 'fox', action);
           foxAttack ||= clip === 'Attack';
-          actor.companion.position.set(-0.95, 0.1, 0.4 + strike * 0.5);
+          // Actors face the boss. Negative local Z keeps companions camera-side.
+          actor.companion.position.set(-0.58, 0.1, -0.82 - (index % 2) * 0.62 + strike * 0.46);
           actor.companion.rotation.x = 0;
           return;
         }

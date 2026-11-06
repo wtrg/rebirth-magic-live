@@ -35,7 +35,8 @@ const icePreview = mockQa?.then(enabled => enabled ? loadFireMagePreview(true) :
 const foxPreview = mockQa?.then(enabled => enabled ? loadFoxForQa() : undefined).catch(() => undefined);
 void Promise.all([loadRaidModels().catch(() => undefined), firePreview, bossPreview, icePreview, foxPreview]).then(([models, fireMage, varkhazar, iceMage, fox]) => {
   try {
-    render = createArena(get('viewport'), () => low.checked, overlay, models, { fireMage, varkhazar, iceMage, fox });
+    render = createArena(get('viewport'), () => low.checked, overlay, models, { fireMage, varkhazar, iceMage, fox },
+      !!(iceMage || fox) && params.get('animation-qa') === '1');
     if (state) render(state);
   } catch {
     get('notice').textContent = 'WebGL 2 không khả dụng · HUD vẫn đang hoạt động';

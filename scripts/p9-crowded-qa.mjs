@@ -16,13 +16,15 @@ const roster = ['ice', 'fire', 'thunder', 'knight', 'healer', 'summon', 'ice', '
 const benchmark = process.argv.includes('--benchmark');
 const record = process.argv.includes('--record');
 const phone = process.argv.includes('--phone');
+const allFox = process.argv.includes('--all-fox');
 assert.ok(!(benchmark && record));
+assert.ok(!allFox || (!benchmark && !record));
 const event = (i, command) => ({ id: 'crowded:' + i + ':' + command.slice(1), user: 'mock:crowded-' + i,
   name: 'QA ' + i, kind: 'chat', command });
 const seed = newGame();
 for (const [i, classId] of roster.entries()) {
   applyEvent(seed, event(i, '!join'), 1);
-  Object.assign(seed.players[i], { classId, owned: 3, pet: i % 3 });
+  Object.assign(seed.players[i], { classId, owned: 3, pet: allFox ? 0 : i % 3 });
 }
 const store = openStore(database);
 store.commit(seed.players);
@@ -46,12 +48,17 @@ try {
   for (const [i] of roster.entries()) await post('/event', event(i, '!join'));
   await post('/admin', 'start');
   browser = await chromium.launch({ channel: 'chrome', headless: false });
-  const modes = record ? ['paired'] : benchmark ? ['default', 'paired', 'paired', 'default'] :
+  const modes = record || allFox ? ['paired'] : benchmark ? ['default', 'paired', 'paired', 'default'] :
     ['default', 'paired', 'ice-missing', 'fox-missing', 'live-mode'];
   for (const mode of modes) {
     const size = phone ? { width: 540, height: 960 } : { width: 1080, height: 1920 };
     const page = await browser.newPage({ viewport: size, recordVideo: record ? { dir: 'test-results', size } : undefined });
     const errors = [], candidateRequests = [];
+    const inspectAnimations = mode === 'paired' && !benchmark;
+    if (inspectAnimations) await page.addInitScript(() => {
+      window.qaAnimations = [];
+      document.addEventListener('qa-animation', event => window.qaAnimations.push(event.detail));
+    });
     page.on('pageerror', error => errors.push(error.message));
     page.on('request', request => {
       if (/(ice-mage|fire-fox)-[^/]+\.glb$/.test(request.url())) candidateRequests.push(request.url());
@@ -77,7 +84,8 @@ try {
         if (draws > before) window.qaDraws.push([time, draws - before]);
       });
     });
-    await page.goto(base + '/?overlay&fire-preview=1&boss-preview=1' + (mode === 'default' ? '' : '&crowded-qa=1'));
+    await page.goto(base + '/?overlay&fire-preview=1&boss-preview=1' +
+      (mode === 'default' ? '' : '&crowded-qa=1') + (inspectAnimations ? '&animation-qa=1' : ''));
     const canvas = page.locator('canvas[data-fire-preview=skinned][data-boss-preview=skinned]');
     await canvas.waitFor();
     await page.waitForFunction(() => document.querySelector('#count')?.textContent === '08');
@@ -100,13 +108,28 @@ try {
       const draws = samples.map(([, count]) => count).sort((a, b) => a - b);
       console.log(JSON.stringify({ mode, renderer, samples: samples.length, p95Ms: gaps[Math.floor(.95 * (gaps.length - 1))],
         maxGapMs: gaps.at(-1), medianDraws: draws[Math.floor(draws.length / 2)] }));
-    } else await page.screenshot({ path: 'test-results/p9-crowded-' + mode + (phone ? '-phone' : '') + '.png' });
-    if (!benchmark && mode === 'paired') {
+    } else await page.screenshot({ path: 'test-results/p9-crowded-' + (allFox ? 'eight-foxes' : mode) + (phone ? '-phone' : '') + '.png' });
+    if (inspectAnimations) {
+      const sequence = (id, actor, clips) => page.waitForFunction(({ id, actor, clips }) => {
+        let index = 0;
+        for (const item of window.qaAnimations) {
+          if (item.id === id && item.actor === actor && item.clip === clips[index]) index++;
+        }
+        return index === clips.length;
+      }, { id: 'mock:crowded-' + id, actor, clips });
       await page.waitForFunction(() => document.querySelector('#phase')?.textContent === 'GIAI ĐOẠN I');
+      await sequence(0, 'ice', ['Idle']);
+      await sequence(1, 'fire', ['Idle']);
+      await sequence(0, 'fox', ['Idle']);
+      if (allFox) await page.waitForFunction(() => new Set(window.qaAnimations.filter(event =>
+        event.actor === 'fox' && event.clip === 'Idle').map(event => event.id)).size === 8);
       await post('/event', event(0, '!attack'));
       await page.locator('canvas[data-fox-attacking]').waitFor();
-      await page.screenshot({ path: 'test-results/p9-crowded-fox-attack' + (phone ? '-phone' : '') + '.png' });
-      await page.locator('canvas[data-fox-attacking]').waitFor({ state: 'detached' });
+      await page.screenshot({ path: 'test-results/p9-crowded-' + (allFox ? 'eight-foxes-attack' : 'fox-attack') + (phone ? '-phone' : '') + '.png' });
+      await sequence(0, 'ice', ['Idle', 'Run', 'Attack', 'Idle']);
+      await sequence(0, 'fox', ['Idle', 'Run', 'Attack', 'Idle']);
+      await post('/event', event(1, '!attack'));
+      await sequence(1, 'fire', ['Idle', 'Attack', 'Idle']);
       if (record) {
         for (const [i] of roster.entries()) {
           await post('/event', event(i, '!skill1'));
@@ -123,7 +146,8 @@ try {
     } else await page.close();
   }
   if (record) console.log('PASS: eight-player HUD, player skills and boss impact recorded');
-  else if (!benchmark) console.log('PASS: eight-player HUD, both opt-in assets and independent fallback');
+  else if (allFox) console.log('PASS: eight Fire Fox rigs and three verified animation sequences');
+  else if (!benchmark) console.log('PASS: eight-player HUD, three animation sequences and independent fallback');
 } finally {
   await browser?.close();
   if (server.exitCode === null && server.signalCode === null) server.kill();

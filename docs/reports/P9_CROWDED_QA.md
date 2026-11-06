@@ -60,3 +60,20 @@ on Chrome ANGLE Intel UHD D3D11.
 
 These are three-second CPU draw-submission samples. Presentation FPS and
 long-session behavior are outside this measurement.
+
+### Staggered eight-fox formation and animation QA
+
+The foxes now alternate between two camera-side depths without changing the
+reviewed model scale. At 540×960 the foreground foxes are easier to separate
+from the player torsos. The arena crystals and adjacent actors still obscure
+parts of a few foxes. The boss and the player damage label remain readable in
+the sampled attack frame.
+
+Run the browser harness at both sizes with `--all-fox` to reproduce the
+eight-companion case. QA-only events verify that the named mixer actions
+actually advance. Real MOCK attacks verified Idle → Run → Attack → Idle on
+Ice Mage and Fire Fox, and Idle → Attack → Idle on Fire Mage. Both sizes also
+passed the original mixed-roster run with independent 404 fallback.
+
+[Eight foxes, 1080×1920](evidence/p9-eight-foxes.png) ·
+[Attack, 540×960](evidence/p9-eight-foxes-attack-phone.png)
