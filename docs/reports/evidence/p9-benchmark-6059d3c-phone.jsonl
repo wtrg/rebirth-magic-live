@@ -1,0 +1,4 @@
+{"mode":"default","renderer":"ANGLE (Intel, Intel(R) UHD Graphics (0x0000A7A8) Direct3D11 vs_5_0 ps_5_0, D3D11)","samples":90,"p95Ms":33.5,"maxGapMs":33.59999999999991,"medianDraws":248}
+{"mode":"paired","renderer":"ANGLE (Intel, Intel(R) UHD Graphics (0x0000A7A8) Direct3D11 vs_5_0 ps_5_0, D3D11)","samples":91,"p95Ms":33.5,"maxGapMs":33.60000000000002,"medianDraws":205}
+{"mode":"paired","renderer":"ANGLE (Intel, Intel(R) UHD Graphics (0x0000A7A8) Direct3D11 vs_5_0 ps_5_0, D3D11)","samples":90,"p95Ms":33.5,"maxGapMs":33.60000000000002,"medianDraws":206}
+{"mode":"default","renderer":"ANGLE (Intel, Intel(R) UHD Graphics (0x0000A7A8) Direct3D11 vs_5_0 ps_5_0, D3D11)","samples":46,"p95Ms":33.5,"maxGapMs":1000.1000000000001,"medianDraws":248}
