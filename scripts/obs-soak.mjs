@@ -14,8 +14,9 @@ const config = JSON.parse((await readFile(configPath,'utf8')).replace(/^\uFEFF/,
 assert.equal(config.auth_required,true,'QA OBS must require authentication');
 assert.ok(typeof config.server_password === 'string' && config.server_password.length >= 16);
 const seconds = Number(process.env.QA_OBS_SECONDS ?? 600);
+const pairedPreview = process.env.QA_OBS_P9_PREVIEW === '1';
 const port = Number(process.env.QA_OBS_PORT ?? 4193);
-assert.ok(Number.isInteger(seconds) && seconds >= 30 && seconds <= 3600);
+assert.ok(Number.isInteger(seconds) && seconds >= 30 && seconds <= 43200);
 assert.ok(Number.isInteger(port) && port >= 1024 && port <= 65535);
 const dir = resolve('test-results/obs-current-'+Date.now());
 await mkdir(dir,{recursive:true});
@@ -109,7 +110,12 @@ try {
   sceneName='Rebirth Combined QA '+Date.now();
   await call('CreateScene',{sceneName});
   inputName='Rebirth Browser QA '+Date.now();
-  await call('CreateInput',{sceneName,inputName,inputKind:'browser_source',inputSettings:{url:base+'/?overlay=1&audio=1',width:1080,height:1920,fps:30,fps_custom:true,reroute_audio:true},sceneItemEnabled:true});
+  const overlay = new URL('/?overlay=1&audio=1',base);
+  if (pairedPreview) {
+    overlay.searchParams.set('fire-preview','1');
+    overlay.searchParams.set('boss-preview','1');
+  }
+  await call('CreateInput',{sceneName,inputName,inputKind:'browser_source',inputSettings:{url:overlay.href,width:1080,height:1920,fps:30,fps_custom:true,reroute_audio:true},sceneItemEnabled:true});
   await call('SetInputAudioTracks',{inputName,inputAudioTracks:{'1':true,'2':false,'3':false,'4':false,'5':false,'6':false}});
   await call('SetInputVolume',{inputName,inputVolumeDb:0});
   await call('SetCurrentProgramScene',{sceneName});
@@ -125,9 +131,14 @@ try {
   await wave('!auto on');
   await waitFor(()=>snapshot?.players.every(player=>player.auto));
   await sleep(2000);
+  await call('StartRecord'); recording=true;
+  // Wait for the muxer to write data and leave a lead-in before starting the workload clock.
+  await waitFor(async()=>{
+    const status=await call('GetRecordStatus');
+    return status.outputActive && status.outputBytes>0 && status.outputDuration>=5000;
+  },30000);
   const before=await call('GetStats');
   const measuredFrom=memory.length;
-  await call('StartRecord'); recording=true;
   await post('/admin','start');
   const startedAt=Date.now(), started=performance.now();
   const ingressBefore={accepted,throttled,updates};
@@ -165,7 +176,7 @@ try {
   assert.equal(socket.readyState,WebSocket.OPEN);
   assert.ok(wins>0 && snapshot.raid.stage>1 && updates>100);
   assert.ok(snapshot.players.every(player=>player.auto));
-  const summary={sourceCommit,sourceDirty,secondsRequested:seconds,measuredSeconds,startedAt,endedAt,obs:version.obsVersion,video,recording:outputPath,driver:'32 server-auto players; manual skill2/ult; host raid restart; ranked cosmetic mock-30 gifts',manualBasicCommands:0,players:32,classes:[...new Set(endState.players.map(player=>player.classId))],petCount:endState.players.filter(player=>player.pet!==null).length,petTypes:[...new Set(endState.players.map(player=>player.pet))],measuredIngress,lifetimeIngress:{accepted,throttled,updates},victoriesRestarted:wins,terminalResultAtEnd:endState.raid.result,stage:endState.raid.stage,sampledPeakQueue:peakQueue,before,after,samples,memory:memory.slice(measuredFrom).filter(sample=>sample.at>=startedAt && sample.at<=endedAt)};
+  const summary={sourceCommit,sourceDirty,pairedPreview,secondsRequested:seconds,measuredSeconds,startedAt,endedAt,obs:version.obsVersion,video,recording:outputPath,driver:'32 server-auto players; manual skill2/ult; host raid restart; ranked cosmetic mock-30 gifts',manualBasicCommands:0,players:32,classes:[...new Set(endState.players.map(player=>player.classId))],petCount:endState.players.filter(player=>player.pet!==null).length,petTypes:[...new Set(endState.players.map(player=>player.pet))],measuredIngress,lifetimeIngress:{accepted,throttled,updates},victoriesRestarted:wins,terminalResultAtEnd:endState.raid.result,stage:endState.raid.stage,sampledPeakQueue:peakQueue,before,after,samples,memory:memory.slice(measuredFrom).filter(sample=>sample.at>=startedAt && sample.at<=endedAt)};
   await writeFile(join(dir,'results.json'),JSON.stringify(summary,null,2)+'\n');
   console.log('Results:',join(dir,'results.json'));
 } finally {
