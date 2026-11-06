@@ -11,18 +11,25 @@ The designated ChatGPT Web Leader reviewed RC5 on 2026-11-05 and approved Window
 
 ## Evidence index
 
-- [Measured art specification](ART_SPECIFICATION.md), [actual GLB manifest](../assets/manifest.json), [six-class/five-cycle rebirth analysis](reports/REBIRTH_BALANCE.md) and [task traceability ledger](TASK_LEDGER.md). These are Codex deliverables; Gemini's report remains NOT_RECEIVED. No runtime balance change is proposed in the worksheet.
+- [Measured art specification](ART_SPECIFICATION.md), [actual GLB manifest](../assets/manifest.json), [six-class/five-cycle rebirth analysis](reports/REBIRTH_BALANCE.md) and [task traceability ledger](TASK_LEDGER.md). These are Codex deliverables. Gemini later supplied the initial Fire Mage generator for the P9 preview. No runtime balance change is proposed in the worksheet.
 
 - [P0 foundation](reports/PHASE_REPORT_P0.md) and [P1 3D prototype](reports/PHASE_REPORT_P1.md).
 - [P2 combat](reports/PHASE_REPORT_P2.md), [P3 progression and recovery](reports/PHASE_REPORT_P3.md) and [P4 pets](reports/PHASE_REPORT_P4.md).
 - [P5 interaction](reports/PHASE_REPORT_P5.md), [P6 visual and audio polish](reports/PHASE_REPORT_P6.md) and [P7 release and performance](reports/PHASE_REPORT_P7.md).
 
-The owner confirmed that a real TikTok LIVE test session is unavailable. Actual room events and gift pricing are unverified. The Windows MOCK candidate is documented in [release scope](RELEASE_CANDIDATE.md). Leader approval remains pending.
+The owner confirmed that a real TikTok LIVE test session is unavailable. Actual room events and gift pricing are unverified. The Windows MOCK candidate is documented in [release scope](RELEASE_CANDIDATE.md). Leader approval for Windows MOCK is recorded above. Final art, gameplay balance and LIVE gates remain pending.
 
-RC5 clean-install QA at `3d74b32` passed all 36 tests, manifest freshness, production smoke, six-class/three-pet action checks and multi-size layout checks on Windows/Intel UHD. The final clone stayed clean with an explicit LF rule for the generated manifest. Review this candidate with the measured source limits in P7. The WT bridge recheck again returned `fetch failed`; no direct Leader receipt is asserted.
+RC5 clean-install QA at `3d74b32` passed all 36 tests, manifest freshness, production smoke, six-class/three-pet action checks and multi-size layout checks on Windows/Intel UHD. The final clone stayed clean with an explicit LF rule for the generated manifest. Review this candidate with the measured source limits in P7. The WT bridge recheck returned `fetch failed` before the RC5 handoff was delivered via ChatGPT Web.
 
 P7 includes a ten-minute combined OBS/server-auto/HUD/audio recording at `46cf80d`, in addition to the older `7b225ea` evidence. It supports combined local operation within its documented limits and predates the v11 correction. The [auto-order finding/correction](reports/AUTO_ORDER_FINDING.md) now includes stage-based opportunity rotation, historical v10 replay protection and eight 322-raid comparison cohorts at `3fa4190`. This closes repeated fixed-roster exclusion for the tested workloads while leaving broader manual/co-op balance, product and visual approval pending.
 
 The baseline idle-battle requirement now has opt-in server basic attacks (`!auto on/off`) independent of a MOCK browser loop. See P2 for cooldown, persistence, replay and browserless test evidence. Skills remain manual and the host starts each raid. Review the resulting idle/manual gameplay balance alongside the existing class balance request.
+
+## Open follow-up decisions
+
+- P9: Review the paired Fire Mage and Varkhazar preview, including the revised pre-impact warning. The ChatGPT Web request was sent, but the reply failed to load. [Draft PR #48](https://github.com/wtrg/rebirth-magic-live/pull/48)
+- P10: Decide whether to prototype a bounded attack collection window and how auto and manual attacks should share priority. The production ingress and replay evidence is available, and the decision request was posted on GitHub. [P10 evidence](reports/P10_MANUAL_INGRESS.md) · [Decision request](https://github.com/wtrg/rebirth-magic-live/issues/41#issuecomment-6667014615)
+- P11: A permitted TikTok room and test session are required to verify real comments, gifts and reconnect. [LIVE setup](LIVE_SETUP.md)
+- P12: The eight-hour local OBS and recovery measurements are available for the tested P9 commit. [Endurance report](reports/OBS_ENDURANCE_8H.md)
 
 Master section 7.2 has a [detailed database design](DATABASE_DESIGN.md) and executable scratch SQL for all 17 entities plus seven supports. Review ownership, immutable raid mode, imported score baselines, unknown historical timestamps, retention and the proposed offline cutover. It is a reviewed prototype, not an activated migration. A future adapter/importer and its failure/recovery QA are separately required before adoption.
