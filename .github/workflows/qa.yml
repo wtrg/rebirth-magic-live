@@ -17,4 +17,5 @@ jobs:
       - run: node scripts/inspect-models.ts
       - run: git diff --exit-code -- assets/manifest.json
       - run: npm test
+      - run: node scripts/live-loopback-qa.mjs
       - run: npm run build
