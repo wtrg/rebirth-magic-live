@@ -43,3 +43,20 @@ health response that suppresses both candidate requests.
 
 [Revised portrait](evidence/p9-crowded-readability.png) ·
 [Revised phone attack](evidence/p9-crowded-readability-phone.png)
+
+### Exact revision performance rerun
+
+Runtime and harness both used the clean checkout
+`16c3173738f26b1a8c7e47de0eecfe488e978040`. The commands were
+`node scripts/p9-crowded-qa.mjs --benchmark` and the same command with
+`--phone`. Each ran the eight-player default/paired/paired/default sequence
+on Chrome ANGLE Intel UHD D3D11.
+
+- 1080×1920 median draws in run order were 248, 205, 205 and 249.
+  Largest gaps were 33.6, 49.3, 49.5 and 49.5 ms.
+- 540×960 median draws were 248, 205, 205 and 248.
+  Largest gaps were 33.5, 33.6, 50.1 and 49.9 ms.
+- The p95 draw-submission gap was 33.5 ms in every sample.
+
+These are three-second CPU draw-submission samples. Presentation FPS and
+long-session behavior are outside this measurement.
