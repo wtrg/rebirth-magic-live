@@ -20,7 +20,9 @@ $env:QA_OBS_PORT='4193'
 node scripts/obs-soak.mjs
 ```
 
-The backend port must be free. Duration defaults to 600 seconds and is bounded to 30–3600 seconds. The harness creates a fresh synthetic SQLite database and its own loopback MOCK server. It adds a temporary OBS scene/Browser Source with `overlay=1&audio=1`, routes source audio to track 1, and restores the previous QA scene/removes the new source on exit. It mutes previous QA browser inputs; their mute state is not restored because this is a disposable installation. Unexpected inputs, active recording/streaming, wrong video dimensions or missing authentication cause refusal. The harness requests graceful backend shutdown; it can terminate only its own spawned backend if shutdown times out. It leaves the portable OBS process open for inspection.
+The backend port must be free. Duration defaults to 600 seconds and is bounded to 30–43200 seconds. The harness creates a fresh synthetic SQLite database and its own loopback MOCK server. It adds a temporary OBS scene/Browser Source with `overlay=1&audio=1`, routes source audio to track 1, and restores the previous QA scene/removes the new source on exit. It mutes previous QA browser inputs; their mute state is not restored because this is a disposable installation. Unexpected inputs, active recording/streaming, wrong video dimensions or missing authentication cause refusal. The harness requests graceful backend shutdown; it can terminate only its own spawned backend if shutdown times out. It leaves the portable OBS process open for inspection.
+
+Set `QA_OBS_P9_PREVIEW=1` to request both P9 preview assets when testing a build that includes them. The harness waits for an active recording with output bytes and at least five seconds of OBS recording time before starting the measured workload. The encoded duration check still applies.
 
 Workload: 32 synthetic players, all six classes, opt-in server basic auto, manual skill II/ultimate requests, host-controlled ranked raid restarts and three earned pet selections. There are no manual basic attacks. `mock-30` gifts are cosmetic in ranked raids; this run does not measure gift-assisted practice balance. The Browser Source uses the production low-quality renderer, whose cap displays eight actors while all 32 simulate on the server.
 
@@ -32,7 +34,7 @@ With free FFmpeg/FFprobe available on PATH, analyze a completed run:
 node scripts/analyze-obs.mjs test-results/obs-current-TIMESTAMP/results.json
 ```
 
-Replace `TIMESTAMP` with the actual run directory printed by the harness. The analyzer only accepts results beneath this repository's `test-results` and recordings within the isolated portable recording directory. It checks encoded dimensions/rate/duration and the AAC track, decodes mono PCM16 at 48 kHz, measures RMS/peak/clipping in one-minute windows (including a final partial window), and writes `analysis.json` plus local `audio-mono.wav`. Zero clipped decoded mono samples do not rule out all stereo/encoding artifacts. Inspect the frames and listen to the recording separately. Publish only selected synthetic/redacted evidence, never the OBS configuration or database.
+Replace `TIMESTAMP` with the actual run directory printed by the harness. The analyzer only accepts results beneath this repository's `test-results` and recordings within the isolated portable recording directory. It checks encoded dimensions/rate/duration and the AAC track, decodes mono PCM16 at 48 kHz, measures RMS/peak/clipping in one-minute windows (including a final partial window), and writes `analysis.json` without storing the decoded PCM. Zero clipped decoded mono samples do not rule out all stereo/encoding artifacts. Inspect the frames and listen to the recording separately. Publish only selected synthetic/redacted evidence, never the OBS configuration or database.
 
 Counter scope matters:
 
@@ -43,3 +45,5 @@ Counter scope matters:
 - OBS stats describe its compositor/encoder. A 30 FPS recording or OBS counter does not prove 30 unique Three.js presentations/s. Use the [separate native-clock scene benchmark](reports/PHASE_REPORT_P7.md#native-browser-render-submissions-and-resource-counts) for its specifically defined CPU submissions.
 
 Review encoded dimensions/duration, render/encode skips, captured HUD/3D, audio signal/clipping and server progression before accepting a run. A ten-minute sample does not prove 8–12-hour stability, absence of leaks, subjective audio quality or actual upstream TikTok LIVE.
+
+The [eight-hour P9 report](reports/OBS_ENDURANCE_8H.md) records the tested preview build, OBS counters and SQLite restore results.
