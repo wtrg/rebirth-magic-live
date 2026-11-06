@@ -14,6 +14,8 @@ const database = join(folder, 'synthetic.sqlite');
 const base = 'http://127.0.0.1:4243';
 const roster = ['ice', 'fire', 'thunder', 'knight', 'healer', 'summon', 'ice', 'fire'];
 const benchmark = process.argv.includes('--benchmark');
+const record = process.argv.includes('--record');
+assert.ok(!(benchmark && record));
 const event = (i, command) => ({ id: 'crowded:' + i + ':' + command.slice(1), user: 'mock:crowded-' + i,
   name: 'QA ' + i, kind: 'chat', command });
 const seed = newGame();
@@ -43,9 +45,11 @@ try {
   for (const [i] of roster.entries()) await post('/event', event(i, '!join'));
   await post('/admin', 'start');
   browser = await chromium.launch({ channel: 'chrome', headless: false });
-  const modes = benchmark ? ['default', 'paired', 'paired', 'default'] : ['default', 'paired', 'ice-missing', 'fox-missing'];
+  const modes = record ? ['paired'] : benchmark ? ['default', 'paired', 'paired', 'default'] :
+    ['default', 'paired', 'ice-missing', 'fox-missing'];
   for (const mode of modes) {
-    const page = await browser.newPage({ viewport: { width: 1080, height: 1920 } });
+    const size = { width: 1080, height: 1920 };
+    const page = await browser.newPage({ viewport: size, recordVideo: record ? { dir: 'test-results', size } : undefined });
     const errors = [], candidateRequests = [];
     page.on('pageerror', error => errors.push(error.message));
     page.on('request', request => {
@@ -101,11 +105,23 @@ try {
       await page.locator('canvas[data-fox-attacking]').waitFor();
       await page.screenshot({ path: 'test-results/p9-crowded-fox-attack.png' });
       await page.locator('canvas[data-fox-attacking]').waitFor({ state: 'detached' });
+      if (record) {
+        for (const [i] of roster.entries()) {
+          await post('/event', event(i, '!skill1'));
+          await sleep(110);
+        }
+        await page.getByText('CHẤN ĐỘNG', { exact: true }).waitFor();
+        await sleep(750);
+      }
     }
     assert.deepEqual(errors, []);
-    await page.close();
+    if (record) {
+      await page.context().close();
+      await page.video().saveAs('test-results/p9-crowded-playback.webm');
+    } else await page.close();
   }
-  if (!benchmark) console.log('PASS: eight-player HUD, both opt-in assets and independent fallback');
+  if (record) console.log('PASS: eight-player HUD, player skills and boss impact recorded');
+  else if (!benchmark) console.log('PASS: eight-player HUD, both opt-in assets and independent fallback');
 } finally {
   await browser?.close();
   if (server.exitCode === null && server.signalCode === null) server.kill();

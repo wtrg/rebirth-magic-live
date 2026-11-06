@@ -22,3 +22,5 @@ Chrome used Intel UHD through ANGLE D3D11. These samples measure draw submission
 The draft is a reproducible QA branch for review. The candidate assets still require a production integration decision.
 
 [Forward placement trial](evidence/p9-crowded-fox-forward.png) shifts the candidate fox 0.7 scene units toward the camera in its owner's local frame. The center fox's torso and tail are easier to distinguish in this formation. The original image and render measurements above document the earlier placement.
+
+[5.48-second crowded combat recording](evidence/p9-crowded-playback.mp4) shows the full HUD, staggered skill inputs from eight synthetic players, and the boss warning and impact at 1080 x 1920. Use `node scripts/p9-crowded-qa.mjs --record` to reproduce the silent browser capture. The center fox is visible below its owner in several sampled frames, although nearby models and effects still overlap parts of the group. This is a brief readability sample.
