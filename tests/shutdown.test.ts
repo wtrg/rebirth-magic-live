@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { spawn } from 'node:child_process';
 import { once } from 'node:events';
-import { mkdtemp, rm } from 'node:fs/promises';
+import { mkdtemp, readFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { setTimeout } from 'node:timers/promises';
@@ -10,7 +10,7 @@ import { request } from 'node:http';
 import { DatabaseSync } from 'node:sqlite';
 import { WebSocket } from 'ws';
 import { openStore } from '../apps/server/store.ts';
-import { applyEvent, newGame } from '../packages/combat/index.ts';
+import { applyEvent, newGame, nextRaidStage } from '../packages/combat/index.ts';
 import { playReplayWithDebt } from '../apps/server/replay.ts';
 import type { GameSnapshot } from '../packages/shared/index.ts';
 
@@ -104,6 +104,7 @@ for (const scenario of ['terminal', 'nonterminal', 'rollback']) test('ranked win
   const terminal = scenario !== 'nonterminal';
   const directory = await mkdtemp(join(tmpdir(), 'rebirth-ranked-shutdown-'));
   const database = join(directory, 'synthetic.sqlite');
+  const replayFile = join(directory, 'shutdown.json');
   const base = 'http://127.0.0.1:4227';
   const seed = newGame();
   const chat = (user: string, command: string) => ({ id: user + ':' + command.slice(1), user, name: user, kind: 'chat' as const, command });
@@ -113,12 +114,12 @@ for (const scenario of ['terminal', 'nonterminal', 'rollback']) test('ranked win
   const initial = openStore(database);
   initial.commitBatch(seed.players, [], undefined, new Map([[winner, 5]]));
   initial.close();
-  const launch = () => spawn(process.execPath, ['apps/server/index.ts'], {
+  const launch = (outputFile = '') => spawn(process.execPath, ['apps/server/index.ts'], {
     env: { ...process.env, PORT: '4227', DB_PATH: database, REBIRTH_MODE: 'mock',
-      REBIRTH_RANKED_SCHEDULER: '1', REBIRTH_RECORD_REPLAY: '1' },
+      REBIRTH_RANKED_SCHEDULER: '1', REBIRTH_RECORD_REPLAY: '1', REBIRTH_MOCK_REPLAY_FILE: outputFile },
     stdio: ['ignore', 'pipe', 'pipe'],
   });
-  let server = launch();
+  let server = launch(replayFile);
   let closed = once(server, 'close');
   let output = '', errors = '';
   let socket: WebSocket | undefined;
@@ -187,8 +188,15 @@ for (const scenario of ['terminal', 'nonterminal', 'rollback']) test('ranked win
     await post('/admin', 'shutdown', 204);
     if (scenario !== 'rollback') assert.ok(performance.now() - sentAt < 400, 'Shutdown must occur before the opening window expires');
     assert.equal((await closed)[0], 0, errors);
+    const shutdownTrace = JSON.parse(await readFile(replayFile, 'utf8'));
+    const shutdownReplay = playReplayWithDebt(shutdownTrace);
     const saved = openStore(database);
     try {
+      assert.deepEqual(shutdownReplay.debt, saved.loadOpportunityDebt());
+      for (const { id, lastHit, wins } of shutdownReplay.state.players) {
+        assert.equal(lastHit, saved.find(id)?.lastHit);
+        assert.equal(wins, saved.find(id)?.wins);
+      }
       if (scenario === 'rollback') {
         assert.equal(saved.hasReceipt(first.id), false);
         assert.equal(saved.hasReceipt(second.id), false);
@@ -197,6 +205,12 @@ for (const scenario of ['terminal', 'nonterminal', 'rollback']) test('ranked win
         assert.deepEqual(saved.loadOpportunityDebt(), new Map([[winner, 5]]));
         return;
       }
+      const lastStep = shutdownTrace.steps.at(-1);
+      assert.equal(lastStep.kind, 'opportunity');
+      assert.equal(lastStep.reason, 'shutdown');
+      assert.equal(lastStep.outcome, 'committed');
+      assert.equal(lastStep.terminal, terminal);
+      assert.equal(nextRaidStage(shutdownReplay.state), saved.loadStage());
       assert.ok(saved.hasReceipt(first.id) && saved.hasReceipt(second.id));
       assert.ok((saved.find(winner)?.lastHit ?? 0) > 0);
       assert.equal(saved.find(other)?.lastHit === 0, terminal);

@@ -57,6 +57,11 @@ Invoke-WebRequest http://127.0.0.1:4173/replay -OutFile data/rebirth-mock-replay
 node scripts/replay.ts data/rebirth-mock-replay.json
 ```
 
+Để ghi cả các lượt xử lý cuối khi tắt máy chủ, đặt thêm
+`REBIRTH_MOCK_REPLAY_FILE` trước khi chạy. Chọn đường dẫn chưa tồn tại
+trong thư mục đã tạo, ví dụ `data/mock-shutdown.json`. Máy chủ tạo tệp
+khi tắt bình thường, sau khi xử lý hàng đợi.
+
 Replay khởi tạo từ đội hình trống lúc máy chủ bật. Khi xử lý `!join`, bản ghi kèm hồ sơ được khôi phục; sau đó áp dụng các bước theo thứ tự và thời điểm gốc, gồm cả tự đánh. Lệnh phát lại in trạng thái cuối và không mở database. Bản ghi nằm trong bộ nhớ cho tới khi xuất, giới hạn 10.000 bước. Nếu vượt giới hạn, trường `truncated` báo rằng file chỉ chứa phần đầu. Máy chủ LIVE không ghi hoặc xuất replay.
 
 Mã nguồn hiện tại tạo replay v11 với lượt auto đầu tiên luân phiên theo phụ bản. Replay v1–v10 vẫn dùng quy tắc gốc; v10 giữ thứ tự auto cũ.

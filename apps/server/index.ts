@@ -1,5 +1,5 @@
 import { createServer, type IncomingMessage } from 'node:http';
-import { createReadStream, statSync } from 'node:fs';
+import { createReadStream, statSync, writeFileSync } from 'node:fs';
 import { resolve, extname, sep } from 'node:path';
 import { WebSocketServer, WebSocket } from 'ws';
 import { activeRaid, applyEvent, autoBattle, autoReady, canExecuteCombatAction, currentRulesVersion, newGame, nextRaidStage, tick } from '../../packages/combat/index.ts';
@@ -31,6 +31,7 @@ const rankedScheduler = mode === 'mock' && process.env.REBIRTH_RANKED_SCHEDULER 
 const opportunityDebt = rankedScheduler ? store.loadOpportunityDebt() : new Map<string, number>();
 const replay = mode === 'mock' && process.env.REBIRTH_RECORD_REPLAY === '1' ?
   createReplay(state, rankedScheduler ? opportunityDebt : undefined) : null;
+const replayFile = process.env.REBIRTH_MOCK_REPLAY_FILE;
 const queue: { event: GameEvent; admittedAt: number }[] = [];
 const monotonicNow = () => Math.floor(performance.now());
 let window: OpportunityWindow | undefined;
@@ -347,6 +348,14 @@ function shutdown(code = 0) {
   } catch {
     code = 1;
     console.error('Could not commit pending events during shutdown.');
+  }
+  if (replay && replayFile && code === 0) {
+    try {
+      writeFileSync(replayFile, replay.export(), { flag: 'wx' });
+    } catch {
+      code = 1;
+      console.error('Could not create the MOCK shutdown replay file.');
+    }
   }
   for (const client of ws.clients) client.terminate();
   ws.close();
