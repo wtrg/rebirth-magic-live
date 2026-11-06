@@ -28,6 +28,11 @@ Chọn **Raid luyện tập** để thử hiệu ứng chiến đấu của quà
 
 Dữ liệu MOCK mặc định nằm ở `data/rebirth.sqlite`. Tiến trình phụ bản được lưu sau mỗi trận thắng xếp hạng. Xem [sao lưu và khôi phục](docs/RECOVERY.md). Đặt `PORT` và `DB_PATH` qua biến môi trường nếu cần.
 
+Để tạo gói Windows MOCK từ checkout sạch, chạy `npm ci` rồi chạy
+`./scripts/package-windows-mock.ps1` trong PowerShell. ZIP và mã SHA-256
+được tạo trong thư mục `test-results` và hiển thị trong terminal. Giải nén,
+chạy `start-mock.cmd` trên máy có Node 24 và mở URL cổng 4273.
+
 ```powershell
 npm run typecheck
 npm run lint
