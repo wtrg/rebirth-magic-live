@@ -19,3 +19,11 @@ Run `node scripts/p10-ranked-matrix.mjs` from the repository root. The Windows M
 Replay and SQLite matched in all nine cells. The 350 ms spread is measured from first to last scheduled manual send. The server window can open earlier for auto, and network and harness scheduling add delay. The latest admitted intent in those cells was 396–398 ms after window opening. Sent commands absent from a resolved window are counted separately from commands scheduled but denied by the killing action.
 
 The one-hit workload exposes a limitation in the approved +1/-1 debt rule. Profiles present more often can build debt faster than rotating guests, and several rotating profiles had no executed action in this sample. The matrix therefore does not support activating v13 as the default. A follow-up should compare attendance-adjusted rules against this same fixture and repeat the HTTP matrix with multiple class mixes and more than one successful action per raid. This run is not a measurement of actual TikTok arrivals or presentation latency.
+
+## Six-class multi-action run
+
+Set `QA_MATRIX_RAIDS=6` and run `node scripts/p10-ranked-matrix.mjs --mixed`. The Windows MOCK run used runtime `a1b4348`. Each class appears in both manual and auto profiles, seeded at level 30. Across 54 raids, six to fourteen players contributed per victory. Replay v13, SQLite debt, wins and stage matched in every cell.
+
+Across the three spreads, all profiles earned at least one win in the fixed and 24/24/32 cohorts. Six profiles earned none in each 24/32 cohort. At 350 ms, one manual send in each rotating pattern was absent from resolved windows. This shorter sample measures per-profile contribution and rewards, and cannot establish long-run fairness or actual LIVE timing.
+
+[Raw mixed-class results](evidence/p10-ranked-mixed.jsonl)

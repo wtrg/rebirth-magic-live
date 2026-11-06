@@ -9,6 +9,7 @@ import { WebSocket } from 'ws';
 import { openStore } from '../apps/server/store.ts';
 import { playReplayWithDebt } from '../apps/server/replay.ts';
 import { applyEvent, newGame } from '../packages/combat/index.ts';
+import { classes } from '../packages/shared/index.ts';
 
 const ids = Array.from({ length: 32 }, (_, i) => 'mock:matrix' + i);
 const rosterPatterns = [
@@ -18,6 +19,8 @@ const rosterPatterns = [
 ];
 const chat = (user, command, id) => ({ id, user, name: user, kind: 'chat', command });
 const raids = Number(process.env.QA_MATRIX_RAIDS ?? 36);
+const mixed = process.argv.includes('--mixed');
+const classIds = Object.keys(classes);
 assert.ok(Number.isInteger(raids) && raids >= 3 && raids <= 80);
 
 async function cohort(pattern, spread, index) {
@@ -28,7 +31,8 @@ async function cohort(pattern, spread, index) {
   const seed = newGame();
   for (const [i, id] of ids.entries()) {
     applyEvent(seed, chat(id, '!join', 'seed-' + i), 1);
-    Object.assign(seed.players.at(-1), { level: 1100, auto: i % 2 === 0 });
+    Object.assign(seed.players.at(-1), { level: mixed ? 30 : 1100,
+      classId: mixed ? classIds[Math.floor(i / 2) % classIds.length] : 'fire', auto: i % 2 === 0 });
   }
   const initial = openStore(database);
   initial.commit(seed.players);
@@ -59,6 +63,7 @@ async function cohort(pattern, spread, index) {
   }
   const wins = new Map(ids.map(id => [id, 0]));
   const firstSlots = [];
+  const contributorCounts = [];
   try {
     await until(() => output.includes(base));
     socket = new WebSocket(base.replace('http:', 'ws:') + '/state', { origin: base });
@@ -78,10 +83,11 @@ async function cohort(pattern, spread, index) {
       }));
       await until(() => state?.raid.result === 'victory');
       const credited = state.players.filter(player => player.contribution > 0);
-      assert.equal(credited.length, 1);
-      const winner = credited[0].id;
-      wins.set(winner, wins.get(winner) + 1);
-      firstSlots.push(winner);
+      if (mixed) assert.ok(credited.length > 1);
+      else assert.equal(credited.length, 1);
+      for (const player of credited) wins.set(player.id, wins.get(player.id) + 1);
+      contributorCounts.push(credited.length);
+      if (!mixed) firstSlots.push(credited[0].id);
       if (n + 1 < raids) await sleep(210);
     }
     const { raid, players, logs, paused, effect } = state;
@@ -102,7 +108,7 @@ async function cohort(pattern, spread, index) {
       assert.deepEqual(saved.loadOpportunityDebt(), replay.debt);
       assert.equal(saved.loadStage(), raids + 1);
       for (const [id, count] of wins) assert.equal(saved.find(id).wins, count, id);
-      return { roster: pattern.map(group => group.length), spread, raids, offeredManual, scheduledManual,
+      return { roster: pattern.map(group => group.length), spread, raids, offeredManual, scheduledManual, contributorCounts,
         latestAdmissionMs: Math.max(0, ...windows.flatMap(step => step.intents.map(intent => intent.admittedAt - step.openedAt))),
         firstSlots, wins: [...wins.values()], replayAndSqlite: 'pass' };
     } finally { saved.close(); }
