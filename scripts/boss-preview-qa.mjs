@@ -1,0 +1,35 @@
+import assert from 'node:assert/strict';
+import { chromium } from 'playwright';
+import { createServer } from 'vite';
+const server=await createServer({server:{host:'127.0.0.1',port:4199,strictPort:true}});
+await server.listen();
+const browser=await chromium.launch({channel:'chrome'});
+try {
+  const page=await browser.newPage({viewport:{width:1080,height:1920}});
+  const errors=[];
+  page.on('pageerror',e=>errors.push(e.message));
+  await page.goto('http://127.0.0.1:4199/scripts/fixtures/animation.html?boss-preview=1');
+  await page.waitForFunction(()=>!!window.animationQA?.bossPose());
+  const get=()=>page.evaluate(()=>window.animationQA.bossPose());
+  const warning=page.locator('#boss-warning');
+  await page.evaluate(()=>{const q=window.animationQA;q.state.raid.next=Date.now()+1600;q.advance(50);});
+  const idle=await get();
+  assert.equal(await warning.isVisible(),false);
+  await page.evaluate(()=>window.animationQA.advance(1150));
+  const windup=await get();
+  assert.equal(await warning.isVisible(),true);
+  assert.notDeepEqual(windup,idle);
+  await page.evaluate(()=>{const q=window.animationQA;q.stage('pause');q.advance(600);});
+  assert.deepEqual(await get(),windup);
+  assert.equal(await warning.isVisible(),true);
+  await page.evaluate(()=>{const q=window.animationQA;q.state.raid.next+=600;q.stage('resume');q.advance(350);});
+  await page.screenshot({path:'test-results/p9-boss-client-telegraph.png'});
+  const charged=await get();
+  assert.notDeepEqual(charged,windup);
+  await page.evaluate(()=>{const q=window.animationQA;q.state.bossImpactAt=Date.now();q.state.raid.next=Date.now()+4600;q.state.effect={serial:2,label:'Concurrent player hit',color:'#ff6600',kind:'skill'};q.advance(200);});
+  assert.notDeepEqual(await get(),charged);
+  assert.equal(await warning.isVisible(),false);
+  await page.screenshot({path:'test-results/p9-boss-client-attack.png'});
+  assert.deepEqual(errors,[]);
+  console.log('PASS: scheduled telegraph, pause/resume, and attack while player effect occupies the shared effect slot.');
+} finally {await browser.close();await server.close();}

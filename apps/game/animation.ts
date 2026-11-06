@@ -7,7 +7,7 @@ export function createClipPlayer(root: Object3D, clips: AnimationClip[]) {
   let current: AnimationAction | undefined;
   let lastTrigger: number | undefined;
   return {
-    update(name: string, delta: number, trigger?: number) {
+    update(name: string, delta: number, trigger?: number, seek?: number) {
       const action = actions.get(name);
       if (!action) {
         current?.stop();
@@ -17,13 +17,17 @@ export function createClipPlayer(root: Object3D, clips: AnimationClip[]) {
       const impact = name === 'Hit' || name === 'Attack';
       if (action !== current || impact && trigger !== lastTrigger) {
         current?.stop();
-        action.reset().setLoop(name === 'Idle' ? LoopRepeat : LoopOnce, name === 'Idle' ? Infinity : 1);
+        const loop = name === 'Idle' || name === 'Run';
+        action.reset().setLoop(loop ? LoopRepeat : LoopOnce, loop ? Infinity : 1);
         action.clampWhenFinished = true;
         action.play();
         current = action;
       }
       lastTrigger = trigger;
-      mixer.update(delta);
+      if (seek !== undefined) {
+        action.time = Math.min(action.getClip().duration, Math.max(0, seek));
+        mixer.update(0);
+      } else mixer.update(delta);
       return action;
     },
   };
