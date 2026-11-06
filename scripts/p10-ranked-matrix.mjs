@@ -20,6 +20,7 @@ const rosterPatterns = [
 const chat = (user, command, id) => ({ id, user, name: user, kind: 'chat', command });
 const raids = Number(process.env.QA_MATRIX_RAIDS ?? 36);
 const mixed = process.argv.includes('--mixed');
+const participation = process.argv.includes('--participation');
 const classIds = Object.keys(classes);
 assert.ok(Number.isInteger(raids) && raids >= 3 && raids <= 80);
 
@@ -39,7 +40,8 @@ async function cohort(pattern, spread, index) {
   initial.close();
   const server = spawn(process.execPath, ['apps/server/index.ts'], {
     env: { ...process.env, PORT: String(port), DB_PATH: database, REBIRTH_MODE: 'mock',
-      REBIRTH_RANKED_SCHEDULER: '1', REBIRTH_RECORD_REPLAY: '1' },
+      REBIRTH_RANKED_SCHEDULER: participation ? 'ranked-participation-v1' : '1',
+      REBIRTH_RECORD_REPLAY: '1', REBIRTH_MOCK_REPLAY_FILE: '' },
     stdio: ['ignore', 'pipe', 'pipe'],
   });
   const exited = once(server, 'close');
@@ -93,7 +95,7 @@ async function cohort(pattern, spread, index) {
     const { raid, players, logs, paused, effect } = state;
     const response = await fetch(base + '/replay', { signal: AbortSignal.timeout(5000) });
     const trace = await response.json();
-    assert.equal(trace.version, 13);
+    assert.equal(trace.version, participation ? 14 : 13);
     assert.equal(trace.truncated, false);
     const replay = playReplayWithDebt(trace);
     assert.deepEqual(replay.state, { raid, players, logs, paused, effect });
@@ -107,12 +109,21 @@ async function cohort(pattern, spread, index) {
       pattern[n % pattern.length].filter(id => ids.indexOf(id) % 2 === 1).length).reduce((a, b) => a + b, 0);
     await post('/admin', 'shutdown');
     assert.equal((await exited)[0], 0, errors);
-    const saved = openStore(database);
+    const saved = openStore(database, participation);
     try {
       assert.deepEqual(saved.loadOpportunityDebt(), replay.debt);
+      if (participation) assert.deepEqual(saved.loadParticipation(), replay.participation);
       assert.equal(saved.loadStage(), raids + 1);
       for (const [id, count] of wins) assert.equal(saved.find(id).wins, count, id);
-      return { roster: pattern.map(group => group.length), spread, raids, offeredManual, scheduledManual, contributorCounts, windowWaitMs,
+      const players = participation ? ids.map(id => {
+        const offered = Array.from({ length: raids }, (_, n) => pattern[n % pattern.length])
+          .filter(roster => roster.includes(id)).length;
+        const manual = ids.indexOf(id) % 2 === 1;
+        const admittedManual = windows.filter(step => step.intents.some(intent => intent.event.user === id)).length;
+        return { id, wins: wins.get(id), offeredManual: manual ? offered : 0, admittedManual,
+          unrecordedManual: manual ? offered - admittedManual : 0, ...replay.participation.history.get(id) };
+      }) : undefined;
+      return { roster: pattern.map(group => group.length), spread, raids, offeredManual, scheduledManual, contributorCounts, windowWaitMs, players,
         latestAdmissionMs: Math.max(0, ...windows.flatMap(step => step.intents.map(intent => intent.admittedAt - step.openedAt))),
         firstSlots, wins: [...wins.values()], replayAndSqlite: 'pass' };
     } finally { saved.close(); }
