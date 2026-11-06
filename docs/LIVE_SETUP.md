@@ -33,4 +33,6 @@ Khi nguồn gián đoạn, game, HUD và điều khiển cục bộ vẫn chạy
 - Rớt kết nối và kết nối lại. Kiểm tra HUD vẫn hoạt động, rồi nhận thêm một bình luận mới.
 - Mở OBS Browser Source ở 1080×1920 và xác nhận bố cục, trạng thái LIVE và tiến độ trận.
 
-Trạng thái hiện tại: transport WebSocket và schema v1 được thử bằng fixture cục bộ. Phiên TikTok LIVE thật, giá và gift ID thực tế, OBS và hiệu năng stream vẫn chờ nghiệm thu.
+Chạy `node scripts/live-loopback-qa.mjs` để kiểm tra server ở chế độ LIVE với nguồn Euler tổng hợp qua loopback. Bài thử xác minh bình luận, đòn đánh, gift streak hoàn tất, kết nối lại, loại sự kiện trùng và SQLite. Chỉ tiến trình thử dùng địa chỉ loopback và khóa giả.
+
+Phiên TikTok LIVE thật, giá và gift ID thực tế, OBS và hiệu năng stream vẫn chờ nghiệm thu.
