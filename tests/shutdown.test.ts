@@ -11,6 +11,7 @@ import { DatabaseSync } from 'node:sqlite';
 import { WebSocket } from 'ws';
 import { openStore } from '../apps/server/store.ts';
 import { applyEvent, newGame } from '../packages/combat/index.ts';
+import { playReplayWithDebt } from '../apps/server/replay.ts';
 import type { GameSnapshot } from '../packages/shared/index.ts';
 
 test('local shutdown drains accepted events and closes the database', { timeout: 20000 }, async () => {
@@ -99,7 +100,8 @@ test('local shutdown drains accepted events and closes the database', { timeout:
   }
 });
 
-for (const terminal of [true, false]) test('ranked shutdown drains once with terminal=' + terminal, { timeout: 15000 }, async () => {
+for (const scenario of ['terminal', 'nonterminal', 'rollback']) test('ranked window HTTP and SQLite: ' + scenario, { timeout: 15000 }, async () => {
+  const terminal = scenario !== 'nonterminal';
   const directory = await mkdtemp(join(tmpdir(), 'rebirth-ranked-shutdown-'));
   const database = join(directory, 'synthetic.sqlite');
   const base = 'http://127.0.0.1:4227';
@@ -154,11 +156,36 @@ for (const terminal of [true, false]) test('ranked shutdown drains once with ter
     const health = await (await fetch(base + '/health', { signal: AbortSignal.timeout(3000) })).json();
     assert.equal(health.queue, 2);
     assert.equal(snapshot?.raid.result, null);
+    if (scenario === 'rollback') {
+      const fault = new DatabaseSync(database);
+      try {
+        fault.exec(`CREATE TRIGGER reject_settlement BEFORE UPDATE ON ranked_opportunity_debt
+          BEGIN SELECT RAISE(ABORT, 'synthetic settlement failure'); END`);
+      } finally { fault.close(); }
+      await until(() => snapshot?.paused === true);
+      const trace = await (await fetch(base + '/replay', { signal: AbortSignal.timeout(3000) })).json();
+      assert.ok(trace.steps.some((step: { kind: string; outcome?: string }) =>
+        step.kind === 'opportunity' && step.outcome === 'rollback'));
+      const { raid, players, logs, paused, effect } = snapshot!;
+      assert.deepEqual(playReplayWithDebt(trace), {
+        state: { raid, players, logs, paused, effect }, debt: new Map([[winner, 5]]),
+      });
+      assert.equal(raid.result, null);
+      assert.ok(players.every(player => player.lastHit === 0 && player.wins === 0));
+    }
     await post('/admin', 'shutdown', 204);
-    assert.ok(performance.now() - sentAt < 400, 'Shutdown must occur before the opening window expires');
+    if (scenario !== 'rollback') assert.ok(performance.now() - sentAt < 400, 'Shutdown must occur before the opening window expires');
     assert.equal((await closed)[0], 0, errors);
     const saved = openStore(database);
     try {
+      if (scenario === 'rollback') {
+        assert.equal(saved.hasReceipt(first.id), false);
+        assert.equal(saved.hasReceipt(second.id), false);
+        assert.equal(saved.find(winner)?.wins, 0);
+        assert.equal(saved.loadStage(), 1);
+        assert.deepEqual(saved.loadOpportunityDebt(), new Map([[winner, 5]]));
+        return;
+      }
       assert.ok(saved.hasReceipt(first.id) && saved.hasReceipt(second.id));
       assert.ok((saved.find(winner)?.lastHit ?? 0) > 0);
       assert.equal(saved.find(other)?.lastHit === 0, terminal);
