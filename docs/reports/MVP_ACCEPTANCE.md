@@ -25,6 +25,12 @@ Scope follows section 16 of the project brief. Evidence applies to the specific 
 19. Public source — [repository](https://github.com/wtrg/rebirth-magic-live). RC5 adds stage-rotated auto with versioned replay, viewport-bounded desktop controls, measured asset specifications and broader rebirth/schema QA. Earlier runtime features remain included. Release history and exact local QA scope are tracked in P7 and the release document.
 20. Codex acceptance report — P0–P7 reports and this audit identify measured evidence, gaps and external-agent status. [Leader handoff](../LEADER_REVIEW_REQUEST.md).
 
+## Extracted Windows package smoke
+
+The local archive `RE-BIRTH-WINDOWS-MOCK-9963579.zip` was built from `9963579` for Windows with Node.js 24. Its SHA-256 is `a1bb514f8a2bcb3f00457ad8a4b266c5653d86a8ed976568b02be23663166736`. A clean extraction passed launcher startup, join, raid start, server-confirmed player damage, both preview GLB requests and graceful shutdown.
+
+Portable OBS then used the extracted server and built assets with both previews enabled. The 30.6-second MOCK workload exercised 32 synthetic players, accepted 1,602 events and restarted after 12 observed victories. SQLite integrity passed with 32 profiles at saved stage 13. The resulting 36.166-second recording contained H.264 at 1080×1920 and 30 FPS and stereo AAC at 48 kHz. OBS recorded zero render or output skips. Decoded mono audio contained signal and zero clipped samples. This short test covers the extracted package. The eight-hour endurance measurement covers the earlier source identified in the [endurance report](OBS_ENDURANCE_8H.md).
+
 ## Remaining gates
 
 Master-wide traceability is indexed in the [task ledger](../TASK_LEDGER.md). The [measured art specification](../ART_SPECIFICATION.md) closes the prototype dimension/manifest documentation gap. The [rebirth worksheet](REBIRTH_BALANCE.md) verifies all five cycles and quantifies current gains/reset losses; gameplay approval remains pending. P7 includes a ten-minute combined auto/HUD/audio recording at `46cf80d`, before the v11 ordering correction. The [auto-order defect](AUTO_ORDER_FINDING.md) is corrected with deterministic stage-based rotation and old replay compatibility. The 322-raid synthetic cohorts verify that specific fixed-roster exclusion fix; they do not establish full manual/co-op class balance or extend the older OBS measurement to every later change.
