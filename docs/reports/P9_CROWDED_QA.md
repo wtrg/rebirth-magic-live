@@ -20,3 +20,5 @@ Chrome used Intel UHD through ANGLE D3D11. These samples measure draw submission
 [Eight-player portrait](evidence/p9-crowded-paired.png) · [Fire Fox attack sample](evidence/p9-crowded-fox-attack.png)
 
 The draft is a reproducible QA branch for review. The candidate assets still require a production integration decision.
+
+[Forward placement trial](evidence/p9-crowded-fox-forward.png) shifts the candidate fox 0.7 scene units toward the camera in its owner's local frame. The center fox's torso and tail are easier to distinguish in this formation. The original image and render measurements above document the earlier placement.

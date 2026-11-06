@@ -271,7 +271,7 @@ export function createArena(view: HTMLElement, low: () => boolean, portrait: boo
           const clip = strike > 0.73 ? 'Run' : strike > 0 ? 'Attack' : 'Idle';
           foxClips.update(clip, delta, actor.strike);
           foxAttack ||= clip === 'Attack';
-          actor.companion.position.set(-0.9, 0.1, strike * 0.8);
+          actor.companion.position.set(-0.9, 0.1, -0.7 + strike * 0.8);
           actor.companion.rotation.x = 0;
           return;
         }

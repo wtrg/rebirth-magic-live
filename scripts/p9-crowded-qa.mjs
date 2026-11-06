@@ -40,7 +40,7 @@ try {
   for (let i = 0; i < 100 && !ready; i++) await sleep(40);
   assert.ok(ready);
   await mkdir('test-results', { recursive: true });
-  await Promise.all(roster.map((_, i) => post('/event', event(i, '!join'))));
+  for (const [i] of roster.entries()) await post('/event', event(i, '!join'));
   await post('/admin', 'start');
   browser = await chromium.launch({ channel: 'chrome', headless: false });
   const modes = benchmark ? ['default', 'paired', 'paired', 'default'] : ['default', 'paired', 'ice-missing', 'fox-missing'];
