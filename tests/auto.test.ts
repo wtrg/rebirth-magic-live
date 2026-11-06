@@ -156,7 +156,7 @@ test('auto preference persists through archive and restored join', () => {
   } finally { store.close(); }
 });
 
-test('browserless server auto pauses, replays and commits one victory with stage progress', { timeout: 15000 }, async () => {
+for (const scheduled of [false, true]) test('browserless server auto pauses, replays and commits one victory with stage progress, scheduler=' + scheduled, { timeout: 15000 }, async () => {
   const directory = await mkdtemp(join(tmpdir(), 'rebirth-auto-'));
   const database = join(directory, 'auto.sqlite');
   const base = 'http://127.0.0.1:4194';
@@ -167,7 +167,8 @@ test('browserless server auto pauses, replays and commits one victory with stage
   initialStore.commit(seed.players);
   initialStore.close();
   const server = spawn(process.execPath, ['apps/server/index.ts'], {
-    env: { ...process.env, PORT: '4194', DB_PATH: database, REBIRTH_MODE: 'mock', REBIRTH_RECORD_REPLAY: '1' },
+    env: { ...process.env, PORT: '4194', DB_PATH: database, REBIRTH_MODE: 'mock', REBIRTH_RECORD_REPLAY: '1',
+      REBIRTH_RANKED_SCHEDULER: scheduled ? '1' : '0' },
     stdio: ['ignore', 'pipe', 'pipe'],
   });
   const closed = once(server, 'close');
@@ -220,8 +221,8 @@ test('browserless server auto pauses, replays and commits one victory with stage
     assert.equal(state!.players[0].shards, 1);
     assert.equal(state!.players[0].xp, 120);
     const trace = await (await fetch(base + '/replay', { signal: AbortSignal.timeout(3000) })).json();
-    assert.equal(trace.version, currentRulesVersion);
-    assert.ok(trace.steps.some((step: { kind: string }) => step.kind === 'auto'));
+    assert.equal(trace.version, scheduled ? 13 : currentRulesVersion);
+    assert.ok(trace.steps.some((step: { kind: string }) => step.kind === (scheduled ? 'opportunity' : 'auto')));
     const game: GameState = {
       raid: state!.raid, players: state!.players, logs: state!.logs, paused: state!.paused, effect: state!.effect,
     };

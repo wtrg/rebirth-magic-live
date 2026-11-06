@@ -1,14 +1,15 @@
 import { createServer, type IncomingMessage } from 'node:http';
-import { createReadStream, statSync } from 'node:fs';
+import { createReadStream, statSync, writeFileSync } from 'node:fs';
 import { resolve, extname, sep } from 'node:path';
 import { WebSocketServer, WebSocket } from 'ws';
-import { activeRaid, applyEvent, autoBattle, autoReady, currentRulesVersion, newGame, nextRaidStage, tick } from '../../packages/combat/index.ts';
+import { activeRaid, applyEvent, autoBattle, autoReady, canExecuteCombatAction, currentRulesVersion, newGame, nextRaidStage, tick } from '../../packages/combat/index.ts';
 import { LiveAdapter, normalizeEvent } from '../../packages/tiktok-adapter/index.ts';
 import { eulerSource, eulerUrl, normalizeEulerMessage, readGiftMap } from '../../packages/tiktok-adapter/euler.ts';
 import type { EventContext, GameEvent, GameSnapshot } from '../../packages/shared/index.ts';
 import { openStore } from './store.ts';
 import { applyAdmin, isAdminAction } from './admin.ts';
 import { createReplay } from './replay.ts';
+import { admitOpportunityIntent, openOpportunityWindow, resolveOpportunityWindow, settleRankedDebt, type OpportunityWindow } from './opportunity.ts';
 
 const port = Number(process.env.PORT ?? 4173);
 const dist = resolve('dist');
@@ -26,8 +27,16 @@ const abortLive = new AbortController();
 const live = new LiveAdapter(broadcast);
 const store = openStore(process.env.DB_PATH ?? (mode === 'live' ? 'data/rebirth-live.sqlite' : 'data/rebirth.sqlite'));
 let state = newGame([], store.loadStage());
-const replay = mode === 'mock' && process.env.REBIRTH_RECORD_REPLAY === '1' ? createReplay(state) : null;
-const queue: GameEvent[] = [];
+const rankedScheduler = mode === 'mock' && process.env.REBIRTH_RANKED_SCHEDULER === '1';
+const opportunityDebt = rankedScheduler ? store.loadOpportunityDebt() : new Map<string, number>();
+const replay = mode === 'mock' && process.env.REBIRTH_RECORD_REPLAY === '1' ?
+  createReplay(state, rankedScheduler ? opportunityDebt : undefined) : null;
+const replayFile = process.env.REBIRTH_MOCK_REPLAY_FILE;
+const queue: { event: GameEvent; admittedAt: number }[] = [];
+const monotonicNow = () => Math.floor(performance.now());
+let window: OpportunityWindow | undefined;
+let firstWindow = true;
+let executedThisRaid = new Set<string>();
 let stopping = false;
 const lastEvent = new Map<string, number>();
 const adminClock = { pausedAt: 0 };
@@ -53,13 +62,18 @@ async function readJson(req: IncomingMessage): Promise<unknown> {
   return JSON.parse(body);
 }
 
+function pendingEventCount() {
+  return queue.length + (window?.intents.size ?? 0);
+}
+
 function enqueue(event: GameEvent, now: number) {
   if (event.kind === 'gift' && !event.complete) return true;
   const limiterKey = event.kind + ':' + event.user;
-  if (stopping || state.paused || queue.length >= 128 || lastEvent.size >= 4096 && !lastEvent.has(limiterKey)) return false;
+  if (stopping || state.paused || pendingEventCount() >= 128 ||
+      lastEvent.size >= 4096 && !lastEvent.has(limiterKey)) return false;
   if (now - (lastEvent.get(limiterKey) ?? 0) < 200) return false;
   lastEvent.set(limiterKey, now);
-  queue.push(event);
+  queue.push({ event, admittedAt: monotonicNow() });
   return true;
 }
 
@@ -72,7 +86,7 @@ const server = createServer(async (req, res) => {
   const path = req.url?.split('?')[0];
   if (path === '/health' && req.method === 'GET') {
     res.setHeader('Content-Type', 'application/json');
-    res.end(JSON.stringify({ status: 'ok', mode, live: live.status, queue: queue.length }));
+    res.end(JSON.stringify({ status: 'ok', mode, live: live.status, queue: pendingEventCount() }));
     return;
   }
   if (path === '/replay' && req.method === 'GET' && replay) {
@@ -112,11 +126,12 @@ const server = createServer(async (req, res) => {
     if (!isAdminAction(body)) { res.writeHead(400).end(); return; }
     if (body === 'start' || body === 'practice' || body === 'clear-roster') {
       try {
-        processQueue(now, queue.length);
+        if (!useRankedScheduler()) processQueue(now, queue.length);
       } catch {
         applyAdmin(state, 'pause', now, adminClock);
         replay?.record({ kind: 'admin', action: 'pause', at: now });
         queue.length = 0;
+        window = undefined;
         console.error('Local persistence failed. Game paused.');
         broadcast();
         res.writeHead(503).end();
@@ -125,9 +140,17 @@ const server = createServer(async (req, res) => {
     }
     const wasPaused = state.paused;
     if (!applyAdmin(state, body, now, adminClock)) { res.writeHead(409).end(); return; }
-    if (body === 'start' || body === 'practice' || body === 'clear-roster') bossImpactAt = undefined;
+    if (body === 'start' || body === 'practice' || body === 'clear-roster') {
+      bossImpactAt = undefined;
+      window = undefined;
+      firstWindow = true;
+      executedThisRaid.clear();
+    }
     if (body === 'resume' && wasPaused && bossImpactAt !== undefined) bossImpactAt += now - adminClock.pausedAt;
-    if (body === 'pause') queue.length = 0;
+    if (body === 'pause') {
+      queue.length = 0;
+      window = undefined;
+    }
     replay?.record({ kind: 'admin', action: body, at: now });
     broadcast();
     res.writeHead(204).end();
@@ -170,9 +193,66 @@ function broadcast() {
   }
 }
 
-function processQueue(now: number, limit: number) {
+function useRankedScheduler() {
+  return rankedScheduler && !state.raid.practice && activeRaid(state);
+}
+
+function publishDebt(changes: ReadonlyMap<string, number>) {
+  for (const [id, debt] of changes) {
+    if (debt) opportunityDebt.set(id, debt);
+    else opportunityDebt.delete(id);
+  }
+}
+
+function closeWindow(now: number, closedAt: number, reason: 'deadline' | 'shutdown') {
+  const closing = window;
+  if (!closing) return;
+  const ids = new Set<string>();
+  const intents = [...closing.intents.values()].filter(({ event }) => {
+    if (ids.has(event.id) || store.hasReceipt(event.id)) return false;
+    ids.add(event.id);
+    return true;
+  });
+  const step = { kind: 'opportunity' as const, at: now, openedAt: closing.openedAt, deadline: closing.deadline,
+    closedAt, reason, intents };
+  const result = resolveOpportunityWindow(state, intents, opportunityDebt, now, reason !== 'shutdown');
+  const executed = new Set([...executedThisRaid, ...result.executed]);
+  const terminal = !state.raid.result && !!result.state.raid.result;
+  const changes = terminal ? settleRankedDebt(opportunityDebt, executed, result.denied) : new Map<string, number>();
+  const stage = nextRaidStage(result.state);
+  try {
+    if (!store.commitBatch(result.state.players, intents.map(({ event }) => ({ id: event.id, at: now })),
+      stage > nextRaidStage(state) ? stage : undefined, changes)) throw new Error('Duplicate ranked window receipt');
+  } catch (error) {
+    replay?.record({ ...step, outcome: 'rollback' });
+    throw error;
+  }
+  state = result.state;
+  publishDebt(changes);
+  executedThisRaid = terminal ? new Set() : executed;
+  replay?.record({ ...step, outcome: 'committed', terminal });
+  window = undefined;
+}
+
+function startWindow(at: number) {
+  window = openOpportunityWindow(at, firstWindow);
+  firstWindow = false;
+  return window;
+}
+
+function processQueue(now: number, limit: number, shuttingDown = false) {
   for (let i = 0; i < limit && queue.length; i++) {
-    const event = queue[0];
+    const { event, admittedAt } = queue[0];
+    if (useRankedScheduler() && event.kind === 'chat' &&
+        /^!(skill1|skill2|ult|attack)(?:\s|$)/.test(event.command)) {
+      if (window && admittedAt >= window.deadline && !shuttingDown) closeWindow(now, monotonicNow(), 'deadline');
+      if (useRankedScheduler() && state.players.some(player => player.id === event.user) && !store.hasReceipt(event.id)) {
+        if (!window && canExecuteCombatAction(state, event, now)) startWindow(admittedAt);
+        if (window) admitOpportunityIntent(window, { event, admittedAt });
+      }
+      queue.shift();
+      continue;
+    }
     const next = structuredClone(state);
     const member = next.players.find(player => player.id === event.user);
     const context: EventContext = {};
@@ -192,20 +272,35 @@ function processQueue(now: number, limit: number) {
   }
 }
 
-const clock = setInterval(() => {
-  if (state.paused) return;
-  const now = Date.now();
-  if (!queue.length && !autoReady(state, now) && (!activeRaid(state) && state.raid.phase !== 'SPAWN' || now < state.raid.next)) return;
-  try {
+function processBossTick(now: number) {
     const draft = structuredClone(state);
     if (tick(draft, now, currentRulesVersion)) {
-      store.commit(draft.players);
+      const terminal = useRankedScheduler() && !!draft.raid.result;
+      const changes = terminal ? settleRankedDebt(opportunityDebt, executedThisRaid, new Set()) : undefined;
+      store.commitBatch(draft.players, [], undefined, changes);
+      if (changes) {
+        publishDebt(changes);
+        executedThisRaid.clear();
+        window = undefined;
+      }
       if (draft.effect?.kind === 'boss' && draft.effect.serial !== state.effect?.serial) bossImpactAt = now;
       state = draft;
       replay?.record({ kind: 'tick', at: now });
     }
-    processQueue(now, 16);
-    if (autoReady(state, now)) {
+}
+
+const clock = setInterval(() => {
+  if (state.paused) return;
+  const now = Date.now();
+  if (!queue.length && !window && !autoReady(state, now) && (!activeRaid(state) && state.raid.phase !== 'SPAWN' || now < state.raid.next)) return;
+  try {
+    processBossTick(now);
+    processQueue(now, rankedScheduler ? queue.length : 16);
+    if (useRankedScheduler()) {
+      const at = monotonicNow();
+      if (window && at >= window.deadline) closeWindow(now, at, 'deadline');
+      if (useRankedScheduler() && !window && autoReady(state, now)) startWindow(at);
+    } else if (autoReady(state, now)) {
       const automatic = structuredClone(state);
       if (autoBattle(automatic, now, currentRulesVersion)) {
         const nextStage = nextRaidStage(automatic);
@@ -219,6 +314,7 @@ const clock = setInterval(() => {
     applyAdmin(state, 'pause', now, adminClock);
     replay?.record({ kind: 'admin', action: 'pause', at: now });
     queue.length = 0;
+    window = undefined;
     console.error('Local persistence failed. Game paused.');
     broadcast();
   }
@@ -242,10 +338,24 @@ function shutdown(code = 0) {
   clearInterval(clock);
   clearInterval(cleanup);
   try {
-    processQueue(Date.now(), queue.length);
+    const boundary = monotonicNow();
+    const now = Date.now();
+    if (useRankedScheduler()) {
+      processBossTick(now);
+      processQueue(now, queue.length, true);
+      closeWindow(now, boundary, 'shutdown');
+    } else processQueue(now, queue.length);
   } catch {
     code = 1;
     console.error('Could not commit pending events during shutdown.');
+  }
+  if (replay && replayFile && code === 0) {
+    try {
+      writeFileSync(replayFile, replay.export(), { flag: 'wx' });
+    } catch {
+      code = 1;
+      console.error('Could not create the MOCK shutdown replay file.');
+    }
   }
   for (const client of ws.clients) client.terminate();
   ws.close();
