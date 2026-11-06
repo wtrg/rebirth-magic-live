@@ -128,7 +128,7 @@ test('current replay records mixed auto, manual and boss ticks deterministically
   tick(state, 6400, currentRulesVersion);
   replay.record({ kind: 'tick', at: 6400 });
   const trace = JSON.parse(replay.export());
-  assert.equal(trace.version, 11);
+  assert.equal(trace.version, currentRulesVersion);
   assert.deepEqual(playReplay(trace), state);
   assert.deepEqual(playReplay(trace), state);
 });
@@ -220,7 +220,7 @@ test('browserless server auto pauses, replays and commits one victory with stage
     assert.equal(state!.players[0].shards, 1);
     assert.equal(state!.players[0].xp, 120);
     const trace = await (await fetch(base + '/replay', { signal: AbortSignal.timeout(3000) })).json();
-    assert.equal(trace.version, 11);
+    assert.equal(trace.version, currentRulesVersion);
     assert.ok(trace.steps.some((step: { kind: string }) => step.kind === 'auto'));
     const game: GameState = {
       raid: state!.raid, players: state!.players, logs: state!.logs, paused: state!.paused, effect: state!.effect,
