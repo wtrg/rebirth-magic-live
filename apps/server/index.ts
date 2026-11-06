@@ -229,7 +229,7 @@ function closeWindow(now: number, closedAt: number, reason: 'deadline' | 'shutdo
   state = result.state;
   publishDebt(changes);
   executedThisRaid = terminal ? new Set() : executed;
-  replay?.record({ ...step, outcome: 'committed' });
+  replay?.record({ ...step, outcome: 'committed', terminal });
   window = undefined;
 }
 

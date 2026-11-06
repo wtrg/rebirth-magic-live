@@ -9,7 +9,8 @@ type Step = { at: number } & (
   { kind: 'tick' } |
   { kind: 'auto' } |
   { kind: 'opportunity'; openedAt: number; deadline: number; closedAt: number;
-    reason: 'deadline' | 'shutdown'; outcome: 'committed' | 'rollback'; intents: OpportunityIntent[] } |
+    reason: 'deadline' | 'shutdown'; intents: OpportunityIntent[] } &
+    ({ outcome: 'committed'; terminal: boolean } | { outcome: 'rollback' }) |
   { kind: 'admin'; action: AdminAction }
 );
 const limit = 10000;
@@ -83,9 +84,12 @@ export function playReplayWithDebt(raw: unknown) {
       if (step.outcome !== 'committed') throw new Error('Invalid opportunity outcome');
       const before = state.raid.result;
       const result = resolveOpportunityWindow(state, intents, debt, step.at, step.reason !== 'shutdown');
+      const terminal = !before && !!result.state.raid.result;
+      // Early v13 MOCK captures predate the explicit terminal marker.
+      if (step.terminal !== undefined && step.terminal !== terminal) throw new Error('Invalid opportunity terminal outcome');
       state = result.state;
       for (const id of result.executed) executed.add(id);
-      if (!before && state.raid.result) settle(result.denied);
+      if (terminal) settle(result.denied);
     } else if (step.kind === 'auto' && version >= 10) {
       autoBattle(state, step.at, version);
     } else if (step.kind === 'admin' && isAdminAction(step.action)) {

@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { admitOpportunityIntent, openOpportunityWindow, rankedOpportunitySlots, resolveOpportunityWindow, settleRankedDebt } from '../apps/server/opportunity.ts';
 import { applyEvent, newGame } from '../packages/combat/index.ts';
+import { createReplay, playReplayWithDebt } from '../apps/server/replay.ts';
 
 function chat(user: string, command: string) {
   return { kind: 'chat' as const, user, name: user, command, id: user + command };
@@ -73,4 +74,26 @@ test('a killing action denies only still-eligible slots and preserves the input 
   assert.equal(result.state.raid.result, 'victory');
   assert.equal(state.raid.hp, 1);
   assert.equal(state.players[0].wins, 0);
+});
+
+test('replay distinguishes terminal and nonterminal shutdown windows', () => {
+  for (const terminal of [true, false]) {
+    const state = newGame();
+    applyEvent(state, chat('mock:player', '!join'), 1);
+    state.raid.phase = 'PHASE_1';
+    if (terminal) state.raid.hp = 1;
+    const debt = new Map([['mock:player', 3]]);
+    const recording = createReplay(state, debt);
+    recording.record({ kind: 'opportunity', at: 200, openedAt: 100, deadline: 500, closedAt: 200,
+      reason: 'shutdown', outcome: 'committed', terminal,
+      intents: [{ event: { ...chat('mock:player', '!attack'), id: 'ranked-shutdown' }, admittedAt: 100 }] });
+    const trace = JSON.parse(recording.export());
+    const result = playReplayWithDebt(trace);
+    assert.equal(result.state.raid.result, terminal ? 'victory' : null);
+    assert.equal(result.debt.get('mock:player'), terminal ? 2 : 3);
+    trace.steps[0].terminal = !terminal;
+    assert.throws(() => playReplayWithDebt(trace), /Invalid opportunity terminal outcome/);
+    delete trace.steps[0].terminal;
+    assert.deepEqual(playReplayWithDebt(trace), result);
+  }
 });
