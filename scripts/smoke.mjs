@@ -62,6 +62,8 @@ try {
   await start();
   const send = (path,body,origin = base) => fetch(base+path,{ method:'POST', headers: { Origin:origin, 'Content-Type':'application/json' }, body:JSON.stringify(body) });
   assert.equal((await send('/admin','pause','http://example.test')).status,403);
+  const foreignSocket = new WebSocket(base.replace('http:', 'ws:') + '/state', { origin: 'http://example.test' });
+  await assert.rejects(once(foreignSocket, 'open'), /socket hang up/);
   assert.equal((await send('/event',{ kind:'chat' })).status,400);
   assert.equal((await send('/event',{ id:'spoof', user:'live:123', name:'Fake', username:'fake', kind:'chat', command:'!join' })).status,400);
   browser = await chromium.launch({ channel:process.env.QA_BROWSER ?? 'chrome', args:['--enable-unsafe-swiftshader'] });
@@ -237,10 +239,16 @@ try {
   encounter.close();
   await start(encounterPath);
   const classIds = ['fire','ice','thunder','knight','healer','summon'];
+  const untrustedName = '<img src=x id=qa-injected>';
   for (const id of classIds) {
-    assert.equal((await send('/event',{id:'class-join:'+id,user:'qa:'+id,name:id,kind:'chat',command:'!join'})).status,202);
+    const name = id === 'summon' ? untrustedName : id;
+    assert.equal((await send('/event',{id:'class-join:'+id,user:'qa:'+id,name,kind:'chat',command:'!join'})).status,202);
   }
   await waitForText(overlay,'#count','06');
+  for (const view of [page, overlay]) {
+    await waitForText(view,'#party',untrustedName);
+    assert.equal(await view.locator('#qa-injected').count(),0);
+  }
   await sleep(250);
   for (const id of classIds) {
     assert.equal((await send('/event',{id:'class-select:'+id,user:'qa:'+id,name:id,kind:'chat',command:'!class '+id})).status,202);
