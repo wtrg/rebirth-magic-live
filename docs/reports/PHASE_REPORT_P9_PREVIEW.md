@@ -45,3 +45,9 @@ Both captures came from the built 540 × 960 MOCK client. Browser QA asserts tha
 [4.2-second MP4](evidence/p9-telegraph-portrait.mp4) · [Frame sequence](evidence/p9-telegraph-frames.png)
 
 Captured from the built Windows MOCK client at `ecd0684`, with eight synthetic Fire Mages, both preview rigs and the portrait HUD. The 1080 × 1920 recording follows one server attack through idle, amber warning, impact and recovery. The browser observed the server's impact timestamp and reported no page errors. At this width the computed boss impact label is 56.7 px, down from the regular effect size of 64.8 px. The MP4 is silent and does not include a separate Fire Mage cast sequence.
+
+### Fire Mage cast capture
+
+[3.2-second MP4](evidence/p9-fire-mage-cast.mp4)
+
+Captured from the same Windows MOCK build at `ecd0684`. One of eight synthetic Fire Mages sends `!skill1` through the server. The clip shows the staff orb on the character, the cast pose, the Hỏa Tiễn hit effect and a return to idle. The WebSocket snapshot confirms the caster's last-hit timestamp advanced and Varkhazar's HP fell from 1005 to 974. Damage, the pose and the impact cue follow the same server action. The build has no separate traveling fire projectile. The 1080 × 1920 recording is silent.
