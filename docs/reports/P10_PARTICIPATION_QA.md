@@ -58,8 +58,6 @@ for each of those IDs exhausted its capacity on a higher-priority first
 service. The other six cells had no unserved eligible IDs. This audit uses
 actual window capacity under the chosen policy.
 
-The six-slot simulation and this
-one-hit HTTP run do not cover a six-class, multi-phase HTTP workload.
 Following independent review, v14 replay rejects ranked actions outside its
 window protocol. SQLite writes now check both opening sequence counters inside
 the transaction. Regression tests cover an injected ranked auto step, an extra
@@ -73,10 +71,36 @@ manual commands respectively were absent from the recorded windows. At 60 and
 An additional 54 mixed auto/manual HTTP raids used all six classes at level 30.
 All nine cells passed parity. The runs had 6–14 contributors per raid, and all
 32 IDs contributed across each six-raid cell. This workload had variable
-capacity. The fixed six-slot 96-raid results above remain simulation evidence.
+capacity. The separate fixed-capacity HTTP run is described below.
 
 Raw synthetic results are available for the [324-raid repeat](evidence/p10-v14-http-324.jsonl),
 [54 mixed raids](evidence/p10-v14-http-mixed-54.jsonl), and
 [controlled three-policy comparison](evidence/p10-v14-policy-study.jsonl).
 The [capacity audit](evidence/p10-v14-capacity-324.jsonl) includes window-level
 evidence for both unserved IDs at every spread.
+
+## Fixed-capacity HTTP fixture
+
+Run `node scripts/p10-ranked-matrix.mjs --participation --six-slots`.
+This workload alternates 24- and 32-player rosters, uses all six classes
+and alternates the manual send order with a 180 ms spread. Half the IDs
+use server auto, and the others send a basic attack over HTTP.
+
+Before each join, the harness calibrates only synthetic SQLite player levels
+so that five basic hits cannot kill the boss and six can. The server uses
+the normal boss HP, phase progression, combat, scheduler and settlement.
+The harness requires exactly six distinct executed slots and one committed
+terminal window per raid, plus wraith spawns from stage three onward.
+The fixture measures fairness under a controlled opportunity budget. Its
+synthetic player levels are outside ordinary progression and it does not
+measure the balance of different attack skills.
+
+The 96-raid Windows run against runtime `54bdec0` produced 576 distinct
+per-raid executions and passed replay/WebSocket/SQLite parity. Every ID was
+eligible in every roster appearance (96 for regulars, 48 for guests), and all
+offered manual attacks were admitted. Individual service rates ranged from
+20.83% to 21.88%, a 1.04 percentage-point spread. The longest wait was five
+consecutive eligible raids. The replay eligibility and rate gates were
+checked against the captured per-ID results and added to the harness.
+
+[Raw 96-raid six-slot HTTP evidence](evidence/p10-v14-http-six-96.jsonl)
