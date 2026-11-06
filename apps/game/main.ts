@@ -2,7 +2,7 @@ import './style.css';
 import { classes, pets, items, achievements, attackStats, defenseOf, maxHp, type GameSnapshot } from '../../packages/shared/index.ts';
 
 import { createArena } from './scene.ts';
-import { loadFireMagePreview, loadRaidModels, loadVarkhazarPreview } from './asset-loader.ts';
+import { loadFireMagePreview, loadFoxForQa, loadRaidModels, loadVarkhazarPreview } from './asset-loader.ts';
 import { createCombatAudio } from './audio.ts';
 
 const get = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
@@ -27,9 +27,12 @@ low.checked = params.get('quality') !== 'high';
 let render: ((state: GameSnapshot) => void) | undefined;
 const bossPreview = params.get('boss-preview') === '1' ? loadVarkhazarPreview().catch(() => undefined) : undefined;
 const firePreview = params.get('fire-preview') === '1' ? loadFireMagePreview().catch(() => undefined) : undefined;
-void Promise.all([loadRaidModels().catch(() => undefined), firePreview, bossPreview]).then(([models, fireMage, varkhazar]) => {
+const qa = params.get('crowded-qa') === '1';
+const icePreview = qa ? loadFireMagePreview(true).catch(() => undefined) : undefined;
+const foxPreview = qa ? loadFoxForQa().catch(() => undefined) : undefined;
+void Promise.all([loadRaidModels().catch(() => undefined), firePreview, bossPreview, icePreview, foxPreview]).then(([models, fireMage, varkhazar, iceMage, fox]) => {
   try {
-    render = createArena(get('viewport'), () => low.checked, overlay, models, { fireMage, varkhazar });
+    render = createArena(get('viewport'), () => low.checked, overlay, models, { fireMage, varkhazar, iceMage, fox });
     if (state) render(state);
   } catch {
     get('notice').textContent = 'WebGL 2 không khả dụng · HUD vẫn đang hoạt động';

@@ -5,8 +5,8 @@ import { classes, pets } from '../../packages/shared/index.ts';
 export type ModelTemplates = { nodes: ReadonlyMap<string, Object3D>; animations: AnimationClip[] };
 export type FireMagePreview = { scene: Object3D; animations: AnimationClip[] };
 
-export async function loadFireMagePreview(): Promise<FireMagePreview> {
-  const url = new URL('../../assets/characters/fire-mage-preview/fire-mage.glb', import.meta.url);
+export async function loadFireMagePreview(ice = false): Promise<FireMagePreview> {
+  const url = ice ? new URL('../../assets/characters/ice-mage-preview/ice-mage.glb', import.meta.url) : new URL('../../assets/characters/fire-mage-preview/fire-mage.glb', import.meta.url);
   const { scene, animations } = await new GLTFLoader().loadAsync(url.href);
   const names = new Map([['idle', 'Idle'], ['move', 'Run'], ['attack', 'Attack'], ['hit', 'Hit'], ['defeat', 'Defeat']]);
   if (animations.length !== names.size || ![...names.keys()].every(name => animations.some(clip => clip.name === name))) {
@@ -47,4 +47,8 @@ export async function loadRaidModels(): Promise<ModelTemplates> {
     templates.set(id, model);
   }
   return { nodes: templates, animations };
+}
+
+export async function loadFoxForQa() {
+  return new GLTFLoader().loadAsync(new URL('../../assets/pets/fire-fox-preview/fire-fox.glb', import.meta.url).href);
 }

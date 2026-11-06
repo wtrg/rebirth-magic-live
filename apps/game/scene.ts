@@ -6,13 +6,15 @@ import { classes, pets, type GameSnapshot } from '../../packages/shared/index.ts
 import { createClipPlayer, hasTemporaryPet } from './animation.ts';
 
 export function createArena(view: HTMLElement, low: () => boolean, portrait: boolean, models?: ModelTemplates,
-  previews?: { fireMage?: FireMagePreview; varkhazar?: Awaited<ReturnType<typeof loadVarkhazarPreview>> }) {
-  const { fireMage, varkhazar } = previews ?? {};
+  previews?: { fireMage?: FireMagePreview; iceMage?: FireMagePreview; fox?: FireMagePreview; varkhazar?: Awaited<ReturnType<typeof loadVarkhazarPreview>> }) {
+  const { fireMage, varkhazar, iceMage, fox } = previews ?? {};
   const renderer = new T.WebGLRenderer({ antialias: false, powerPreference: 'low-power' });
   renderer.domElement.setAttribute('aria-label', 'Đấu trường 3D Cổng Hư Vô');
   renderer.domElement.dataset.models = models ? 'glb' : 'procedural';
   if (varkhazar) renderer.domElement.dataset.bossPreview = 'skinned';
   if (fireMage) renderer.domElement.dataset.firePreview = 'skinned';
+  if (iceMage) renderer.domElement.dataset.icePreview = 'skinned';
+  if (fox) renderer.domElement.dataset.foxPreview = 'skinned';
   view.prepend(renderer.domElement);
   const scene = new T.Scene();
   scene.background = new T.Color(0x141123);
@@ -65,12 +67,13 @@ export function createArena(view: HTMLElement, low: () => boolean, portrait: boo
   }
 
   function playerCharacter(id: keyof typeof classes) {
-    if (id !== 'fire' || !fireMage) return { ...character(id), clips: undefined };
+    const preview = id === 'fire' ? fireMage : id === 'ice' ? iceMage : undefined;
+    if (!preview) return { ...character(id), clips: undefined };
     const root = new T.Group();
-    const rig = cloneSkinned(fireMage.scene);
+    const rig = cloneSkinned(preview.scene);
     root.add(rig);
     scene.add(root);
-    return { root, body: rig, weapon: undefined, clips: createClipPlayer(rig, fireMage.animations) };
+    return { root, body: rig, weapon: undefined, clips: createClipPlayer(rig, preview.animations) };
   }
 
   const boss = character('boss');
@@ -255,7 +258,7 @@ export function createArena(view: HTMLElement, low: () => boolean, portrait: boo
       if (petIndex !== null) {
         if (actor.companion.children[0]?.userData.index !== petIndex) {
           actor.companion.clear();
-          const model = petModels[petIndex].clone();
+          const model = petIndex === 0 && fox ? cloneSkinned(fox.scene) : petModels[petIndex].clone();
           model.userData.index = petIndex;
           actor.companion.add(model);
         }
