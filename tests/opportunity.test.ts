@@ -30,6 +30,22 @@ test('debt settlement respects the cap and execution takes precedence over denia
   assert.deepEqual(changes, new Map([['served', 3], ['denied', 1]]));
 });
 
+test('auto fills the same slot when an earlier attack destroys the manual target', () => {
+  const state = newGame();
+  for (const id of ['first', 'second']) applyEvent(state, chat(id, '!join'), 1);
+  state.raid.phase = 'PHASE_2';
+  state.raid.wraiths = [{ hp: 1, maxHp: 1 }, { hp: 1, maxHp: 1 }];
+  state.players[1].auto = true;
+  const intents = ['first', 'second'].map(user => ({ event: chat(user, '!attack left'), admittedAt: 1 }));
+  const debt = new Map([['first', 1]]);
+  const regular = resolveOpportunityWindow(state, intents, debt, 401);
+  assert.deepEqual([...regular.executed], ['first', 'second']);
+  assert.ok(regular.state.raid.hp < state.raid.hp);
+  const shutdown = resolveOpportunityWindow(state, intents, debt, 401, false);
+  assert.deepEqual([...shutdown.executed], ['first']);
+  assert.equal(shutdown.state.raid.hp, state.raid.hp);
+});
+
 test('opening window holds one manual intent per player and excludes the exact deadline', () => {
   const window = openOpportunityWindow(1000, true);
   assert.equal(admitOpportunityIntent(window, { event: chat('first', '!skill1'), admittedAt: 1000 }), true);

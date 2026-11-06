@@ -39,7 +39,8 @@ export function rankedOpportunitySlots(
       player.auto && canExecuteCombatAction(state, automatic, at) ? automatic : undefined;
     if (!action) continue;
     const tie = createHash('sha256').update(JSON.stringify([state.raid.stage, player.id])).digest('hex');
-    slots.push({ playerId: player.id, action, manual: action === intent, debt: openingDebt.get(player.id) ?? 0, tie });
+    slots.push({ playerId: player.id, action, manual: action === intent,
+      fallback: action === intent && player.auto ? automatic : undefined, debt: openingDebt.get(player.id) ?? 0, tie });
   }
   return slots.sort((a, b) => b.debt - a.debt ||
     (a.tie < b.tie ? -1 : a.tie > b.tie ? 1 : a.playerId < b.playerId ? -1 : 1));
@@ -58,14 +59,19 @@ export function resolveOpportunityWindow(
     .filter(slot => includeAuto || slot.manual);
   const executed = new Set<string>();
   const denied = new Set<string>();
+  function eligibleAction(slot: (typeof slots)[number]) {
+    if (canExecuteCombatAction(state, slot.action, at)) return slot.action;
+    if (includeAuto && slot.fallback && canExecuteCombatAction(state, slot.fallback, at)) return slot.fallback;
+  }
   for (const [index, slot] of slots.entries()) {
-    if (!canExecuteCombatAction(state, slot.action, at)) continue;
+    const action = eligibleAction(slot);
+    if (!action) continue;
     const next = structuredClone(state);
-    if (!applyEvent(next, slot.action, at)) continue;
+    if (!applyEvent(next, action, at)) continue;
     executed.add(slot.playerId);
     if (!activeRaid(next)) {
       for (const remaining of slots.slice(index + 1)) {
-        if (canExecuteCombatAction(state, remaining.action, at)) denied.add(remaining.playerId);
+        if (eligibleAction(remaining)) denied.add(remaining.playerId);
       }
       state = next;
       break;
