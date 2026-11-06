@@ -20,3 +20,5 @@ Standing clips contact the floor through leg bones. The revised defeat clip roll
 Run `node scripts/ice-portrait-qa.mjs` for the standalone 1080 × 1920 fixture using the game arena camera and simplified HUD. Chrome on Intel UHD rendered all five sampled poses and remained operational after a forced Ice GLB 404. The spear and crystal fins read clearly in the sampled frames, while the indigo body has low contrast against the floor. These stills do not cover continuous motion, crowded raids, or the production HUD.
 
 [Portrait pose sheet](portrait-poses.png)
+
+[Continuous portrait playback](portrait-playback.mp4) records the five exported clips in sequence on Intel UHD. Run `node scripts/ice-portrait-qa.mjs --record` to reproduce the browser capture. The fixture keeps the actor in place with a simplified HUD, so the footage is scoped to pose and silhouette review.
