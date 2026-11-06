@@ -155,6 +155,11 @@ for (const scenario of ['terminal', 'nonterminal', 'rollback']) test('ranked win
     const sentAt = performance.now();
     await post('/event', second, 202);
     await post('/event', first, 202);
+    if (scenario === 'rollback') {
+      // Valid chat packets from outside the raid must not fill ranked slots.
+      await Promise.all(Array.from({ length: 65 }, (_, i) =>
+        post('/event', chat('mock:outside-' + i, '!attack'), 202)));
+    }
     // Wait for the scheduler tick to move these commands from ingress into its window.
     await setTimeout(90);
     const health = await (await fetch(base + '/health', { signal: AbortSignal.timeout(3000) })).json();
@@ -170,6 +175,8 @@ for (const scenario of ['terminal', 'nonterminal', 'rollback']) test('ranked win
       const trace = await (await fetch(base + '/replay', { signal: AbortSignal.timeout(3000) })).json();
       assert.ok(trace.steps.some((step: { kind: string; outcome?: string }) =>
         step.kind === 'opportunity' && step.outcome === 'rollback'));
+      assert.deepEqual(trace.steps.find((step: { kind: string }) => step.kind === 'opportunity')
+        .intents.map((intent: { event: { user: string } }) => intent.event.user), [other, winner]);
       const { raid, players, logs, paused, effect } = snapshot!;
       assert.deepEqual(playReplayWithDebt(trace), {
         state: { raid, players, logs, paused, effect }, debt: new Map([[winner, 5]]),
