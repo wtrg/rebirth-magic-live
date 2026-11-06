@@ -50,5 +50,11 @@ export async function loadRaidModels(): Promise<ModelTemplates> {
 }
 
 export async function loadFoxForQa() {
-  return new GLTFLoader().loadAsync(new URL('../../assets/pets/fire-fox-preview/fire-fox.glb', import.meta.url).href);
+  const { scene, animations } = await new GLTFLoader().loadAsync(new URL('../../assets/pets/fire-fox-preview/fire-fox.glb', import.meta.url).href);
+  const names = new Map([['idle', 'Idle'], ['move', 'Run'], ['attack', 'Attack']]);
+  if (animations.length !== names.size || ![...names.keys()].every(name => animations.some(clip => clip.name === name))) {
+    throw new Error('Missing Fire Fox QA clips');
+  }
+  for (const clip of animations) clip.name = names.get(clip.name)!;
+  return { scene, animations };
 }

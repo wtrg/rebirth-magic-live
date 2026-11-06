@@ -59,6 +59,13 @@ try {
     assert.equal(await canvas.getAttribute('data-fox-preview'), ['paired', 'ice-missing'].includes(mode) ? 'skinned' : null);
     assert.equal(candidateRequests.length, mode === 'default' ? 0 : 2);
     await page.screenshot({ path: 'test-results/p9-crowded-' + mode + '.png' });
+    if (mode === 'paired') {
+      await page.waitForFunction(() => document.querySelector('#phase')?.textContent === 'GIAI ĐOẠN I');
+      await post('/event', event(0, '!attack'));
+      await page.locator('canvas[data-fox-attacking]').waitFor();
+      await page.screenshot({ path: 'test-results/p9-crowded-fox-attack.png' });
+      await page.locator('canvas[data-fox-attacking]').waitFor({ state: 'detached' });
+    }
     assert.deepEqual(errors, []);
     await page.close();
   }

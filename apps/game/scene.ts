@@ -109,6 +109,7 @@ export function createArena(view: HTMLElement, low: () => boolean, portrait: boo
     return root;
   });
   const squad = new Map<string, ReturnType<typeof playerCharacter> & { classId: string; companion: T.Group; lastHit: number; strike: number; hp: number; recoil: number }>();
+  const foxPlayers = new WeakMap<T.Object3D, ReturnType<typeof createClipPlayer>>();
   const flash = mesh(scene, new T.TorusGeometry(1.8,0.09,4,36), '#ffd3a4', [0,0.08,-1.45], [1,1,1], true);
   flash.rotation.x = -Math.PI/2;
   flash.material = flash.material.clone();
@@ -218,6 +219,7 @@ export function createArena(view: HTMLElement, low: () => boolean, portrait: boo
       animateLimbs(preview.body, Math.sin(time*0.004)*0.025,0,0);
     }
     const players = state?.players.slice(0,low() ? 8 : 12) ?? [];
+    let foxAttack = false;
     const ids = new Set(players.map(player => player.id));
     for (const [id, actor] of squad) if (!ids.has(id)) { actor.root.removeFromParent(); squad.delete(id); }
     players.forEach((player,index) => {
@@ -259,10 +261,20 @@ export function createArena(view: HTMLElement, low: () => boolean, portrait: boo
         if (actor.companion.children[0]?.userData.index !== petIndex) {
           actor.companion.clear();
           const model = petIndex === 0 && fox ? cloneSkinned(fox.scene) : petModels[petIndex].clone();
+          if (petIndex === 0 && fox) foxPlayers.set(model, createClipPlayer(model, fox.animations));
           model.userData.index = petIndex;
           actor.companion.add(model);
         }
         const model = actor.companion.children[0];
+        const foxClips = foxPlayers.get(model);
+        if (foxClips) {
+          const clip = strike > 0.73 ? 'Run' : strike > 0 ? 'Attack' : 'Idle';
+          foxClips.update(clip, delta, actor.strike);
+          foxAttack ||= clip === 'Attack';
+          actor.companion.position.set(-0.9, 0.1, strike * 0.8);
+          actor.companion.rotation.x = 0;
+          return;
+        }
         const gait = Math.sin(time*(strike > 0 ? 0.035 : 0.009) + index);
         for (const part of model.children) {
           if (part.userData.motion === 'paw-forward' || part.userData.motion === 'paw-back') {
@@ -276,6 +288,7 @@ export function createArena(view: HTMLElement, low: () => boolean, portrait: boo
         actor.companion.rotation.x = strike * 0.28;
       } else actor.companion.clear();
     });
+    if (fox) renderer.domElement.toggleAttribute('data-fox-attacking', foxAttack);
     renderer.render(scene,camera);
   });
   return (next: GameSnapshot) => { state = next; };
