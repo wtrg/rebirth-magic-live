@@ -11,3 +11,4 @@ Run the generator with Blender 4.5 Python and bpy available:
 The preview has no runtime integration. In-game scale, readability and Intel UHD performance still need validation alongside a representative non-Fire class.
 
 Run `python inspect-motion.py` in the same Blender Python environment to sample each exported clip. Each clip moves the skinned mesh and keeps its lowest vertex within 0.01 m of the ground at the sampled integer frames. This check does not evaluate foot sliding, mesh intersections, or legibility in the game camera.
+All sampled floor contacts belong to paw bones.
