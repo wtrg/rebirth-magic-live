@@ -3,6 +3,7 @@ import { activeRaid, applyEvent, canExecuteCombatAction } from '../../packages/c
 import type { GameEvent, GameState } from '../../packages/shared/index.ts';
 
 type ChatEvent = Extract<GameEvent, { kind: 'chat' }>;
+type SlotOrder = (a: { playerId: string; tie: string }, b: { playerId: string; tie: string }) => number;
 
 export type OpportunityIntent = { event: ChatEvent; admittedAt: number };
 export type OpportunityWindow = {
@@ -27,6 +28,7 @@ export function rankedOpportunitySlots(
   manual: ReadonlyMap<string, ChatEvent>,
   openingDebt: ReadonlyMap<string, number>,
   at: number,
+  order?: SlotOrder,
 ) {
   if (state.raid.practice) return [];
   const slots = [];
@@ -42,8 +44,8 @@ export function rankedOpportunitySlots(
     slots.push({ playerId: player.id, action, manual: action === intent,
       fallback: action === intent && player.auto ? automatic : undefined, debt: openingDebt.get(player.id) ?? 0, tie });
   }
-  return slots.sort((a, b) => b.debt - a.debt ||
-    (a.tie < b.tie ? -1 : a.tie > b.tie ? 1 : a.playerId < b.playerId ? -1 : 1));
+  return slots.sort(order ?? ((a, b) => b.debt - a.debt ||
+    (a.tie < b.tie ? -1 : a.tie > b.tie ? 1 : a.playerId < b.playerId ? -1 : 1)));
 }
 
 export function resolveOpportunityWindow(
@@ -52,10 +54,11 @@ export function resolveOpportunityWindow(
   openingDebt: ReadonlyMap<string, number>,
   at: number,
   includeAuto = true,
+  order?: SlotOrder,
 ) {
   let state = initial;
   const manual = new Map(intents.map(intent => [intent.event.user, intent.event]));
-  const slots = rankedOpportunitySlots(initial, manual, openingDebt, at)
+  const slots = rankedOpportunitySlots(initial, manual, openingDebt, at, order)
     .filter(slot => includeAuto || slot.manual);
   const executed = new Set<string>();
   const denied = new Set<string>();
