@@ -8,7 +8,9 @@ let browser;
 try {
   await server.listen();
   browser = await chromium.launch({ channel: 'chrome', headless: false });
-  const page = await browser.newPage({ viewport: { width: 1080, height: 1920 } });
+  const size = { width: 1080, height: 1920 };
+  const record = process.argv.includes('--record');
+  const page = await browser.newPage({ viewport: size, recordVideo: record ? { dir: 'test-results', size } : undefined });
   const errors = [];
   page.on('pageerror', error => errors.push(error.message));
   const url = 'http://127.0.0.1:4242/scripts/fixtures/fox-portrait.html';
@@ -26,13 +28,22 @@ try {
     const extension = gl.getExtension('WEBGL_debug_renderer_info');
     return extension ? gl.getParameter(extension.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER);
   }));
-  await page.route('**/fire-fox.glb', route => route.fulfill({ status: 404 }));
-  await page.reload();
-  await page.waitForFunction(() => !!window.foxPortrait);
-  assert.equal(await page.evaluate(() => window.foxPortrait.skinned), false);
-  assert.equal(await page.locator('canvas[data-models=glb]').count(), 1);
+  if (record) {
+    await page.reload();
+    await page.waitForFunction(() => !!window.foxPortrait);
+    await page.evaluate(() => window.foxPortrait.playback());
+    await page.context().close();
+    await page.video().saveAs('test-results/fox-portrait-playback.webm');
+  } else {
+    await page.route('**/fire-fox.glb', route => route.fulfill({ status: 404 }));
+    await page.reload();
+    await page.waitForFunction(() => !!window.foxPortrait);
+    assert.equal(await page.evaluate(() => window.foxPortrait.skinned), false);
+    assert.equal(await page.locator('canvas[data-models=glb]').count(), 1);
+  }
   assert.deepEqual(errors, []);
-  console.log('PASS: all three poses rendered and missing Fire Fox GLB left the arena running');
+  console.log(record ? 'PASS: all three poses rendered and playback recorded' :
+    'PASS: all three poses rendered and missing Fire Fox GLB left the arena running');
 } finally {
   await browser?.close();
   await server.close();

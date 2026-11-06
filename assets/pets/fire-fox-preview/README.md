@@ -16,3 +16,5 @@ All sampled floor contacts belong to paw bones.
 Run `node scripts/fox-portrait-qa.mjs` for the standalone 1080 × 1920 fixture with the game arena camera and simplified HUD. Chrome on Intel UHD rendered idle, move and attack and continued with the existing pet after a forced GLB 404. The orange tail separates the pet from the floor, but the leg motion is subtle at phone scale. This fixture checks sampled poses with the default attract actor nearby. It does not exercise continuous playback, a crowded roster or the production HUD.
 
 [Portrait pose sheet](portrait-poses.png)
+
+[Continuous portrait playback](portrait-playback.mp4) shows idle, two gait cycles, attack and return to idle. Use `node scripts/fox-portrait-qa.mjs --record` to save the silent browser capture in test-results. The published clip trims setup frames and retains the same camera and simplified HUD. Movement plays in place for visual inspection.

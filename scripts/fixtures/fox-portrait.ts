@@ -26,16 +26,32 @@ actor.position.x = 0.95;
 actor.rotation.y = Math.PI;
 arena.add(actor);
 const mixer = new T.AnimationMixer(actor);
-const render = (name: string, fraction: number) => {
+const pose = (name: string) => {
   mixer.stopAllAction();
-  const clip = asset?.animations.find(clip => clip.name === name);
-  if (clip) {
-    const action = mixer.clipAction(clip);
-    action.setLoop(T.LoopOnce, 1);
-    action.clampWhenFinished = true;
-    action.reset().play();
-    mixer.setTime(clip.duration * fraction);
-  }
   document.getElementById('pose')!.textContent = name;
+  const clip = asset?.animations.find(clip => clip.name === name);
+  if (!clip) return 0;
+  const action = mixer.clipAction(clip);
+  action.setLoop(T.LoopOnce, 1);
+  action.clampWhenFinished = true;
+  action.reset().play();
+  return clip.duration;
 };
-Object.assign(window, { foxPortrait: { render, skinned: !!asset, clips: asset?.animations.map(clip => clip.name) ?? [] } });
+const render = (name: string, fraction: number) => mixer.setTime(pose(name) * fraction);
+async function playback() {
+  for (const name of ['idle', 'move', 'move', 'attack']) {
+    const duration = pose(name);
+    const started = performance.now();
+    await new Promise<void>(resolve => {
+      const frame = (now: number) => {
+        const elapsed = Math.max(0, (now - started) / 1000);
+        mixer.setTime(Math.min(elapsed, duration));
+        if (elapsed < duration) requestAnimationFrame(frame);
+        else resolve();
+      };
+      requestAnimationFrame(frame);
+    });
+  }
+  render('idle', 0);
+}
+Object.assign(window, { foxPortrait: { render, playback, skinned: !!asset, clips: asset?.animations.map(clip => clip.name) ?? [] } });
