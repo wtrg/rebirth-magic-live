@@ -8,6 +8,10 @@ import { join } from 'node:path';
 import { setTimeout } from 'node:timers/promises';
 import { request } from 'node:http';
 import { DatabaseSync } from 'node:sqlite';
+import { WebSocket } from 'ws';
+import { openStore } from '../apps/server/store.ts';
+import { applyEvent, newGame } from '../packages/combat/index.ts';
+import type { GameSnapshot } from '../packages/shared/index.ts';
 
 test('local shutdown drains accepted events and closes the database', { timeout: 20000 }, async () => {
   const directory = await mkdtemp(join(tmpdir(),'rebirth-shutdown-'));
@@ -92,5 +96,78 @@ test('local shutdown drains accepted events and closes the database', { timeout:
     if (server.exitCode === null && server.signalCode === null) server.kill();
     await closed;
     await rm(directory,{recursive:true,force:true,maxRetries:5});
+  }
+});
+
+for (const terminal of [true, false]) test('ranked shutdown drains once with terminal=' + terminal, { timeout: 15000 }, async () => {
+  const directory = await mkdtemp(join(tmpdir(), 'rebirth-ranked-shutdown-'));
+  const database = join(directory, 'synthetic.sqlite');
+  const base = 'http://127.0.0.1:4227';
+  const seed = newGame();
+  const chat = (user: string, command: string) => ({ id: user + ':' + command.slice(1), user, name: user, kind: 'chat' as const, command });
+  const winner = 'mock:shutdown-a', other = 'mock:shutdown-b';
+  for (const id of [winner, other]) applyEvent(seed, chat(id, '!join'), 1);
+  if (terminal) seed.players[0].level = 1100;
+  const initial = openStore(database);
+  initial.commitBatch(seed.players, [], undefined, new Map([[winner, 5]]));
+  initial.close();
+  const server = spawn(process.execPath, ['apps/server/index.ts'], {
+    env: { ...process.env, PORT: '4227', DB_PATH: database, REBIRTH_MODE: 'mock',
+      REBIRTH_RANKED_SCHEDULER: '1', REBIRTH_RECORD_REPLAY: '1' },
+    stdio: ['ignore', 'pipe', 'pipe'],
+  });
+  const closed = once(server, 'close');
+  let output = '', errors = '';
+  let socket: WebSocket | undefined;
+  let snapshot: GameSnapshot | undefined;
+  server.stdout.on('data', chunk => { output += String(chunk); });
+  server.stderr.on('data', chunk => { errors += String(chunk); });
+  const post = async (path: string, payload: unknown, status: number) => {
+    const response = await fetch(base + path, {
+      method: 'POST', headers: { Origin: base, 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload), signal: AbortSignal.timeout(3000),
+    });
+    assert.equal(response.status, status);
+  };
+  async function until(predicate: () => boolean) {
+    for (let i = 0; i < 240; i++) {
+      if (predicate()) return;
+      assert.equal(server.exitCode, null, errors);
+      await setTimeout(20);
+    }
+    assert.fail('Timed out waiting for ranked shutdown fixture');
+  }
+  try {
+    await until(() => output.includes(base));
+    socket = new WebSocket(base.replace('http:', 'ws:') + '/state', { origin: base });
+    socket.on('message', data => { snapshot = JSON.parse(String(data)) as GameSnapshot; });
+    await Promise.all([winner, other].map(id => post('/event', chat(id, '!join'), 202)));
+    await until(() => snapshot?.players.length === 2);
+    await post('/admin', 'start', 204);
+    await until(() => snapshot?.raid.phase === 'PHASE_1');
+    const first = chat(winner, '!attack'), second = chat(other, '!attack');
+    const sentAt = performance.now();
+    await post('/event', second, 202);
+    await post('/event', first, 202);
+    await post('/admin', 'shutdown', 204);
+    assert.ok(performance.now() - sentAt < 400, 'Shutdown must occur before the opening window expires');
+    assert.equal((await closed)[0], 0, errors);
+    const saved = openStore(database);
+    try {
+      assert.ok(saved.hasReceipt(first.id) && saved.hasReceipt(second.id));
+      assert.ok((saved.find(winner)?.lastHit ?? 0) > 0);
+      assert.equal(saved.find(other)?.lastHit === 0, terminal);
+      assert.equal(saved.find(winner)?.wins, terminal ? 1 : 0);
+      assert.equal(saved.find(other)?.wins, 0);
+      assert.equal(saved.loadStage(), terminal ? 2 : 1);
+      assert.deepEqual(saved.loadOpportunityDebt(), new Map(terminal ? [[winner, 4], [other, 1]] : [[winner, 5]]));
+    } finally {
+      saved.close();
+    }
+  } finally {
+    socket?.terminate();
+    if (server.exitCode === null && server.signalCode === null) server.kill();
+    await closed;
+    await rm(directory, { recursive: true, force: true, maxRetries: 5 });
   }
 });
