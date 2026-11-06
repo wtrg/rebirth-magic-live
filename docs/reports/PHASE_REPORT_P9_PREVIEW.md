@@ -39,3 +39,9 @@ The skinned preview now shows an amber ring and the text VARKHAZAR SẮP TẤN C
 [Warning, −190 to −89 ms](evidence/p9-warning-charged.png) · [Impact, +185 to +331 ms](evidence/p9-warning-impact.png)
 
 Both captures came from the built 540 × 960 MOCK client. Browser QA asserts that the warning is hidden during idle, visible during windup and pause, and hidden during impact. Typecheck, lint, 36 tests and build passed. Viewer recognition and Leader approval remain pending.
+
+### Continuous boss attack capture
+
+[4.2-second MP4](evidence/p9-telegraph-portrait.mp4) · [Frame sequence](evidence/p9-telegraph-frames.png)
+
+Captured from the built Windows MOCK client at `ecd0684`, with eight synthetic Fire Mages, both preview rigs and the portrait HUD. The 1080 × 1920 recording follows one server attack through idle, amber warning, impact and recovery. The browser observed the server's impact timestamp and reported no page errors. At this width the computed boss impact label is 56.7 px, down from the regular effect size of 64.8 px. The MP4 is silent and does not include a separate Fire Mage cast sequence.
