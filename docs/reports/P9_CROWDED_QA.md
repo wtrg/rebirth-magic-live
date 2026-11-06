@@ -1,6 +1,6 @@
 # P9 crowded portrait QA
 
-Local-only QA branch based on 9963579. Candidate GLBs are from PR #58 at 113d301 and PR #59 at fd7519e. Run the build and then `node scripts/p9-crowded-qa.mjs`. The script starts an isolated MOCK server, joins eight synthetic players across six classes, and captures the production HUD at 1080 x 1920. It checks request isolation and forces each candidate GLB to fail separately. It writes screenshots to the ignored test-results directory.
+QA branch based on 9963579. Candidate GLBs are from PR #58 at 113d301 and PR #59 at fd7519e. Run the build and then `node scripts/p9-crowded-qa.mjs`. The script starts an isolated MOCK server, joins eight synthetic players across six classes, and captures the production HUD at 1080 x 1920. It checks request isolation and forces each candidate GLB to fail separately. It writes screenshots to the ignored test-results directory.
 
 The paired still shows recognizable ice spears at both ends of the formation. Fire Fox's glowing tail is visible on the left and right. The center fox is partially occluded by other actors. This check covers scene composition, loading and fallback. The QA hook uses the existing companion placement and plays the fox's skinned idle, movement and attack clips. The browser check issues a real MOCK attack from a fox owner, observes the attack clip start and confirms return to idle. It does not measure frame delivery or guarantee that every pet stays visible throughout a crowded raid.
 
@@ -16,3 +16,7 @@ Run `node scripts/p9-crowded-qa.mjs --benchmark` after building. The harness sam
 | 4 | Off | 90 | 248 | 33.5 ms | 33.6 ms |
 
 Chrome used Intel UHD through ANGLE D3D11. These samples measure draw submission, not presentation FPS, GPU memory or long-session combat load.
+
+[Eight-player portrait](evidence/p9-crowded-paired.png) · [Fire Fox attack sample](evidence/p9-crowded-fox-attack.png)
+
+The draft is a reproducible QA branch for review. The candidate assets still require a production integration decision.
