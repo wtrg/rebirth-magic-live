@@ -113,17 +113,21 @@ for (const scenario of ['terminal', 'nonterminal', 'rollback']) test('ranked win
   const initial = openStore(database);
   initial.commitBatch(seed.players, [], undefined, new Map([[winner, 5]]));
   initial.close();
-  const server = spawn(process.execPath, ['apps/server/index.ts'], {
+  const launch = () => spawn(process.execPath, ['apps/server/index.ts'], {
     env: { ...process.env, PORT: '4227', DB_PATH: database, REBIRTH_MODE: 'mock',
       REBIRTH_RANKED_SCHEDULER: '1', REBIRTH_RECORD_REPLAY: '1' },
     stdio: ['ignore', 'pipe', 'pipe'],
   });
-  const closed = once(server, 'close');
+  let server = launch();
+  let closed = once(server, 'close');
   let output = '', errors = '';
   let socket: WebSocket | undefined;
   let snapshot: GameSnapshot | undefined;
-  server.stdout.on('data', chunk => { output += String(chunk); });
-  server.stderr.on('data', chunk => { errors += String(chunk); });
+  function watchServer() {
+    server.stdout.on('data', chunk => { output += String(chunk); });
+    server.stderr.on('data', chunk => { errors += String(chunk); });
+  }
+  watchServer();
   const post = async (path: string, payload: unknown, status: number) => {
     const response = await fetch(base + path, {
       method: 'POST', headers: { Origin: base, 'Content-Type': 'application/json' },
@@ -195,6 +199,25 @@ for (const scenario of ['terminal', 'nonterminal', 'rollback']) test('ranked win
       assert.deepEqual(saved.loadOpportunityDebt(), new Map(terminal ? [[winner, 4], [other, 1]] : [[winner, 5]]));
     } finally {
       saved.close();
+    }
+    if (scenario === 'terminal') {
+      socket.terminate();
+      snapshot = undefined;
+      output = errors = '';
+      server = launch();
+      closed = once(server, 'close');
+      watchServer();
+      await until(() => output.includes(base));
+      const trace = await (await fetch(base + '/replay', { signal: AbortSignal.timeout(3000) })).json();
+      const restored = playReplayWithDebt(trace);
+      assert.equal(restored.state.raid.stage, 2);
+      assert.deepEqual(restored.debt, new Map([[winner, 4], [other, 1]]));
+      socket = new WebSocket(base.replace('http:', 'ws:') + '/state', { origin: base });
+      socket.on('message', data => { snapshot = JSON.parse(String(data)) as GameSnapshot; });
+      await post('/event', { ...chat(winner, '!join'), id: 'restarted-join' }, 202);
+      await until(() => snapshot?.players[0]?.wins === 1);
+      await post('/admin', 'shutdown', 204);
+      assert.equal((await closed)[0], 0, errors);
     }
   } finally {
     socket?.terminate();
