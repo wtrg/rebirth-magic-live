@@ -45,3 +45,5 @@ Counter scope matters:
 - OBS stats describe its compositor/encoder. A 30 FPS recording or OBS counter does not prove 30 unique Three.js presentations/s. Use the [separate native-clock scene benchmark](reports/PHASE_REPORT_P7.md#native-browser-render-submissions-and-resource-counts) for its specifically defined CPU submissions.
 
 Review encoded dimensions/duration, render/encode skips, captured HUD/3D, audio signal/clipping and server progression before accepting a run. A ten-minute sample does not prove 8–12-hour stability, absence of leaks, subjective audio quality or actual upstream TikTok LIVE.
+
+The [eight-hour P9 report](reports/OBS_ENDURANCE_8H.md) records the tested preview build, OBS counters and SQLite restore results.
