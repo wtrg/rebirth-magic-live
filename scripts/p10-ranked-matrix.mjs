@@ -99,6 +99,10 @@ async function cohort(pattern, spread, index) {
     assert.deepEqual(replay.state, { raid, players, logs, paused, effect });
     const windows = trace.steps.filter(step => step.kind === 'opportunity');
     const scheduledManual = windows.reduce((sum, step) => sum + step.intents.length, 0);
+    const waits = windows.flatMap(step => step.intents.map(intent => step.closedAt - intent.admittedAt)).sort((a, b) => a - b);
+    assert.ok(waits.length > 0 && waits[0] >= 0);
+    const windowWaitMs = { p50: waits[Math.floor(.50 * (waits.length - 1))],
+      p95: waits[Math.floor(.95 * (waits.length - 1))], max: waits.at(-1) };
     const offeredManual = Array.from({ length: raids }, (_, n) =>
       pattern[n % pattern.length].filter(id => ids.indexOf(id) % 2 === 1).length).reduce((a, b) => a + b, 0);
     await post('/admin', 'shutdown');
@@ -108,7 +112,7 @@ async function cohort(pattern, spread, index) {
       assert.deepEqual(saved.loadOpportunityDebt(), replay.debt);
       assert.equal(saved.loadStage(), raids + 1);
       for (const [id, count] of wins) assert.equal(saved.find(id).wins, count, id);
-      return { roster: pattern.map(group => group.length), spread, raids, offeredManual, scheduledManual, contributorCounts,
+      return { roster: pattern.map(group => group.length), spread, raids, offeredManual, scheduledManual, contributorCounts, windowWaitMs,
         latestAdmissionMs: Math.max(0, ...windows.flatMap(step => step.intents.map(intent => intent.admittedAt - step.openedAt))),
         firstSlots, wins: [...wins.values()], replayAndSqlite: 'pass' };
     } finally { saved.close(); }

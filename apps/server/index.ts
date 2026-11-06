@@ -244,7 +244,7 @@ function processQueue(now: number, limit: number, shuttingDown = false) {
     const { event, admittedAt } = queue[0];
     if (useRankedScheduler() && event.kind === 'chat' &&
         /^!(skill1|skill2|ult|attack)(?:\s|$)/.test(event.command)) {
-      if (window && admittedAt >= window.deadline && !shuttingDown) closeWindow(now, admittedAt, 'deadline');
+      if (window && admittedAt >= window.deadline && !shuttingDown) closeWindow(now, monotonicNow(), 'deadline');
       if (useRankedScheduler() && state.players.some(player => player.id === event.user) && !store.hasReceipt(event.id)) {
         if (!window && canExecuteCombatAction(state, event, now)) startWindow(admittedAt);
         if (window) admitOpportunityIntent(window, { event, admittedAt });

@@ -27,3 +27,9 @@ Set `QA_MATRIX_RAIDS=6` and run `node scripts/p10-ranked-matrix.mjs --mixed`. Th
 Across the three spreads, all profiles earned at least one win in the fixed and 24/24/32 cohorts. Six profiles earned none in each 24/32 cohort. At 350 ms, one manual send in each rotating pattern was absent from resolved windows. This shorter sample measures per-profile contribution and rewards, and cannot establish long-run fairness or actual LIVE timing.
 
 [Raw mixed-class results](evidence/p10-ranked-mixed.jsonl)
+
+## Manual window wait sample
+
+A repeat of the 54-raid six-class matrix measured the monotonic gap from each recorded manual intent's ingress timestamp to actual window processing. The server now records the processing timestamp even when a late packet triggers closure. Across the nine cells, median wait was 201–374 ms, p95 was 369–417 ms and the largest observed wait was 438 ms. The 50 ms scheduler tick can process a window after its fixed admission deadline. These timings cover only intents included in a resolved window, including some whose actions never execute, and exclude upstream TikTok and browser display delay. Replay and SQLite matched in every cell.
+
+[Raw latency sample](evidence/p10-ranked-latency.jsonl)
