@@ -9,3 +9,7 @@ Run the generator with Blender 4.5 Python and bpy available:
 [Idle pose rendered from the exported GLB](idle.png)
 
 Review this alongside the Hỏa Hồ candidate. In-game scale, portrait readability and Intel UHD performance still need validation. The asset is staged independently of the game client.
+
+[Shared portrait scale study with Hỏa Hồ](ice-fox-scale-study.png)
+
+Both exported GLBs use the same ground plane and camera at their authored scale. The study isolates the silhouettes with neutral lighting. The actual arena camera, combat HUD and effects still need separate evaluation.
