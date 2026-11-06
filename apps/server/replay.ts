@@ -25,7 +25,7 @@ export function createReplay(initial: GameState) {
 export function playReplay(raw: unknown): GameState {
   if (!raw || typeof raw !== 'object') throw new Error('Invalid replay');
   const { version, initial, steps } = raw as { version?: unknown; initial?: GameState; steps?: Step[] };
-  if ((version !== 1 && version !== 2 && version !== 3 && version !== 4 && version !== 5 && version !== 6 && version !== 7 && version !== 8 && version !== 9 && version !== 10 && version !== 11) || !initial?.raid || !Array.isArray(initial.players) ||
+  if ((version !== 1 && version !== 2 && version !== 3 && version !== 4 && version !== 5 && version !== 6 && version !== 7 && version !== 8 && version !== 9 && version !== 10 && version !== 11 && version !== 12) || !initial?.raid || !Array.isArray(initial.players) ||
       !Array.isArray(initial.logs) || !Array.isArray(steps) || steps.length > limit) {
     throw new Error('Invalid replay');
   }

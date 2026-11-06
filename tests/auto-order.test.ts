@@ -26,7 +26,7 @@ test('v11 gives every roster position the first auto opportunity over a full 32-
       const state = raid(stage, 32, 1100, reverse);
       const order = [...state.players];
       const expectedWinner = order[(stage - 1) % 32];
-      assert.equal(autoBattle(state, 1800), true);
+      assert.equal(autoBattle(state, 1800, 11), true);
       assert.equal(state.raid.result, 'victory');
       assert.deepEqual(state.players.filter(player => player.contribution > 0).map(player => player.id), [expectedWinner.id]);
       for (let i = 0; i < 32; i++) {
@@ -68,6 +68,7 @@ test('v10 keeps the original fixed order while v11 rotates the level-30 reproduc
     assert.deepEqual(rotated.players.filter(player => player.wins > 0).map(player => player.id), ids.slice(1, 22));
     assert.equal(rotated.players[21].contribution, 45);
     assert.equal(rotated.players[0].wins, 0);
+    assert.deepEqual(playReplay({ version: 11, initial, steps: [{ kind: 'auto', at: 1800 }] }), rotated);
   }
 });
 
@@ -102,7 +103,30 @@ test('rotated auto skips dead, disabled and cooling attackers and stops after th
   assert.deepEqual(paused, before);
 });
 
-test('v11 mixed manual, boss and rotated auto replay is deterministic with shared cooldowns', () => {
+test('v12 rotates first auto opportunity despite coordinated rejoin order changes', () => {
+  const winners = new Set<string>();
+  for (let stage = 1; stage <= 32; stage++) {
+    const state = raid(stage, 32, 1100);
+    const pivot = (33 - stage) % 32;
+    state.players = [...state.players.slice(pivot), ...state.players.slice(0, pivot)];
+    const displayOrder = state.players.map(player => player.id);
+    const old = structuredClone(state);
+    autoBattle(old, 1800, 11);
+    assert.equal(old.players.find(player => player.wins)?.id, 'mock:order0');
+    const replay = createReplay(state);
+    assert.equal(autoBattle(state, 1800), true);
+    replay.record({ kind: 'auto', at: 1800 });
+    assert.equal(state.raid.result, 'victory');
+    assert.deepEqual(state.players.map(player => player.id), displayOrder);
+    const rewarded = state.players.filter(player => player.wins > 0);
+    assert.equal(rewarded.length, 1);
+    winners.add(rewarded[0].id);
+    assert.deepEqual(playReplay(JSON.parse(replay.export())), state);
+  }
+  assert.equal(winners.size, 32);
+});
+
+test('current mixed manual, boss and rotated auto replay is deterministic with shared cooldowns', () => {
   const state = raid(2, 3);
   const replay = createReplay(state);
   const manual = (id: string, command: string, at: number) => {
@@ -124,7 +148,6 @@ test('v11 mixed manual, boss and rotated auto replay is deterministic with share
   replay.record({ kind: 'auto', at: 6400 });
   assert.equal(state.raid.result, 'victory');
   const trace = JSON.parse(replay.export());
-  assert.equal(trace.version, 11);
   assert.equal(trace.version, currentRulesVersion);
   assert.deepEqual(playReplay(trace), state);
   assert.deepEqual(playReplay(trace), state);

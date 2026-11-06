@@ -1,7 +1,7 @@
 import { classes, pets, items, achievements, attackStats, defenseOf, maxHp, type ItemId, type EffectKind, type EventContext, type GameEvent, type GameState, type Player } from '../shared/index.ts';
 import { gifts } from '../tiktok-adapter/index.ts';
 
-export const currentRulesVersion = 11;
+export const currentRulesVersion = 12;
 
 export const activeRaid = (state: GameState) => ['PHASE_1', 'PHASE_2', 'ENRAGED'].includes(state.raid.phase);
 export const bossPhase = (hp: number, max: number) => hp <= 0 ? 'DEAD' : hp * 4 <= max ? 'ENRAGED' : hp * 100 <= max * 55 ? 'PHASE_2' : 'PHASE_1';
@@ -337,12 +337,15 @@ export function autoReady(state: GameState, now: number) {
 export function autoBattle(state: GameState, now: number, rulesVersion = currentRulesVersion) {
   if (rulesVersion < 10 || !autoReady(state, now)) return false;
   let changed = false;
-  // Rotate opportunity between ranked stages without changing roster/display order.
-  // Historical auto traces must retain the original fixed-order resolution.
-  const count = state.players.length;
+  // Use a stable order for the rotation even when players leave and rejoin.
+  // Replays before v12 use their recorded roster order.
+  const roster = rulesVersion >= 12
+    ? [...state.players].sort((a,b) => a.id < b.id ? -1 : a.id > b.id ? 1 : 0)
+    : state.players;
+  const count = roster.length;
   const start = rulesVersion >= 11 ? (state.raid.stage - 1) % count : 0;
   for (let offset = 0; offset < count; offset++) {
-    const player = state.players[(start + offset) % count];
+    const player = roster[(start + offset) % count];
     if (!activeRaid(state)) break;
     if (!player.auto || player.hp <= 0 || now < player.ready[3]) continue;
     applyEvent(state, { id:'auto:'+player.id+':'+now, user:player.id, name:player.name,
