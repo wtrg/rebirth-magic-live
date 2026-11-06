@@ -15,6 +15,7 @@ const base = 'http://127.0.0.1:4243';
 const roster = ['ice', 'fire', 'thunder', 'knight', 'healer', 'summon', 'ice', 'fire'];
 const benchmark = process.argv.includes('--benchmark');
 const record = process.argv.includes('--record');
+const phone = process.argv.includes('--phone');
 assert.ok(!(benchmark && record));
 const event = (i, command) => ({ id: 'crowded:' + i + ':' + command.slice(1), user: 'mock:crowded-' + i,
   name: 'QA ' + i, kind: 'chat', command });
@@ -48,7 +49,7 @@ try {
   const modes = record ? ['paired'] : benchmark ? ['default', 'paired', 'paired', 'default'] :
     ['default', 'paired', 'ice-missing', 'fox-missing'];
   for (const mode of modes) {
-    const size = { width: 1080, height: 1920 };
+    const size = phone ? { width: 540, height: 960 } : { width: 1080, height: 1920 };
     const page = await browser.newPage({ viewport: size, recordVideo: record ? { dir: 'test-results', size } : undefined });
     const errors = [], candidateRequests = [];
     page.on('pageerror', error => errors.push(error.message));
@@ -98,12 +99,12 @@ try {
       const draws = samples.map(([, count]) => count).sort((a, b) => a - b);
       console.log(JSON.stringify({ mode, renderer, samples: samples.length, p95Ms: gaps[Math.floor(.95 * (gaps.length - 1))],
         maxGapMs: gaps.at(-1), medianDraws: draws[Math.floor(draws.length / 2)] }));
-    } else await page.screenshot({ path: 'test-results/p9-crowded-' + mode + '.png' });
+    } else await page.screenshot({ path: 'test-results/p9-crowded-' + mode + (phone ? '-phone' : '') + '.png' });
     if (!benchmark && mode === 'paired') {
       await page.waitForFunction(() => document.querySelector('#phase')?.textContent === 'GIAI ĐOẠN I');
       await post('/event', event(0, '!attack'));
       await page.locator('canvas[data-fox-attacking]').waitFor();
-      await page.screenshot({ path: 'test-results/p9-crowded-fox-attack.png' });
+      await page.screenshot({ path: 'test-results/p9-crowded-fox-attack' + (phone ? '-phone' : '') + '.png' });
       await page.locator('canvas[data-fox-attacking]').waitFor({ state: 'detached' });
       if (record) {
         for (const [i] of roster.entries()) {
