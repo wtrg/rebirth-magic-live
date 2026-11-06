@@ -31,7 +31,10 @@ percentage points for current debt, and 2.08, 12.50 and 6.25 for cap-4.
 Run `node scripts/p10-ranked-matrix.mjs --participation` for the one-hit matrix.
 The harness compares replay to the final WebSocket combat state and the persisted
 ledger to replay. Per-ID output separates offered manual commands, manual intents
-recorded in a window, and settled eligible and served raid counts. The difference
+recorded in a window, and settled eligible and served raid counts. The replay
+observer also counts executed slots and slots denied by a terminal attack. These
+are window-level counts and can include the same ID in both categories within
+one raid. The difference
 between offered and recorded commands can include requests arriving after a raid
 ends. It does not measure packet latency directly.
 
@@ -47,3 +50,17 @@ Following independent review, v14 replay rejects ranked actions outside its
 window protocol. SQLite writes now check both opening sequence counters inside
 the transaction. Regression tests cover an injected ranked auto step, an extra
 window after victory, and stale settlement-only writes.
+
+The guarded repeat at `aa1da98` plus the replay observer passed parity in all
+nine one-hit cells with the same unserved counts. At 350 ms, 4, 1 and 2 offered
+manual commands respectively were absent from the recorded windows. At 60 and
+180 ms all offered manual commands were recorded.
+
+An additional 54 mixed auto/manual HTTP raids used all six classes at level 30.
+All nine cells passed parity. The runs had 6–14 contributors per raid, and all
+32 IDs contributed across each six-raid cell. This workload had variable
+capacity. The fixed six-slot 96-raid results above remain simulation evidence.
+
+Raw synthetic results are available for the [324-raid repeat](evidence/p10-v14-http-324.jsonl),
+[54 mixed raids](evidence/p10-v14-http-mixed-54.jsonl), and
+[controlled three-policy comparison](evidence/p10-v14-policy-study.jsonl).

@@ -97,7 +97,12 @@ async function cohort(pattern, spread, index) {
     const trace = await response.json();
     assert.equal(trace.version, participation ? 14 : 13);
     assert.equal(trace.truncated, false);
-    const replay = playReplayWithDebt(trace);
+    const executedSlots = new Map();
+    const terminalDeniedSlots = new Map();
+    const replay = playReplayWithDebt(trace, ({ executed, denied }) => {
+      for (const id of executed) executedSlots.set(id, (executedSlots.get(id) ?? 0) + 1);
+      for (const id of denied) terminalDeniedSlots.set(id, (terminalDeniedSlots.get(id) ?? 0) + 1);
+    });
     assert.deepEqual(replay.state, { raid, players, logs, paused, effect });
     const windows = trace.steps.filter(step => step.kind === 'opportunity');
     const scheduledManual = windows.reduce((sum, step) => sum + step.intents.length, 0);
@@ -121,7 +126,9 @@ async function cohort(pattern, spread, index) {
         const manual = ids.indexOf(id) % 2 === 1;
         const admittedManual = windows.filter(step => step.intents.some(intent => intent.event.user === id)).length;
         return { id, wins: wins.get(id), offeredManual: manual ? offered : 0, admittedManual,
-          unrecordedManual: manual ? offered - admittedManual : 0, ...replay.participation.history.get(id) };
+          unrecordedManual: manual ? offered - admittedManual : 0,
+          executedSlots: executedSlots.get(id) ?? 0, terminalDeniedSlots: terminalDeniedSlots.get(id) ?? 0,
+          ...replay.participation.history.get(id) };
       }) : undefined;
       return { roster: pattern.map(group => group.length), spread, raids, offeredManual, scheduledManual, contributorCounts, windowWaitMs, players,
         latestAdmissionMs: Math.max(0, ...windows.flatMap(step => step.intents.map(intent => intent.admittedAt - step.openedAt))),

@@ -36,7 +36,9 @@ export function playReplay(raw: unknown): GameState {
   return playReplayWithDebt(raw).state;
 }
 
-export function playReplayWithDebt(raw: unknown) {
+export function playReplayWithDebt(raw: unknown, onWindow?: (result: {
+  executed: ReadonlySet<string>; denied: ReadonlySet<string>;
+}) => void) {
   if (!raw || typeof raw !== 'object') throw new Error('Invalid replay');
   const { version, initial, steps, openingDebt, policyId, openingParticipation } = raw as {
     version?: unknown; initial?: GameState; steps?: Step[]; openingDebt?: [string, number][];
@@ -165,6 +167,7 @@ export function playReplayWithDebt(raw: unknown) {
         });
         if (settled) { eligible.clear(); executed.clear(); }
       } else if (terminal) settle(result.denied);
+      onWindow?.({ executed: result.executed, denied: result.denied });
     } else if (step.kind === 'auto' && version >= 10) {
       if (participation && !state.raid.practice && activeRaid(state)) throw new Error('Ranked auto requires a participation window');
       autoBattle(state, step.at, version);
