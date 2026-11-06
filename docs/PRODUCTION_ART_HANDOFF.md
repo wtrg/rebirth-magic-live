@@ -1,6 +1,6 @@
 # P9 production art delivery brief
 
-Gemini owns art direction and asset proposals. Antigravity owns Three.js integration after asset review. Codex verifies the assets and fallback on Windows with Intel UHD. This brief is ready for dispatch. Gemini and Antigravity delivery is pending.
+Gemini owns art direction and asset proposals. Antigravity owns Three.js integration after asset review. Codex verifies the assets and fallback on Windows with Intel UHD. Gemini Argon High supplied the initial Fire Mage generator. Codex revised that generator, authored Varkhazar and implemented the optional integration while Antigravity delivery remains unverified. The [paired preview](https://github.com/wtrg/rebirth-magic-live/pull/48) is a draft awaiting Leader art review. The five remaining class and three pet assets still need delivery.
 
 Use the original dark anime-fantasy direction in the [Art Bible](ART_BIBLE.md) and the measured [prototype specification](ART_SPECIFICATION.md). Start with one representative class and Varkhazar for a visual and performance review before producing the remaining five classes, three pets, weapons and effects. Keep silhouette, hit feedback and HUD legible in a 1080 × 1920 OBS composition.
 
