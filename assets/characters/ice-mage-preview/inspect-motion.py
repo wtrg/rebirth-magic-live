@@ -15,16 +15,20 @@ for track in tracks:
     for other in tracks:
         other.mute = other != track
     strip = track.strips[0]
-    floors, poses = [], []
+    floors, poses, supports = [], [], set()
     for frame in range(round(strip.frame_start), round(strip.frame_end) + 1):
         scene.frame_set(frame)
         evaluated = mesh.evaluated_get(bpy.context.evaluated_depsgraph_get())
         points = [evaluated.matrix_world @ vertex.co for vertex in evaluated.data.vertices]
-        floors.append(min(point.z for point in points))
+        lowest = min(range(len(points)), key=lambda index: points[index].z)
+        floors.append(points[lowest].z)
+        supports.add(mesh.vertex_groups[mesh.data.vertices[lowest].groups[0].group].name)
         poses.append(tuple(round(value, 4) for point in points for value in point))
     assert len(set(poses)) > 2, track.name
     assert max(abs(value) for value in floors) < .01, (track.name, min(floors), max(floors))
+    if track.name != "defeat":
+        assert supports <= {"LegL", "LegR"}, (track.name, supports)
     results[track.name] = {"frames": len(poses), "uniquePoses": len(set(poses)),
-                           "floorMin": min(floors), "floorMax": max(floors)}
+                           "supports": sorted(supports), "floorMin": min(floors), "floorMax": max(floors)}
 assert set(results) == {"idle", "move", "attack", "hit", "defeat"}
 print(json.dumps(results, indent=2))
